@@ -38,7 +38,7 @@ local function await_git_email(): string?
         task.wait()
         assert(r.stderr == '', r.stderr)
     end
-    email = string.match(r.stdout, "^%s*([-_%w]+)%s*$")
+    email = string.match(r.stdout, `(%S+)`)
     return email
 end
 
