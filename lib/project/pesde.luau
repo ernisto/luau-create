@@ -6,11 +6,7 @@ local utils = require('@lib/utils')
 local manifest = pesde.manifest
 
 -- functions
-local enabled = false
 local function setup()
-    if enabled then return end
-    enabled = true
-
     pesde.setup()
 
     -- manifest

@@ -6,14 +6,9 @@ local utils = require('@lib/utils')
 local manifest = wally.manifest
 
 -- functions
-local enabled = false
 local function setup()
-    if enabled then return end
-    enabled = true
-
     wally.setup()
 
-    -- manifest
     local entry_folder_name = project.entrypoint and project.entrypoint:match("^(.-)/")
 
     manifest.package.name = `{project.host}/{project.name:gsub('-', '_')}`
