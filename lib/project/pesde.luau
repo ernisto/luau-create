@@ -24,9 +24,7 @@ local function setup()
     manifest.version = tostring(project.version)
     manifest.description = project.description
     manifest.license = project.license
-    manifest.authors = project.authors or {
-        project.host .. if utils.await_git_email() then ` <{utils.await_git_email()}>` else ''
-    }
+    manifest.authors = project.authors
     manifest.repository = project.repository and project.repository.url
     manifest.private = project.private
 

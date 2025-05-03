@@ -20,7 +20,7 @@ local function get_scripts(root: string)
 end
 
 -- vars
-local manifest = merge(if fs.isFile('pesde.toml') then serde.decode('toml', fs.readFile('pesde.toml')) else {}, {
+local default = {
     includes = {},
     engine = {},
     target = {
@@ -30,7 +30,8 @@ local manifest = merge(if fs.isFile('pesde.toml') then serde.decode('toml', fs.r
     scripts = get_scripts('scripts') or {},
     dependencies = {},
     dev_dependencies = {},
-})
+}
+local manifest = merge(default, if fs.isFile('pesde.toml') then serde.decode('toml', fs.readFile('pesde.toml')) else {})
 
 -- functions
 local function save()

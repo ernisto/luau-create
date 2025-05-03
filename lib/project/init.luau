@@ -151,6 +151,11 @@ local function inquire()
     local q_bugs = q.struct { name = 'bugs' } do
         q_bugs.str { name = 'url', optional = true, default = repo_url and `{repo_url}/issues` }
     end
+
+    if #project.authors == 0 then
+        local author = q.str { name = 'author', default = project.host .. if utils.await_git_email() then ` <{utils.await_git_email()}>` else '' }
+        table.insert(project.authors, author)
+    end
 end
 
 -- module
