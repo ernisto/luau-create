@@ -1,11 +1,11 @@
+local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
-local lsp = require('@lib/lsp')
-local git = require('@lib/git')
+local luau = require('@lib/luau')
 
 local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 
-local merge = require('@lib/merge')
+local merge = require('@utils/merge')
 
 -- utils
 local function get_scripts(root: string)
@@ -38,16 +38,12 @@ local function save()
     fs.writeFile('pesde.toml', serde.encode('toml', manifest, true))
 end
 
-local enabled = false
 local function setup()
-    if enabled then return end
-    enabled = true
-
     editor.hide_globs('*_packages/**', '.pesde')
     editor.lock_globs('*_packages/**', '.pesde')
-    git.ignore_globs('*_packages/**', '.pesde')
-    lsp.ignore_import_globs('**/.pesde/**')
-    lsp.ignore_diagnostic_globs('*_packages/**', '.pesde')
+    tracker.ignore_globs('*_packages/**', '.pesde')
+    luau.ignore_import_globs('**/.pesde/**')
+    luau.ignore_diagnostic_globs('*_packages/**', '.pesde')
 end
 
 -- module

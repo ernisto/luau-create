@@ -39,9 +39,14 @@ local function lock_globs(...: glob)
     end
 end
 
+local function setup()
+    hide_globs(".vscode")
+end
+
 -- module
 return table.freeze {
     save = save,
+    setup = setup,
     settings = settings,
 
     hide_globs = hide_globs,

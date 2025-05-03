@@ -1,6 +1,7 @@
-local pesde = require('@lib/package_manager/pesde')
 local project = require('@lib/project').project
-local utils = require('@lib/utils')
+local infer = require('@utils/infer')
+local pesde = require('@tools/pesde')
+local rojo = require("@tools/rojo")
 
 -- vars
 local manifest = pesde.manifest
@@ -8,6 +9,12 @@ local manifest = pesde.manifest
 -- functions
 local function setup()
     pesde.setup()
+
+    if project.environment == 'roblox' then
+        rojo.setup()
+        rojo.add_system_path('roblox_packages', {'ReplicatedStorage', 'packages'})
+        rojo.add_system_path('roblox_server_packages', {'ServerScriptService', 'packages'})
+    end
 
     -- manifest
     local entry_folder_name = project.entrypoint and project.entrypoint:match("^(.-)/")
@@ -33,7 +40,7 @@ local function setup()
     }
     
     manifest.target.lib = if project.kind == 'package' then project.entrypoint else nil
-    manifest.target.cli = utils.await_entry_points().cli
+    manifest.target.cli = infer.await_entry_points().cli
     manifest.target.environment = project.environment
 
     manifest.indices = {

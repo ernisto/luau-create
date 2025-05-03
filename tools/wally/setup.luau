@@ -1,6 +1,6 @@
-local wally = require('@lib/package_manager/wally')
 local project = require('@lib/project').project
-local utils = require('@lib/utils')
+local wally = require('@tools/wally')
+local infer = require('@utils/infer')
 
 -- vars
 local manifest = wally.manifest
@@ -16,7 +16,7 @@ local function setup()
     manifest.package.description = project.description
     manifest.package.license = project.license
     manifest.package.authors = project.authors or {
-        project.host .. if utils.await_git_email() then ` <{utils.await_git_email()}>` else ''
+        project.host .. if infer.await_git_email() then ` <{infer.await_git_email()}>` else ''
     }
     manifest.package.repository = project.repository and project.repository.url
     manifest.package.homepage = project.homepage

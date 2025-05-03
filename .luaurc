@@ -1,8 +1,13 @@
 {
     "languageMode": "strict",
+    "globals": [
+        "warn"
+    ],
     "aliases": {
         "lune": "~/.lune/.typedefs/0.8.9/",
         "pkg": "luau_packages",
+        "tools": "tools",
+        "utils": "utils",
         "cli": "cli",
         "lib": "lib"
     }

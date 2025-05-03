@@ -1,19 +1,12 @@
-local vsc = require('@lib/editor/vsc')
+local vsc = require('@tools/vsc')
 
 local ignore_imports = vsc.settings['luau-lsp.completion.imports.ignoreGlobs'] or {}
+vsc.settings['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports
+
 local ignore_diagnostics = vsc.settings['luau-lsp.ignoreGlobs'] or {}
+vsc.settings['luau-lsp.ignoreGlobs'] = ignore_diagnostics
 
 -- functions
-local enabled = false
-local function setup()
-    if enabled then return end
-    enabled = true
-
-    vsc.settings['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports
-    vsc.settings['luau-lsp.ignoreGlobs'] = ignore_diagnostics
-    vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
-end
-
 type glob = string
 local function ignore_import_globs(...: glob)
     for _,glob in {...} do
@@ -26,6 +19,10 @@ local function ignore_diagnostic_globs(...: glob)
         if table.find(ignore_imports, glob) then continue end
         table.insert(ignore_imports, glob)
     end
+end
+
+local function setup()
+    vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
 end
 
 -- module

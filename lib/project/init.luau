@@ -1,10 +1,10 @@
-local pesde = require("../package_manager/pesde")
-local wally = require("../package_manager/wally")
-local npm = require("../package_manager/npm")
+local pesde = require("@tools/pesde")
+local wally = require("@tools/wally")
+local npm = require("@tools/npm")
 
 local semver = require('@pkg/semver')
-local utils = require("../utils")
-local merge = require("@lib/merge")
+local infer = require("@utils/infer")
+local merge = require("@utils/merge")
 
 -- defs
 export type project = {
@@ -56,8 +56,8 @@ local function await_maybe_extract_pesde()
     local name, host = string.match(manifest.name or '', "(%w[_]+)/([%w_]+)")
     local target = manifest.target
 
-    manifest.name = if name and name:gsub('_', '-') == utils.get_folder_name() then nil else name
-    manifest.host = if host and host:gsub('_', '-') == utils.await_git_user() then nil else name
+    manifest.name = if name and name:gsub('_', '-') == infer.get_folder_name() then nil else name
+    manifest.host = if host and host:gsub('_', '-') == infer.await_git_user() then nil else name
     manifest.repository = manifest.repository and { type = 'git', url = manifest.repository }
     manifest.environment = target and target.environment
     manifest.kind = if target.lib then 'package' elseif target.bin then 'terminal' else 'application'

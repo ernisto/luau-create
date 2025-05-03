@@ -1,11 +1,11 @@
+local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
-local lsp = require('@lib/lsp')
-local git = require('@lib/git')
+local luau = require('@lib/luau')
 
 local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 
-local merge = require('@lib/merge')
+local merge = require('@utils/merge')
 
 -- vars
 local manifest = merge(if fs.isFile('wally.toml') then serde.decode('toml', fs.readFile('wally.toml')) else {}, {
@@ -23,16 +23,12 @@ local function save()
     fs.writeFile('wally.toml', serde.encode('toml', manifest, true))
 end
 
-local enabled = false
 local function setup()
-    if enabled then return end
-    enabled = true
-
     editor.hide_globs('*Packages/**')
     editor.lock_globs('*Packages/**')
-    git.ignore_globs('*Packages/**')
-    lsp.ignore_import_globs('**/_Index/**')
-    lsp.ignore_diagnostic_globs('*Packages/**')
+    tracker.ignore_globs('*Packages/**')
+    luau.ignore_import_globs('**/_Index/**')
+    luau.ignore_diagnostic_globs('*Packages/**')
 end
 
 -- module

@@ -1,15 +1,15 @@
 local inquisitor = require("@cli/inquisitor")
 local project = require('@lib/project')
-local utils = require('@lib/utils')
+local infer = require('@utils/infer')
 
 -- main
 local function inquire()
 
     local project = project.project
 
-    local entry_points = utils.await_entry_points()
-    local infered_user = utils.await_git_user()
-    local folder_name = utils.get_folder_name()
+    local entry_points = infer.await_entry_points()
+    local infered_user = infer.await_git_user()
+    local folder_name = infer.get_folder_name()
 
     -- root
     local q = inquisitor(project)
@@ -85,7 +85,7 @@ local function inquire()
     end
 
     if #project.authors == 0 then
-        local author = q.str { name = 'author', default = project.host .. if utils.await_git_email() then ` <{utils.await_git_email()}>` else '' }
+        local author = q.str { name = 'author', default = project.host .. if infer.await_git_email() then ` <{infer.await_git_email()}>` else '' }
         table.insert(project.authors, author)
     end
 
