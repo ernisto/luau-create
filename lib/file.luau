@@ -3,6 +3,18 @@ local fs = require('@lune/fs')
 
 -- functions
 export type path = string
+local function check_exising_chain(path: string, file_name: string?)
+    local ancestors = string.split(path, '/')
+    local safe_dir = ''
+
+    for index, name in ancestors do
+        if name == '' then break end
+
+        safe_dir ..= name .. '/'
+        if not fs.isDir(safe_dir) then return false end
+    end
+    return not file_name or fs.isFile(safe_dir..file_name) 
+end
 local function ensure_existing_chain(path: string, file_name: string?)
 	local ancestors = string.split(path, '/')
 
@@ -29,8 +41,8 @@ end
 export type data = { [string]: any }
 local function read_str(path: path): string?
     local dir, file = string.match(path, "(.*)/([^/]+)$")
+    if not check_exising_chain(dir or '', file or path) then return end
 
-    ensure_existing_chain(dir or '', file or path)
     return fs.readFile(path)
 end
 local function read_toml(path: path): data?
@@ -47,9 +59,9 @@ local function read_yaml(path: path): data?
 end
 
 local function write_str(path: path, str: string)
-    local dir, file = string.match(path, "(.*)/([^/]+)$")
+    local dir = string.match(path, "(.*)/([^/]+)$")
+    ensure_existing_chain(dir or '')
 
-    ensure_existing_chain(dir or '', file or path)
     return fs.writeFile(path, str)
 end
 local function write_toml(path: path, data: data)
@@ -73,4 +85,7 @@ return table.freeze {
     write_toml = write_toml,
     write_json = write_json,
     write_yaml = write_yaml,
+
+    ensure_existing_chain = ensure_existing_chain,
+    check_exising_chain = check_exising_chain,
 }

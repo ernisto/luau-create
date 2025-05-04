@@ -9,10 +9,11 @@ local vsc = require('@tools/vsc')
 local dom = require('@self/dom')
 
 -- vars
+local sup = false
 local places = {}
 local synced_paths = {}
 local tree = dom.node('DataModel')
-local sup = false
+merge({ tree = tree }, file.read_json('dev.project.json'))
 
 -- functions
 local function save()
@@ -39,7 +40,6 @@ end
 local function setup()
     if sup then return end
     sup = true
-    merge({ tree = tree }, file.read_json('dev.project.json'))
 
     tracker.ignore_globs('sourcemap.json', 'dist/**')
     editor.hide_globs('sourcemap.json', 'dist/**')

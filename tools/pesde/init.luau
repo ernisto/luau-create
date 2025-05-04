@@ -21,6 +21,7 @@ local function get_scripts(root: string)
 end
 
 -- vars
+local sup = false
 local manifest: { [string]: any } = {
     includes = {},
     engine = {},
@@ -32,7 +33,7 @@ local manifest: { [string]: any } = {
     dependencies = {},
     dev_dependencies = {},
 }
-local sup = false
+merge(manifest, file.read_toml('pesde.toml'))
 
 -- functions
 local function save()
@@ -43,7 +44,6 @@ end
 local function setup()
     if sup then return end
     sup = true
-    merge(manifest, file.read_toml('pesde.toml'))
 
     editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
     editor.lock_globs('*_packages/**', '.pesde')

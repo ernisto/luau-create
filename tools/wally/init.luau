@@ -6,6 +6,7 @@ local file = require('@lib/file')
 local merge = require('@utils/merge')
 
 -- vars
+local sup = false
 local manifest: { [string]: any } = {
     package = {
         exclude = {},
@@ -15,7 +16,7 @@ local manifest: { [string]: any } = {
     ['dev-dependencies'] = {},
     ['server-dependencies'] = {},
 }
-local sup = false
+merge(manifest, file.read_toml('wally.toml') or {})
 
 -- functions
 local function save()
@@ -26,7 +27,6 @@ end
 local function setup()
     if sup then return end
     sup = true
-    merge(manifest, file.read_toml('wally.toml') or {})
 
     editor.hide_globs('*Packages/**', 'wally.toml')
     editor.lock_globs('*Packages/**')

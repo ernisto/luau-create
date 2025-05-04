@@ -6,10 +6,11 @@ local file = require('@lib/file')
 local merge = require('@utils/merge')
 
 -- vars
+local sup = false
 local manifest: { [string]: any } = {
     directories = {}
 }
-local sup = false
+merge(manifest, file.read_json('package.json') or {})
 
 -- functions
 local function save()
@@ -20,7 +21,6 @@ end
 local function setup()
     if sup then return end
     sup = true
-    merge(manifest, file.read_json('package.json') or {})
 
     editor.hide_globs('node_modules/**', 'package.json')
     editor.lock_globs('node_modules/**')
