@@ -1,6 +1,6 @@
+local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
-local luau = require('@lib/luau')
 local file = require('@lib/file')
 
 local merge = require('@utils/merge')
@@ -20,8 +20,8 @@ local function setup()
     editor.hide_globs('node_modules/**', 'package.json')
     editor.lock_globs('node_modules/**')
     tracker.ignore_globs('node_modules/**')
-    luau.ignore_import_globs('**/node_modules/**')
-    luau.ignore_diagnostic_globs('node_modules/**')
+    language.ignore_import_globs('**/node_modules/**')
+    language.ignore_diagnostic_globs('node_modules/**')
 end
 
 -- module

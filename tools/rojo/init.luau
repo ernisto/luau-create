@@ -1,3 +1,4 @@
+local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local project = require('@lib/project')
 local editor = require('@lib/editor')
@@ -5,7 +6,7 @@ local file = require('@lib/file')
 
 local merge = require('@utils/merge')
 local vsc = require('@tools/vsc')
-local dom = require('./dom')
+local dom = require('@self/dom')
 
 -- vars
 local tree = dom.node('DataModel')

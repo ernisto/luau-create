@@ -1,4 +1,4 @@
-local vsc = require("@tools/vsc")
+local vsc = require('@tools/vsc')
 
 -- functions
 type glob = string

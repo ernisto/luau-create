@@ -1,4 +1,4 @@
-local editor = require("../../lib/editor")
+local editor = require('@lib/editor')
 
 -- functions
 local function save()

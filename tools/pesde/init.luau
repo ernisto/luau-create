@@ -1,7 +1,7 @@
+local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require("@lib/file")
-local luau = require('@lib/luau')
 
 local serde = require("@lune/serde")
 local fs = require("@lune/fs")
@@ -43,8 +43,8 @@ local function setup()
     editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
     editor.lock_globs('*_packages/**', '.pesde')
     tracker.ignore_globs('*_packages/**', '.pesde')
-    luau.ignore_import_globs('**/.pesde/**')
-    luau.ignore_diagnostic_globs('*_packages/**', '.pesde')
+    language.ignore_import_globs('**/.pesde/**')
+    language.ignore_diagnostic_globs('*_packages/**', '.pesde')
 end
 
 -- module

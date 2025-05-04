@@ -1,5 +1,5 @@
+local tracker = require('@lib/tracker')
 local luau = require('@tools/luau')
-local tracker = require("./tracker")
 local lsp = require('@tools/lsp')
 
 -- functions

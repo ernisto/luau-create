@@ -1,5 +1,5 @@
-local tracker = require("@lib/tracker")
-local editor = require("@lib/editor")
+local tracker = require('@lib/tracker')
+local editor = require('@lib/editor')
 local rojo = require('@tools/rojo')
 
 -- functions

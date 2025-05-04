@@ -1,6 +1,6 @@
+local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
-local luau = require('@lib/luau')
 local file = require('@lib/file')
 
 local merge = require('@utils/merge')
@@ -26,8 +26,8 @@ local function setup()
     editor.hide_globs('*Packages/**', 'wally.toml')
     editor.lock_globs('*Packages/**')
     tracker.ignore_globs('*Packages/**')
-    luau.ignore_import_globs('**/_Index/**')
-    luau.ignore_diagnostic_globs('*Packages/**')
+    language.ignore_import_globs('**/_Index/**')
+    language.ignore_diagnostic_globs('*Packages/**')
 end
 
 -- module
