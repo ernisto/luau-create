@@ -17,8 +17,8 @@ local function save()
 end
 
 local function setup()
-    editor.hide_globs('node_modules/**')
-    editor.lock_globs('node_modules/**')
+    editor.hide_globs('node_modules/**', 'package.json')
+    editor.lock_globs('node_modules/**', 'package.json')
     tracker.ignore_globs('node_modules/**')
     luau.ignore_import_globs('**/node_modules/**')
     luau.ignore_diagnostic_globs('node_modules/**')

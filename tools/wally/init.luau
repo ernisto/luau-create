@@ -23,8 +23,8 @@ local function save()
 end
 
 local function setup()
-    editor.hide_globs('*Packages/**')
-    editor.lock_globs('*Packages/**')
+    editor.hide_globs('*Packages/**', 'wally.toml')
+    editor.lock_globs('*Packages/**', 'wally.toml')
     tracker.ignore_globs('*Packages/**')
     luau.ignore_import_globs('**/_Index/**')
     luau.ignore_diagnostic_globs('*Packages/**')

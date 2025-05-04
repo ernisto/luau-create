@@ -10,8 +10,8 @@ local function lock_globs(...: glob)
 end
 
 local function setup()
-    lock_globs("*.lock", "*.lock.*")
-    hide_globs("*.lock", "*.lock.*", ".luaurc")
+    lock_globs('*.lock', '*-lock.*', '*.lock.*')
+    hide_globs('*.lock', '*-lock.*', '*.lock.*')
 end
 
 -- module
