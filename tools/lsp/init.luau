@@ -1,15 +1,14 @@
 local merge = require('@utils/merge')
 local vsc = require('@tools/vsc')
 
-local ignore_imports = {}
-merge(vsc.settings, { ['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports })
-
+-- vars
 local ignore_diagnostics = {}
-merge(vsc.settings, { ['luau-lsp.ignoreGlobs'] = ignore_diagnostics })
+local ignore_imports = {}
+local sup = false
 
 -- functions
 local function save()
-    
+    if not sup then return end
 end
 
 type glob = string
@@ -27,6 +26,13 @@ local function ignore_diagnostic_globs(...: glob)
 end
 
 local function setup()
+    if sup then return end
+    sup = true
+    merge(vsc.settings, {
+        ['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports,
+        ['luau-lsp.ignoreGlobs'] = ignore_diagnostics,
+    })
+
     vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
 end
 

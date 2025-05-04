@@ -5,11 +5,13 @@ local simple_dict = require('@self/simple_dict')
 local merge = require('@utils/merge')
 
 -- vars
-local ignored_globs = (file.read_str('.gitignore') or ''):split('\n')
-local attributes = simple_dict.read('.gitattributes') or {}
+local ignored_globs = {}
+local attributes = {}
+local sup = false
 
 -- functions
 local function save()
+    if not sup then return end
     file.write_str('.gitignore', table.concat(ignored_globs, '\n'))
     simple_dict.write('.gitattributes', attributes)
 end
@@ -29,6 +31,11 @@ local function set_attribute(glob: glob, ...: attribute)
 end
 
 local function setup()
+    if not sup then return end
+    sup = true
+    merge(ignored_globs, (file.read_str('.gitignore') or ''):split('\n'))
+    merge(attributes, simple_dict.read('.gitattributes') or {})
+
     editor.hide_globs(".gitignore", ".gitattributes")
 end
 

@@ -13,14 +13,19 @@ local rc = {
     globals = {},
     lint = {},
 }
-merge(rc, file.read_json('.luaurc'))
+local sup = false
 
 -- functions
 local function save()
+    if not sup then return end
     file.write_json('.luaurc', rc)
 end
 
 local function setup()
+    if sup then return end
+    sup = true
+    merge(rc, file.read_json('.luaurc'))
+
     editor.hide_globs('.luaurc')
     tracker.set_attribute('*.luau', 'text')
 end

@@ -1,19 +1,17 @@
 local merge = require('@utils/merge')
 local file = require('@lib/file')
 
-local recommended_extensions = {}
-merge({ recommendations = recommended_extensions }, file.read_json('.vscode/extensions.json'))
-
+-- vars
 local tasks = {}
-merge({ tasks = tasks }, file.read_json('.vscode/tasks.json'))
-
 local hidden_globs = {}
 local locked_globs = {}
-local settings = { ['files.readonlyInclude'] = locked_globs, ['files.exclude'] = hidden_globs }
-merge(settings, file.read_json('.vscode/settings.json'))
+local recommended_extensions = {}
+local settings = { ['files.readonlyInclude'] = locked_globs, ['files.exclude'] = hidden_globs, ['files.associations'] = {} }
+local sup = false
 
 -- functions
 local function save()
+    if not sup then return end
     file.write_json('./.vscode/extensions.json', { recommendations = recommended_extensions })
     file.write_json('./.vscode/settings.json', settings)
     file.write_json('./.vscode/tasks.json', { version = "2.0.0", tasks = tasks })
@@ -40,7 +38,13 @@ local function lock_globs(...: glob)
 end
 
 local function setup()
-    hide_globs(".vscode")
+    if sup then return end
+    sup = true
+    merge({ recommendations = recommended_extensions }, file.read_json('.vscode/extensions.json'))
+    merge({ tasks = tasks }, file.read_json('.vscode/tasks.json'))
+    merge(settings, file.read_json('.vscode/settings.json'))
+
+    hide_globs('.vscode')
 end
 
 -- module

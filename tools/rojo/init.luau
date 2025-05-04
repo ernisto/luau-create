@@ -9,14 +9,14 @@ local vsc = require('@tools/vsc')
 local dom = require('@self/dom')
 
 -- vars
-local tree = dom.node('DataModel')
-merge({ tree = tree }, file.read_json('dev.project.json'))
-
 local places = {}
 local synced_paths = {}
+local tree = dom.node('DataModel')
+local sup = false
 
 -- functions
 local function save()
+    if not sup then return end
     file.write_json('dev.project.json', { name = project.project.name, tree = tree })
 end
 
@@ -37,6 +37,10 @@ local function set_properties(roblox_path: {string}, properties: { [string]: any
 end
 
 local function setup()
+    if sup then return end
+    sup = true
+    merge({ tree = tree }, file.read_json('dev.project.json'))
+
     tracker.ignore_globs('sourcemap.json', 'dist/**')
     editor.hide_globs('sourcemap.json', 'dist/**')
     editor.lock_globs('sourcemap.json', 'dist/**')

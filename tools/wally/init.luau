@@ -15,14 +15,19 @@ local manifest: { [string]: any } = {
     ['dev-dependencies'] = {},
     ['server-dependencies'] = {},
 }
-merge(manifest, file.read_toml('wally.toml') or {})
+local sup = false
 
 -- functions
 local function save()
+    if not sup then return end
     file.write_toml('wally.toml', manifest)
 end
 
 local function setup()
+    if sup then return end
+    sup = true
+    merge(manifest, file.read_toml('wally.toml') or {})
+
     editor.hide_globs('*Packages/**', 'wally.toml')
     editor.lock_globs('*Packages/**')
     tracker.ignore_globs('*Packages/**')

@@ -1,10 +1,10 @@
 local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
-local file = require("@lib/file")
+local file = require('@lib/file')
 
-local serde = require("@lune/serde")
-local fs = require("@lune/fs")
+local serde = require('@lune/serde')
+local fs = require('@lune/fs')
 
 local merge = require('@utils/merge')
 
@@ -32,14 +32,19 @@ local manifest: { [string]: any } = {
     dependencies = {},
     dev_dependencies = {},
 }
-merge(manifest, file.read_toml('pesde.toml'))
+local sup = false
 
 -- functions
 local function save()
+    if not sup then return end
     fs.writeFile('pesde.toml', serde.encode('toml', manifest, true))
 end
 
 local function setup()
+    if sup then return end
+    sup = true
+    merge(manifest, file.read_toml('pesde.toml'))
+
     editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
     editor.lock_globs('*_packages/**', '.pesde')
     tracker.ignore_globs('*_packages/**', '.pesde')
