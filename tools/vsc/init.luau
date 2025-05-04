@@ -1,31 +1,33 @@
-local serde = require('@lune/serde')
-local fs = require('@lune/fs')
+local merge = require('@utils/merge')
+local file = require('@lib/file')
 
-if not fs.isDir('./.vscode') then fs.writeDir('./.vscode') end
-local recommended_extensions = if fs.isFile('./.vscode/extensions.json') then serde.decode('json', fs.readFile('./.vscode/extensions.json')) else {}
-local settings = if fs.isFile('./.vscode/settings.json') then serde.decode('json', fs.readFile('./.vscode/settings.json')) else {}
-local tasks = if fs.isFile('./.vscode/tasks.json') then serde.decode('json', fs.readFile('./.vscode/tasks.json')) else {}
+local recommended_extensions = {}
+merge({ recommendations = recommended_extensions }, file.read_json('.vscode/extensions.json'))
 
-local locked_globs = settings['file.readonlyInclude'] or {}
-local hidden_globs = settings['file.exclude'] or {}
+local tasks = {}
+merge({ tasks = tasks }, file.read_json('.vscode/tasks.json'))
 
--- defs
-type extension_id = string
-type glob = string
+local hidden_globs = {}
+local locked_globs = {}
+local settings = { ['files.readonlyInclude'] = locked_globs, ['files.exclude'] = hidden_globs }
+merge(settings, file.read_json('.vscode/settings.json'))
 
 -- functions
 local function save()
-    fs.writeFile('./.vscode/extensions.json', serde.encode('json', recommended_extensions, true))
-    fs.writeFile('./.vscode/settings.json', serde.encode('json', settings, true))
-    fs.writeFile('./.vscode/tasks.json', serde.encode('json', tasks, true))
+    file.write_json('./.vscode/extensions.json', { recommendations = recommended_extensions })
+    file.write_json('./.vscode/settings.json', settings)
+    file.write_json('./.vscode/tasks.json', { version = "2.0.0", tasks = tasks })
 end
 
+type extension_id = string
 local function recommend_extensions(...: extension_id)
     for _,extension_id in {...} do
         if table.find(recommended_extensions, extension_id) then continue end
         table.insert(recommended_extensions, extension_id)
     end
 end
+
+type glob = string
 local function hide_globs(...: glob)
     for _,glob in {...} do
         if table.find(hidden_globs, glob) then continue end

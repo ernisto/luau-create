@@ -1,16 +1,17 @@
 local editor = require('@lib/editor')
-local merge = require('@utils/merge')
+local file = require('@lib/file')
+
 local simple_dict = require("./simple_dict")
-local fs = require('@lune/fs')
+local merge = require('@utils/merge')
 
 -- vars
-local ignored_globs = if fs.isFile('.gitignore') then fs.readFile('.gitignore'):split('\n') else {}
-local attributes = if fs.isFile('.gitattributes') then simple_dict.decode(fs.readFile('.gitattributes')) else {}
+local ignored_globs = (file.read_str('.gitignore') or ''):split('\n')
+local attributes = simple_dict.read('.gitattributes') or {}
 
 -- functions
 local function save()
-    fs.writeFile('.gitignore', table.concat(ignored_globs, '\n'))
-    fs.writeFile('.gitattributes', simple_dict.encode(attributes))
+    file.write_str('.gitignore', table.concat(ignored_globs, '\n'))
+    simple_dict.write('.gitattributes', attributes)
 end
 
 type glob = string

@@ -1,14 +1,12 @@
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local luau = require('@lib/luau')
-
-local serde = require("@lune/serde")
-local fs = require("@lune/fs")
+local file = require('@lib/file')
 
 local merge = require('@utils/merge')
 
 -- vars
-local manifest = merge(if fs.isFile('wally.toml') then serde.decode('toml', fs.readFile('wally.toml')) else {}, {
+local manifest: { [string]: any } = {
     package = {
         exclude = {},
         authors = {},
@@ -16,11 +14,12 @@ local manifest = merge(if fs.isFile('wally.toml') then serde.decode('toml', fs.r
     },
     ['dev-dependencies'] = {},
     ['server-dependencies'] = {},
-})
+}
+merge(manifest, file.read_toml('wally.toml') or {})
 
 -- functions
 local function save()
-    fs.writeFile('wally.toml', serde.encode('toml', manifest, true))
+    file.write_toml('wally.toml', manifest)
 end
 
 local function setup()

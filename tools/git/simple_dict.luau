@@ -1,5 +1,7 @@
+local file = require("@lib/file")
 type content = { [string]: {string} }
 
+-- functions
 local function decode(raw: string): content
     
     local lines = string.split(raw, '\n')
@@ -35,8 +37,18 @@ local function encode(content: content)
     return raw
 end
 
+local function write(path: file.path, content: content)
+    file.write_str(path, encode(content))
+end
+local function read(path: file.path)
+    local str = file.read_str(path)
+    return str and decode(str)
+end
+
 -- module
 return table.freeze {
     decode = decode,
     encode = encode,
+    write = write,
+    read = read,
 }

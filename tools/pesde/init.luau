@@ -1,5 +1,6 @@
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
+local file = require("@lib/file")
 local luau = require('@lib/luau')
 
 local serde = require("@lune/serde")
@@ -20,7 +21,7 @@ local function get_scripts(root: string)
 end
 
 -- vars
-local default = {
+local manifest: { [string]: any } = {
     includes = {},
     engine = {},
     target = {
@@ -31,7 +32,7 @@ local default = {
     dependencies = {},
     dev_dependencies = {},
 }
-local manifest = merge(default, if fs.isFile('pesde.toml') then serde.decode('toml', fs.readFile('pesde.toml')) else {})
+merge(manifest, file.read_toml('pesde.toml'))
 
 -- functions
 local function save()

@@ -1,20 +1,19 @@
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local luau = require('@lib/luau')
-
-local serde = require("@lune/serde")
-local fs = require("@lune/fs")
+local file = require('@lib/file')
 
 local merge = require('@utils/merge')
 
 -- vars
-local manifest = merge(if fs.isFile('package.json') then serde.decode('json', fs.readFile('package.json')) else {}, {
+local manifest: { [string]: any } = {
     directories = {}
-})
+}
+merge(manifest, file.read_json('package.json') or {})
 
 -- functions
 local function save()
-    fs.writeFile('package.json', serde.encode('json', manifest, true))
+    file.write_json('package.json', manifest)
 end
 
 local function setup()
