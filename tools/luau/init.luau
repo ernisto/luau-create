@@ -3,12 +3,19 @@ local editor = require('@lib/editor')
 local file = require('@lib/file')
 local merge = require('@utils/merge')
 
+-- defs
+type luaurc = {
+    languageMode: 'strict' | 'nonstrict' | 'nocheck'?,
+    lintErrors: boolean?,
+    typeErrors: boolean?,
+    aliases: { [string]: string },
+    globals: { string },
+    lint: { [string]: boolean },
+}
 
 -- vars
-local rc = {
+local rc: luaurc = {
     languageMode = 'strict',
-    lintErrors = true,
-    typeErrors = true,
     aliases = {},
     globals = {},
     lint = {},
