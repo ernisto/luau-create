@@ -10,8 +10,8 @@ local merge = require("@utils/merge")
 export type project = {
     inquire: () -> (),
 
-    environment: 'roblox' | 'lute' | 'lune' | 'luau',
-    kind: 'package' | 'terminal' | 'plugin' | 'script',
+    environment: 'roblox' | 'lune' | 'luau',
+    kind: 'package' | 'terminal' | 'script' | 'plugin' | 'game',
     side: 'client' | 'shared' | 'server'?,
 
     name: string,
@@ -65,20 +65,14 @@ local function await_maybe_extract_pesde()
     return manifest
 end
 
-local project = merge(
-    {} :: project,
+local project: project = merge(
+    {},
     await_maybe_extract_npm() or {},
     await_maybe_extract_wally() or {},
     await_maybe_extract_pesde() or {}
 )
 
--- functions
-local function setup()
-    
-end
-
 -- module
 return table.freeze {
-    setup = setup,
     project = project,
 }

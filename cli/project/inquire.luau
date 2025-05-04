@@ -16,7 +16,6 @@ local function inquire()
     local env = q.enum {
         name = 'environment',
         { name = 'roblox' },
-        { name = 'lute' },
         { name = 'lune' },
         { name = 'luau' },
     }
@@ -32,8 +31,8 @@ local function inquire()
         if env == 'roblox' then { name = 'plugin' } else nil :: any,
         if env == 'roblox' then { name = 'game' } else nil :: any,
 
-        if env ~= 'roblox' then { name = 'script', desc = 'terminal scripts, such for building, or deploy' } else nil :: any,
-        if env ~= 'roblox' and env ~= 'luau' then { name = 'terminal' } else nil :: any,
+        if env == 'lune' then { name = 'script', desc = 'terminal scripts, such for building, or deploy' } else nil :: any,
+        if env == 'lune' then { name = 'cli' } else nil :: any,
     }
     if env == 'roblox' and kind == 'package' then
         q.enum {
@@ -43,7 +42,7 @@ local function inquire()
             { name = 'server' },
         }
     end
-    if kind ~= 'plugin' and kind ~= 'game' then
+    if kind ~= 'game' then
         q.str {
             name = 'entrypoint',
             default = `{if kind == 'package' then 'lib' else kind}/init.luau` or select(2, next(entry_points))
