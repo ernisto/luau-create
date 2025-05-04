@@ -3,12 +3,10 @@ type content = { [string]: {string} }
 
 -- functions
 local function decode(raw: string): content
-    
     local lines = string.split(raw, '\n')
     local dict = {}
 
     for _,line in lines do
-        
         local key, raw_values = line:match("(%S+)%s*=%s*(.*)")
         if not raw_values then continue end
         if not key then continue end
@@ -22,18 +20,16 @@ local function decode(raw: string): content
     return dict
 end
 local function encode(content: content)
-    
     local raw = ''
     for glob, attributes in content do
-        raw ..= `{glob}\t=\t`
+        raw ..= `{glob}`
         for attribute, value in attributes do
-            raw ..= (if type(attribute) == 'string' then attribute..'=' else '')
+            raw ..= '\t'
+                .. (if type(attribute) == 'string' then attribute..'=' else '')
                 .. tostring(value)
-                .. '\t'
         end
         raw ..= '\n'
     end
-    
     return raw
 end
 
