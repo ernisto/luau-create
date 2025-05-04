@@ -5,6 +5,8 @@ local npm = require("@tools/npm")
 local semver = require('@pkg/semver')
 local infer = require("@utils/infer")
 local merge = require("@utils/merge")
+local luau = require('@lib/luau')
+local file = require('@lib/file')
 
 -- defs
 export type project = {
@@ -72,7 +74,15 @@ local project: project = merge(
     await_maybe_extract_pesde() or {}
 )
 
+local function setup()
+    if project.entrypoint then
+        file.write_str(project.entrypoint, '')
+        for alias, path: any in infer.await_entry_points() do luau.add_alias(alias, path) end
+    end
+end
+
 -- module
 return table.freeze {
     project = project,
+    setup = setup,
 }
