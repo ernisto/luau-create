@@ -5,7 +5,7 @@ local npm = require("@tools/npm")
 local semver = require('@pkg/semver')
 local infer = require("@utils/infer")
 local merge = require("@utils/merge")
-local luau = require('@lib/luau')
+local language = require('@lib/language')
 local file = require('@lib/file')
 
 -- defs
@@ -77,7 +77,7 @@ local project: project = merge(
 local function setup()
     if project.entrypoint then
         file.write_str(project.entrypoint, '')
-        for alias, path: any in infer.await_entry_points() do luau.add_alias(alias, path) end
+        for alias, path: any in infer.await_entry_points() do language.add_alias(alias, path) end
     end
 end
 
