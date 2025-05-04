@@ -30,14 +30,12 @@ end
 type glob = string
 local function hide_globs(...: glob)
     for _,glob in {...} do
-        if table.find(hidden_globs, glob) then continue end
-        table.insert(hidden_globs, glob)
+        hidden_globs[glob] = true
     end
 end
 local function lock_globs(...: glob)
     for _,glob in {...} do
-        if table.find(locked_globs, glob) then continue end
-        table.insert(locked_globs, glob)
+        locked_globs[glob] = true
     end
 end
 
