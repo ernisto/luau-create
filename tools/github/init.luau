@@ -7,7 +7,6 @@ end
 
 local function setup()
     editor.hide_globs('.env', '.github')
-    editor.lock_globs('.env')
 end
 
 -- module

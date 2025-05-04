@@ -41,7 +41,7 @@ end
 
 local function setup()
     editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
-    editor.lock_globs('*_packages/**', '.pesde', 'pesde.toml')
+    editor.lock_globs('*_packages/**', '.pesde')
     tracker.ignore_globs('*_packages/**', '.pesde')
     luau.ignore_import_globs('**/.pesde/**')
     luau.ignore_diagnostic_globs('*_packages/**', '.pesde')
