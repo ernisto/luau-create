@@ -21,24 +21,32 @@ end
 local user: string?
 local function await_git_user(): string?
     if user then return user end
-    local r = process.spawn('git', {'config', 'user.name'})
-    while r.stdout == '' do
-        task.wait()
-        assert(r.stderr == '', r.stderr)
-    end
-    user = string.match(r.stdout, "^%s*([-_%w]+)%s*$")
+    local process = process.create('git', {'config', 'user.name'})
+    local output, err
+
+    repeat
+        output = process.stdout:readToEnd()
+        err = process.stderr:readToEnd()
+        assert(err == '', err)
+    until output ~= '' or err ~= '' or not task.wait()
+
+    user = string.match(output, "^%s*([-_%w]+)%s*$")
     return user
 end
 
 local email: string?
 local function await_git_email(): string?
     if email then return email end
-    local r = process.spawn('git', {'config', 'user.email'})
-    while r.stdout == '' do
-        task.wait()
-        assert(r.stderr == '', r.stderr)
-    end
-    email = string.match(r.stdout, `(%S+)`)
+    local process = process.create('git', {'config', 'user.email'})
+    local output, err
+
+    repeat
+        output = process.stdout:readToEnd()
+        err = process.stderr:readToEnd()
+        assert(err == '', err)
+    until output ~= '' or err ~= '' or not task.wait()
+
+    email = string.match(output, `(%S+)`)
     return email
 end
 
