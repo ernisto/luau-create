@@ -1,4 +1,3 @@
-local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local project = require('@lib/project')
 local editor = require('@lib/editor')
@@ -47,12 +46,10 @@ local function setup()
     vsc.recommend_extensions('evaera.vscode-rojo')
 
     if project.project.kind == 'game' then
-        file.write_str('test/init.luau', '')
-        file.write_str('story/print.story.luau', '')
-        file.write_str('server/init.server.luau', '')
-        file.write_str('client/init.client.luau', '')
-        file.write_str('config/init.toml', '')
-        file.write_str('shared/.gitkeep', '')
+        file.write_str('server/init.server.luau')
+        file.write_str('client/init.client.luau')
+        file.write_str('config/init.toml')
+        file.write_str('shared/.gitkeep')
     end
 end
 
