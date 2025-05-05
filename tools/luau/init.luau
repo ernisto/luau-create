@@ -39,7 +39,7 @@ local function setup()
     merge(rc, file.read_json('.luaurc'))
 
     editor.hide_globs('.luaurc')
-    tracker.set_attribute('*.luau', 'text')
+    tracker.set_attribute('*.luau', 'text', 'eol=lf')
 end
 
 -- module

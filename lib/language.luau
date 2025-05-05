@@ -1,4 +1,3 @@
-local tracker = require('@lib/tracker')
 local project = require('@lib/project')
 local file = require('@lib/file')
 
@@ -25,8 +24,6 @@ local function add_alias(alias: string, path: string)
 end
 
 local function setup()
-    tracker.set_attribute('*.luau', 'text', 'eol=lf')
-
     if project.project.entrypoint then
         file.write_str(project.project.entrypoint)
     end
