@@ -58,11 +58,11 @@ local function read_yaml(path: path): data?
     return str and str ~= '' and serde.decode('yaml', str)
 end
 
-local function write_str(path: path, str: string)
+local function write_str(path: path, str: string?)
     local dir = string.match(path, "(.*)/([^/]+)$")
     ensure_existing_chain(dir or '')
 
-    return fs.writeFile(path, str)
+    return str and fs.writeFile(path, str)
 end
 local function write_toml(path: path, data: data)
     write_str(path, serde.encode('toml', data, true))
