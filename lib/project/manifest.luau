@@ -38,6 +38,7 @@ export type project = {
 }
 
 -- functions
+local none: any = nil
 local function await_maybe_extract_npm()
     return table.clone(npm)
 end
@@ -55,16 +56,16 @@ local function await_maybe_extract_wally()
     return project
 end
 local function await_maybe_extract_pesde()
-    local project = table.clone(pesde)
+    local project: project = table.clone(pesde) :: any
 
     local name, host = string.match(pesde.name or '', "(%w[_]+)/([%w_]+)")
     local target = pesde.target
 
-    project.name = if name and name:gsub('_', '-') == infer.get_folder_name() then nil else name
-    project.host = if host and host:gsub('_', '-') == infer.await_git_user() then nil else name
+    project.name = if name and name:gsub('_', '-') == infer.get_folder_name() then none else name
+    project.host = if host and host:gsub('_', '-') == infer.await_git_user() then none else name
     project.repository = pesde.repository and { type = 'git', url = pesde.repository }
-    project.environment = target and target.environment
-    project.kind = if target.lib then 'package' elseif target.bin then 'terminal' else 'application'
+    project.environment = if target and target.environment ~= 'roblox_server' then target.environment else none
+    project.kind = if target.lib then 'package' elseif target.bin then 'terminal' elseif target.scripts then 'script' else none
     project.entrypoint = target and (target.lib or target.bin)
 
     return project

@@ -17,7 +17,7 @@ end
 local function setup()
     if sup then return end
     sup = true
-    
+
     editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
     editor.lock_globs('*_packages/**', '.pesde')
     tracker.ignore_globs('*_packages/**', '.pesde')
@@ -25,47 +25,33 @@ local function setup()
     language.ignore_diagnostic_globs('*_packages/**', '.pesde')
 
     -- manifest
-    local entry_folder_name = project.entrypoint and project.entrypoint:match("^(.-)/")
-    manifest.engine = {
-        pesde = "^0.6.0",
-        lune = if project.environment == 'lune' then "^0.9.0" else nil,
-    }
+    manifest.engines = { pesde = "^0.6.0" }
 
     manifest.name = `{project.host}/{project.name:gsub('-', '_')}`
     manifest.version = tostring(project.version)
     manifest.description = project.description
     manifest.license = project.license
+
     manifest.authors = project.authors
-    manifest.repository = project.repository and project.repository.url
+
     manifest.private = project.private
+    manifest.repository = project.repository and project.repository.url
 
     manifest.includes = {
         "pesde.toml",
         "README.md",
         "LICENSE",
         "docs/**/*.md",
-        if entry_folder_name then `{entry_folder_name}/**` else project.entrypoint :: any
+        project.entrypoint and `{project.entrypoint}/**` :: any
     }
-    
+
+    manifest.target.environment = if project.environment == 'roblox' and project.side == 'server' then 'roblox_server' else project.environment
     manifest.target.lib = if project.kind == 'package' then project.entrypoint else nil
-    manifest.target.cli = project.directories.cli
+    manifest.target.bin = project.directories.cli
     manifest.target.environment = project.environment
 
-    manifest.indices = {
-        default = "https://github.com/pesde-pkg/index"
-    }
-
-    if project.kind == 'script' then
-        manifest.target.scripts = manifest.scripts
-    end
-    if project.environment == 'roblox' then
-        manifest.wally_indices = {
-            default = "https://github.com/UpliftGames/wally-index"
-        }
-        if project.side == 'server' then
-            manifest.target.environment = 'roblox_server'
-        end
-    end
+    manifest.wally_indices = if project.environment == 'roblox' then { default = "https://github.com/UpliftGames/wally-index" } :: any else nil
+    manifest.indices = { default = "https://github.com/pesde-pkg/index" } :: any
 end
 
 -- module
