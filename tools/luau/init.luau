@@ -28,6 +28,11 @@ local function save()
     file.write_json('.luaurc', rc)
 end
 
+local function add_alias(alias: string, path: string)
+    if rc.aliases[alias] and rc.aliases[alias] ~= path then warn(`alias '{alias}' already defined`) end
+    rc.aliases[alias] = path
+end
+
 local function setup()
     if sup then return end
     sup = true
@@ -42,4 +47,5 @@ return table.freeze {
     rc = rc,
     save = save,
     setup = setup,
+    add_alias = add_alias,
 }

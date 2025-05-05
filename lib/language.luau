@@ -17,8 +17,7 @@ local function add_globals(...: string)
     end
 end
 local function add_alias(alias: string, path: string)
-    if luau.rc.aliases[alias] and luau.rc.aliases[alias] ~= path then warn(`alias '{alias}' already defined`) end
-    luau.rc.aliases[alias] = path
+    luau.add_alias(alias, path)
 end
 
 local function setup()
