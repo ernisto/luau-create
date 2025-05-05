@@ -4,12 +4,7 @@ local infer = require('@utils/infer')
 
 -- main
 local function inquire()
-
     local project = project.project
-
-    local entry_points = infer.await_entry_points()
-    local infered_user = infer.await_git_user()
-    local folder_name = infer.get_folder_name()
 
     -- root
     local q = inquisitor(project)
@@ -21,10 +16,10 @@ local function inquire()
     }
     local kind = q.enum {
         name = 'kind',
-        default_index = if entry_points.lib then 1
-            elseif entry_points.plugin then 2
+        default_index = if project.directories.lib then 1
+            elseif project.directories.plugin then 2
             elseif env == 'roblox' then 3
-            elseif entry_points.cli then 5
+            elseif project.directories.cli then 5
             else 4,
 
         { name = 'package' },
@@ -45,12 +40,12 @@ local function inquire()
     if kind ~= 'game' then
         q.str {
             name = 'entrypoint',
-            default = `{if kind == 'package' then 'lib' else kind}/init.luau` or select(2, next(entry_points))
+            default = if kind == 'package' then 'lib' elseif kind == 'terminal' then 'cli' else kind
         }
     end
 
-    local name = q.identifier { name = 'name', default = folder_name }
-    local host = q.identifier { name = 'host', default = infered_user }
+    local name = q.identifier { name = 'name' }
+    local host = q.identifier { name = 'host' }
     q.version { name = 'version', default = "0.1.0" }
 
     q.str { name = 'description', optional = true }

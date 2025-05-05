@@ -97,41 +97,47 @@ local function inquisitor(output: { [string]: any })
     local self = {}
     
     function self.bool(prop: bool)
-        local value = io.prompt('confirm', prop.name, prop.default)
+        local value = io.prompt('confirm', prop.name, prop.default or output[prop.name])
         output[prop.name] = value
         return value
     end
     function self.int(prop: num)
         prop.parse = parse_integer :: any
+        prop.default = prop.default or output[prop.name]
         local value = prompt_text(prop :: any)
         output[prop.name] = value
         return value
     end
     function self.num(prop: num)
         prop.parse = parse_number :: any
+        prop.default = prop.default or output[prop.name]
         local value = prompt_text(prop :: any)
         output[prop.name] = value
         return value
     end
     function self.str(prop: str)
         prop.parse = prop.parse
+        prop.default = prop.default or output[prop.name]
         local value = prompt_text(prop)
         output[prop.name] = value
         return value
     end
     function self.identifier(prop: str)
         prop.parse = parse_identifier
+        prop.default = prop.default or output[prop.name]
         local value = prompt_text(prop)
         output[prop.name] = value
         return value
     end
     function self.version(prop: str<semver.ParseError>)
         prop.parse = parse_version :: any
+        prop.default = prop.default or output[prop.name]
         local value = prompt_text(prop)
         output[prop.name] = value
         return value
     end
     function self.enum(prop: enum)
+        prop.default_index = prop.default_index or table.find({unpack(prop)}, output[prop.name])
         local value = prompt_enum(prop)
         output[prop.name] = value
         return value

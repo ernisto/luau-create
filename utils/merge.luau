@@ -1,5 +1,6 @@
 local function merge(output, source,...)
     if not source then return output end
+    assert(type(output) == 'table')
 
     if output[1] or source[1] then
         for index, value in source do
@@ -10,7 +11,7 @@ local function merge(output, source,...)
 
     for index, value in source do
         if type(value) == 'table' then
-            output[index] = merge(output[index] or {}, value)
+            output[index] = if output and output[index] then merge(output[index], value) else value
         else
             output[index] = value
         end
