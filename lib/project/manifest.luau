@@ -2,6 +2,7 @@ local pesde = require('@tools/pesde/manifest')
 local wally = require('@tools/wally/manifest')
 local npm = require('@tools/npm/manifest')
 
+local license = require('@self/licenses')
 local semver = require('@pkg/semver')
 local infer = require("@utils/infer")
 local merge = require("@utils/merge")
@@ -22,7 +23,7 @@ export type project = {
     version: semver.Version,
     description: string,
     private: boolean,
-    license: 'MIT'?,
+    license: license.license?,
     authors: {string},
 
     repository: {
