@@ -4,8 +4,6 @@ local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 
-local infer = require('@utils/infer')
-
 -- vars
 local sup = false
 local manifest = require('@self/manifest')
@@ -50,7 +48,7 @@ local function setup()
     }
     
     manifest.target.lib = if project.kind == 'package' then project.entrypoint else nil
-    manifest.target.cli = infer.await_entry_points().cli
+    manifest.target.cli = project.directories.cli
     manifest.target.environment = project.environment
 
     manifest.indices = {
