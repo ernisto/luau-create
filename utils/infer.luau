@@ -11,8 +11,8 @@ local function await_entry_points(): { [string]: string }
     for _,child in fs.readDir('.') do
         local name = string.match(child, '(.*)%.luau?$') or child
         entry_points[name] = if fs.isFile(child) then string.match(child, '%.luau?$') and child
-            elseif fs.isFile(`{child}/init.luau`) then `{child}/init.luau`
-            elseif fs.isFile(`{child}/init.lua`) then `{child}/init.lua`
+            elseif fs.isFile(`{child}/init.luau`) then child
+            elseif fs.isFile(`{child}/init.lua`) then child
             else nil :: any
     end
     return entry_points
