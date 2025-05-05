@@ -5,7 +5,6 @@ local editor = require('@lib/editor')
 local file = require('@lib/file')
 
 local infer = require('@utils/infer')
-local rojo = require('@tools/rojo')
 
 -- vars
 local sup = false
@@ -26,12 +25,6 @@ local function setup()
     tracker.ignore_globs('*_packages/**', '.pesde')
     language.ignore_import_globs('**/.pesde/**')
     language.ignore_diagnostic_globs('*_packages/**', '.pesde')
-
-    if project.environment == 'roblox' then
-        rojo.setup()
-        rojo.add_system_path('roblox_packages', {'ReplicatedStorage', 'packages'})
-        rojo.add_system_path('roblox_server_packages', {'ServerScriptService', 'packages'})
-    end
 
     -- manifest
     local entry_folder_name = project.entrypoint and project.entrypoint:match("^(.-)/")
@@ -67,22 +60,13 @@ local function setup()
     if project.kind == 'script' then
         manifest.target.scripts = manifest.scripts
     end
-
     if project.environment == 'roblox' then
-        
-        if project.side == 'server' then manifest.target.environment = 'roblox_server' end
-        manifest.dev_dependencies.scripts = { name = "pesde/scripts_rojo", version = "^0.1.0", target = "lune" }
-
-        manifest.scripts.roblox_sync_config_generator = ".pesde/scripts/roblox_sync_config_generator.luau"
-        manifest.scripts.sourcemap_generator = ".pesde/scripts/sourcemap_generator.luau"
-
-        manifest.place = {
-            shared = "game.ReplicatedStorage.packages",
-            server = "game.ServerScriptService.packages",
-        }
         manifest.wally_indices = {
             default = "https://github.com/UpliftGames/wally-index"
         }
+        if project.side == 'server' then
+            manifest.target.environment = 'roblox_server'
+        end
     end
 end
 

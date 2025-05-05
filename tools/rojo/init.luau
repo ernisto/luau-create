@@ -4,6 +4,8 @@ local editor = require('@lib/editor')
 local file = require('@lib/file')
 
 local merge = require('@utils/merge')
+local pesde = require('@tools/pesde')
+local wally = require('@tools/wally')
 local vsc = require('@tools/vsc')
 local dom = require('@self/dom')
 
@@ -39,6 +41,22 @@ end
 local function setup()
     if sup then return end
     sup = true
+
+    pesde.manifest.dev_dependencies.scripts = { name = 'pesde/scripts_rojo', version = '^0.1.0', target = 'lune' }
+    pesde.manifest.scripts.roblox_sync_config_generator = '.pesde/scripts/roblox_sync_config_generator.luau'
+    pesde.manifest.scripts.sourcemap_generator = '.pesde/scripts/sourcemap_generator.luau'
+
+    pesde.manifest.place = {
+        shared = 'game.ReplicatedStorage.packages',
+        server = 'game.ServerScriptService.packages',
+    }
+    wally.manifest.place = {
+        shared = 'game.ReplicatedStorage.packages',
+        server = 'game.ServerScriptService.packages',
+    }
+
+    add_system_path('roblox_packages', {'ReplicatedStorage', 'packages'})
+    add_system_path('roblox_server_packages', {'ServerScriptService', 'packages'})
 
     tracker.ignore_globs('sourcemap.json', 'dist/**')
     editor.hide_globs('sourcemap.json', 'dist/**')
