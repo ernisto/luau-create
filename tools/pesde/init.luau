@@ -1,55 +1,89 @@
+local project = require('@lib/project').project
 local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 
-local serde = require('@lune/serde')
-local fs = require('@lune/fs')
-
-local merge = require('@utils/merge')
-
--- utils
-local function get_scripts(root: string)
-    local scripts = {}
-    if not fs.isDir(root) then return end
-    for _,name_ext in fs.readDir('scripts') do
-        local name = string.match(name_ext, "(.-)%.luau?$")
-        if not name then continue end
-        if not fs.isFile(name) then continue end
-        scripts[name] = `{root}/{name_ext}`
-    end
-end
+local infer = require('@utils/infer')
+local rojo = require('@tools/rojo')
 
 -- vars
 local sup = false
-local manifest: { [string]: any } = {
-    includes = {},
-    engine = {},
-    target = {
-        scripts = {}
-    },
-    authors = {},
-    scripts = get_scripts('scripts') or {},
-    dependencies = {},
-    dev_dependencies = {},
-}
-merge(manifest, file.read_toml('pesde.toml'))
+local manifest = require('@self/manifest')
 
 -- functions
 local function save()
     if not sup then return end
-    fs.writeFile('pesde.toml', serde.encode('toml', manifest, true))
+    file.write_toml('pesde.toml', manifest)
 end
 
 local function setup()
     if sup then return end
     sup = true
-
+    
     editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
     editor.lock_globs('*_packages/**', '.pesde')
     tracker.ignore_globs('*_packages/**', '.pesde')
     language.ignore_import_globs('**/.pesde/**')
     language.ignore_diagnostic_globs('*_packages/**', '.pesde')
+
+    if project.environment == 'roblox' then
+        rojo.setup()
+        rojo.add_system_path('roblox_packages', {'ReplicatedStorage', 'packages'})
+        rojo.add_system_path('roblox_server_packages', {'ServerScriptService', 'packages'})
+    end
+
+    -- manifest
+    local entry_folder_name = project.entrypoint and project.entrypoint:match("^(.-)/")
+    manifest.engine = {
+        pesde = "^0.6.0",
+        lune = if project.environment == 'lune' then "^0.9.0" else nil,
+    }
+
+    manifest.name = `{project.host}/{project.name:gsub('-', '_')}`
+    manifest.version = tostring(project.version)
+    manifest.description = project.description
+    manifest.license = project.license
+    manifest.authors = project.authors
+    manifest.repository = project.repository and project.repository.url
+    manifest.private = project.private
+
+    manifest.includes = {
+        "pesde.toml",
+        "README.md",
+        "LICENSE",
+        "docs/**/*.md",
+        if entry_folder_name then `{entry_folder_name}/**` else project.entrypoint :: any
+    }
+    
+    manifest.target.lib = if project.kind == 'package' then project.entrypoint else nil
+    manifest.target.cli = infer.await_entry_points().cli
+    manifest.target.environment = project.environment
+
+    manifest.indices = {
+        default = "https://github.com/pesde-pkg/index"
+    }
+
+    if project.kind == 'script' then
+        manifest.target.scripts = manifest.scripts
+    end
+
+    if project.environment == 'roblox' then
+        
+        if project.side == 'server' then manifest.target.environment = 'roblox_server' end
+        manifest.dev_dependencies.scripts = { name = "pesde/scripts_rojo", version = "^0.1.0", target = "lune" }
+
+        manifest.scripts.roblox_sync_config_generator = ".pesde/scripts/roblox_sync_config_generator.luau"
+        manifest.scripts.sourcemap_generator = ".pesde/scripts/sourcemap_generator.luau"
+
+        manifest.place = {
+            shared = "game.ReplicatedStorage.packages",
+            server = "game.ServerScriptService.packages",
+        }
+        manifest.wally_indices = {
+            default = "https://github.com/UpliftGames/wally-index"
+        }
+    end
 end
 
 -- module

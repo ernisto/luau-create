@@ -3,14 +3,9 @@ local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 
-local merge = require('@utils/merge')
-
 -- vars
 local sup = false
-local manifest: { [string]: any } = {
-    directories = {}
-}
-merge(manifest, file.read_json('package.json') or {})
+local manifest = require('@self/manifest')
 
 -- functions
 local function save()
