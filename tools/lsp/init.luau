@@ -1,3 +1,4 @@
+local project = require('@lib/project')
 local merge = require('@utils/merge')
 local vsc = require('@tools/vsc')
 
@@ -33,7 +34,7 @@ local function setup()
     merge(vsc.settings, {
         ['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports,
         ['luau-lsp.ignoreGlobs'] = ignore_diagnostics,
-        ['luau-lsp.completion.imports.requireStyle'] = 'alwaysRelative',
+        ['luau-lsp.completion.imports.requireStyle'] = if project.project.kind == 'package' then 'alwaysRelative' else 'alwaysAbsolute',
         ['luau-lsp.completion.imports.stringRequires.enabled'] = true,
         ['luau-lsp.fflags.enableNewSolver'] = false,
         ['luau-lsp.bytecode.vectorCtor'] = 'create',
