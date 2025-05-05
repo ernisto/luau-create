@@ -14,13 +14,14 @@ type luaurc = {
 }
 
 -- vars
+local sup = false
 local rc: luaurc = {
     languageMode = 'strict',
     aliases = {},
     globals = {},
     lint = {},
 }
-local sup = false
+merge(rc, file.read_json('.luaurc'))
 
 -- functions
 local function save()
@@ -36,7 +37,6 @@ end
 local function setup()
     if sup then return end
     sup = true
-    merge(rc, file.read_json('.luaurc'))
 
     editor.hide_globs('.luaurc')
     tracker.set_attribute('*.luau', 'text', 'eol=lf')
