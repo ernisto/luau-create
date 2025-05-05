@@ -28,12 +28,19 @@ end
 local function setup()
     if sup then return end
     sup = true
+
+    vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
     merge(vsc.settings, {
         ['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports,
         ['luau-lsp.ignoreGlobs'] = ignore_diagnostics,
+        ['luau-lsp.completion.imports.requireStyle'] = 'alwaysRelative',
+        ['luau-lsp.completion.imports.stringRequires.enabled'] = true,
+        ['luau-lsp.fflags.enableNewSolver'] = false,
+        ['luau-lsp.bytecode.vectorCtor'] = 'create',
+        ['luau-lsp.bytecode.vectorType'] = 'vector',
+        ['luau-lsp.bytecode.vectorLib'] = 'vector',
+        ['luau-lsp.platform.type'] = 'standard',
     })
-
-    vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
 end
 
 -- module

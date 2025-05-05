@@ -45,6 +45,13 @@ local function setup()
     editor.lock_globs('sourcemap.json', 'dist/**')
     vsc.recommend_extensions('evaera.vscode-rojo')
 
+    merge(vsc.settings, {
+        ['luau-lsp.sourcemap.rojoProjectFile'] = 'dev.project.json',
+        ['luau-lsp.diagnostics.strictDatamodelTypes'] = true,
+        ['luau-lsp.sourcemap.includeNonScripts'] = true,
+        ['luau-lsp.diagnostics.workspace'] = true,
+    })
+
     if project.project.kind == 'game' then
         file.write_str('server/init.server.luau')
         file.write_str('client/init.client.luau')
