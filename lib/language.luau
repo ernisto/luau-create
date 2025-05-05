@@ -1,7 +1,6 @@
-local project = require('@lib/project')
+local project = require('@lib/project').project
 local file = require('@lib/file')
 
-local infer = require('@utils/infer')
 local luau = require('@tools/luau')
 local lsp = require('@tools/lsp')
 
@@ -24,13 +23,13 @@ local function add_alias(alias: string, path: string)
 end
 
 local function setup()
-    if project.project.entrypoint then
-        file.write_str(project.project.entrypoint)
+    if project.entrypoint then
+        file.write_default_str(project.entrypoint..'/init.luau')
+        add_alias(project.entrypoint, project.entrypoint)
     end
-    for alias, path in infer.await_entry_points() do
-        local dir = string.match(path, "(.*)/([^/]+)$")
-        file.write_str(path)
-        add_alias(alias, dir or path)
+    for alias, dir in project.directories do
+        file.write_default_str(dir..'/init.luau')
+        add_alias(alias, dir)
     end
 end
 

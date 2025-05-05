@@ -70,11 +70,11 @@ local function setup()
         ['luau-lsp.diagnostics.workspace'] = true,
     })
 
-    if project.project.kind == 'game' then
-        file.write_str('server/init.server.luau')
-        file.write_str('client/init.client.luau')
-        file.write_str('config/init.toml')
-        file.write_str('shared/.gitkeep')
+    if project.kind == 'game' then
+        file.write_default_str('server/init.server.luau')
+        file.write_default_str('client/init.client.luau')
+        file.write_default_str('config/init.toml')
+        file.write_default_str('shared/.gitkeep')
     end
 end
 
