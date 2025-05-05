@@ -1,5 +1,5 @@
+local project = require('@lib/project').project
 local tracker = require('@lib/tracker')
-local project = require('@lib/project')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 
@@ -19,7 +19,7 @@ merge({ tree = tree }, file.read_json('dev.project.json'))
 -- functions
 local function save()
     if not sup then return end
-    file.write_json('dev.project.json', { name = project.project.name, tree = tree })
+    file.write_json('dev.project.json', { name = project.name, tree = tree })
 end
 
 local function add_system_path(system_path: string, roblox_path: {string}, place: string?)
@@ -47,12 +47,12 @@ local function setup()
     pesde.manifest.scripts.sourcemap_generator = '.pesde/scripts/sourcemap_generator.luau'
 
     pesde.manifest.place = {
-        shared = 'game.ReplicatedStorage.packages',
         server = 'game.ServerScriptService.packages',
+        shared = 'game.ReplicatedStorage.packages',
     }
     wally.manifest.place = {
-        shared = 'game.ReplicatedStorage.packages',
         server = 'game.ServerScriptService.packages',
+        shared = 'game.ReplicatedStorage.packages',
     }
 
     add_system_path('roblox_packages', {'ReplicatedStorage', 'packages'})
@@ -75,6 +75,15 @@ local function setup()
         file.write_default_str('client/init.client.luau')
         file.write_default_str('config/init.toml')
         file.write_default_str('shared/.gitkeep')
+
+        add_system_path('server/init.server.luau', {'ServerScriptService', 'server'})
+        add_system_path('client/init.server.luau', {'ReplicatedStorage', 'client'})
+        add_system_path('client/init.server.luau', {'ReplicatedStorage', 'config'})
+        add_system_path('client/init.server.luau', {'ReplicatedStorage', 'shared'})
+    elseif project.kind == 'package' then
+        add_system_path(assert(project.entrypoint), {'ReplicatedStorage', 'packages', project.name})
+    elseif project.kind == 'plugin' then
+        add_system_path(assert(project.entrypoint), {'ServerStorage', project.name})
     end
 end
 
