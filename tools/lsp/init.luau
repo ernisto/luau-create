@@ -41,6 +41,8 @@ local function setup()
         ['luau-lsp.bytecode.vectorLib'] = 'vector',
         ['luau-lsp.platform.type'] = 'standard',
     })
+    ignore_imports = vsc.settings['luau-lsp.completion.imports.ignoreGlobs']
+    ignore_diagnostics = vsc.settings['luau-lsp.ignoreGlobs']
 end
 
 -- module
