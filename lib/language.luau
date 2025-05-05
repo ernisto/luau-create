@@ -29,6 +29,7 @@ local function setup()
     end
     for alias, path in infer.await_entry_points() do
         local dir = string.match(path, "(.*)/([^/]+)$")
+        file.write_str(path)
         add_alias(alias, dir or path)
     end
 end
