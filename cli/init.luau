@@ -10,7 +10,7 @@ if not tool_name then
     inquire_project()
 
     for _,s_tool: any in create.tools do s_tool.setup() end
-    create.roblox_sync.setup()
+    create.language.setup()
     create.editor.setup()
     create.project.setup()
 else

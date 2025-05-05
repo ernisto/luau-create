@@ -1,4 +1,8 @@
 local tracker = require('@lib/tracker')
+local project = require('@lib/project')
+local file = require('@lib/file')
+
+local infer = require('@utils/infer')
 local luau = require('@tools/luau')
 local lsp = require('@tools/lsp')
 
@@ -22,6 +26,14 @@ end
 
 local function setup()
     tracker.set_attribute('*.luau', 'text', 'eol=lf')
+
+    if project.project.entrypoint then
+        file.write_str(project.project.entrypoint)
+    end
+    for alias, path in infer.await_entry_points() do
+        local dir = string.match(path, "(.*)/([^/]+)$")
+        add_alias(alias, dir or path)
+    end
 end
 
 -- module

@@ -5,7 +5,7 @@ local cwd = process.cwd
 
 -- functions
 local entry_points
-local function await_entry_points()
+local function await_entry_points(): { [string]: string }
     if entry_points then return entry_points end
     entry_points = {}
     for _,child in fs.readDir('.') do
@@ -13,7 +13,7 @@ local function await_entry_points()
         entry_points[name] = if fs.isFile(child) then string.match(child, '%.luau?$') and child
             elseif fs.isFile(`{child}/init.luau`) then `{child}/init.luau`
             elseif fs.isFile(`{child}/init.lua`) then `{child}/init.lua`
-            else nil
+            else nil :: any
     end
     return entry_points
 end
