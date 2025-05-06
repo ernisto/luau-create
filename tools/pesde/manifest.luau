@@ -27,7 +27,7 @@ export type manifest = {
     version: version?,
     description: string?,
 
-    license: license.license?,
+    license: license.license_name?,
     authors: {author},
 
     private: boolean?,

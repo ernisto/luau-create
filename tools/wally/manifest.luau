@@ -9,7 +9,7 @@ export type manifest = {
         description: string?,
         version: version?,
 
-        license: license.license?,
+        license: license.license_name?,
         authors: {author},
 
         realm: 'server' | 'shared'?,

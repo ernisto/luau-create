@@ -21,7 +21,7 @@ export type project = {
     version: semver.Version,
     description: string,
     private: boolean,
-    license: license.license?,
+    license: license.license_name?,
     authors: {string},
 
     homepage: string,

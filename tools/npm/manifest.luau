@@ -27,7 +27,7 @@ export type manifest = {
     name: scope_name?,
     version: version?,
     description: string?,
-    license: license.license?,
+    license: license.license_name?,
     keywords: { string },
     
     exports: { [string]: glob },
