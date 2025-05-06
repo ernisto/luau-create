@@ -9,8 +9,6 @@ local merge = require("@utils/merge")
 
 -- defs
 export type project = {
-    inquire: () -> (),
-
     environment: 'roblox' | 'lune' | 'luau',
     kind: 'package' | 'terminal' | 'script' | 'plugin' | 'game',
     side: 'client' | 'shared' | 'server'?,
@@ -26,39 +24,58 @@ export type project = {
     license: license.license?,
     authors: {string},
 
+    homepage: string,
     repository: {
         type: 'git' | string,
         url: string,
     }?,
-
-    homepage: string,
+    funding: {
+        type: 'individual' | 'patreon',
+        url: string,
+    }?,
     bugs: {
-        url: string
-    },
+        email: string?,
+        url: string?
+    }?,
+
+    cpu: {npm.cpu}?,
+    os: {npm.os}?,
 }
 
 -- functions
 local none: any = nil
+local function concat_people(people: npm.people): string
+    if type(people) == 'string' then return people end
+    return people.name
+        .. (people.email and ` <{people.email}>` or '')
+        .. (people.url and ` ({people.url})` or '')
+end
 local function await_maybe_extract_npm()
-    return table.clone(npm)
+    local project: project = table.clone(npm) :: any
+
+    local peoples = {npm.author, unpack(npm.contribuitors) }
+    for index, people in peoples do peoples[index] = concat_people(people :: any) end
+
+    project.entrypoint = npm.main
+    project.authors = peoples :: any
+    return project
 end
 local function await_maybe_extract_wally()
     local wally = wally.package
-    local project = table.clone(wally)
+    local project: project = table.clone(wally) :: any
 
-    local name, host = string.match(wally.name or '', "(%w[_]+)/(%w[_]+)")
-
-    project.repository = pesde.repository and { type = 'git', url = pesde.repository }
+    local host, name = string.match(wally.name or '', "(%w[_]+)/(%w[_]+)")
+    project.repository = wally.repository and { type = 'git', url = wally.repository }
     project.environment = 'roblox'
     project.side = wally.realm
-    project.name = name
-    project.host = host
+    project.name = name :: any
+    project.host = host :: any
     return project
 end
 local function await_maybe_extract_pesde()
     local project: project = table.clone(pesde) :: any
 
-    local name, host = string.match(pesde.name or '', "(%w[_]+)/([%w_]+)")
+    local host, name = string.match(pesde.name or '', "(%w[_]+)/([%w_]+)")
     local target = pesde.target
 
     project.name = if name and name:gsub('_', '-') == infer.get_folder_name() then none else name
@@ -97,8 +114,13 @@ project.entrypoint = if project.kind == 'game' then nil
     else project.kind
 
 project.homepage = `{assert(project.repository).url}#readme`
+project.funding = {
+    type = 'patreon',
+    url = `https://github.com/sponsors/{project.host}`,
+}
 project.bugs = {
-    url = `{assert(project.repository).url}/issues`
+    url = `{assert(project.repository).url}/issues`,
+    email = infer.await_git_email(),
 }
 
 merge(project, await_maybe_extract_npm() or {}, await_maybe_extract_wally() or {}, await_maybe_extract_pesde() or {})

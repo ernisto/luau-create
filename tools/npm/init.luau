@@ -1,3 +1,4 @@
+local project = require('@lib/project').project
 local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
@@ -22,6 +23,36 @@ local function setup()
     tracker.ignore_globs('node_modules/**')
     language.ignore_import_globs('**/node_modules/**')
     language.ignore_diagnostic_globs('node_modules/**')
+
+    manifest.name = `{project.host}/{project.name:gsub('-', '_')}`
+    manifest.version = tostring(project.version)
+    manifest.description = project.description
+    manifest.license = project.license
+    manifest.keywords = {project.environment, project.kind, project.side :: any}
+
+    manifest.contribuitors = {unpack(project.authors, 2)}
+    manifest.author = project.authors[1]
+
+    manifest.private = project.private
+    manifest.repository = project.repository :: any
+    manifest.homepage = project.homepage
+    manifest.funding = project.funding
+    manifest.bugs = project.bugs :: any
+
+    manifest.main = `{project.entrypoint}/init.luau`
+    manifest.files = {
+        "package.json",
+        "README.md",
+        "LICENSE",
+        project.entrypoint and `{project.entrypoint}/**` :: any
+    }
+
+    -- manifest.publicConfigs = {}
+    -- manifest.config = {}
+
+    -- manifest.workspaces = {}
+    -- manifest.exports = {}
+    -- manifest.engines = {}
 end
 
 -- module
