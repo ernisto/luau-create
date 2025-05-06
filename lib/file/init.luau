@@ -1,3 +1,4 @@
+local format = require("@lib/file/format")
 local serde = require('@lune/serde')
 local fs = require('@lune/fs')
 
@@ -71,7 +72,7 @@ local function write_str(path: path, str: string)
     return fs.writeFile(path, str)
 end
 local function write_toml(path: path, data: data)
-    write_str(path, serde.encode('toml', data, true))
+    write_str(path, format(data))
 end
 local function write_json(path: path, data: data)
     write_str(path, serde.encode('json', data, true))
