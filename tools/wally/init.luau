@@ -1,9 +1,9 @@
-local infer = require('@utils/infer')
 local project = require('@lib/project').project
 local language = require('@lib/language')
 local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
+local vsc = require('@tools/vsc')
 
 -- vars
 local sup = false
@@ -24,31 +24,30 @@ local function setup()
     tracker.ignore_globs('*Packages/**')
     language.ignore_import_globs('**/_Index/**')
     language.ignore_diagnostic_globs('*Packages/**')
-
-    local entry_folder_name = project.entrypoint and project.entrypoint:match("^(.-)/")
+    vsc.recommend_extensions('filiptibell.tooling-language-server')
 
     manifest.package.name = `{project.host}/{project.name:gsub('-', '_')}`
     manifest.package.version = tostring(project.version)
     manifest.package.description = project.description
+
     manifest.package.license = project.license
-    manifest.package.authors = project.authors or {
-        project.host .. if infer.await_git_email() then ` <{infer.await_git_email()}>` else ''
-    }
+    manifest.package.authors = project.authors
+
     manifest.package.repository = project.repository and project.repository.url
     manifest.package.homepage = project.homepage
     manifest.package.private = project.private
 
-    manifest.package.exclude = {}
+    manifest.package.exclude = {"**"}
     manifest.package.include = {
         "wally.toml",
         "README.md",
         "LICENSE",
         "docs/**/*.md",
-        if entry_folder_name then `{entry_folder_name}/**` else project.entrypoint :: any
+        project.entrypoint and `{project.entrypoint}/**` :: any
     }
 
     manifest.package.realm = if project.side == 'server' then 'server' else 'shared'
-    manifest.package.index = "https://github.com/UpliftGames/wally-index"
+    manifest.package.registry = "https://github.com/UpliftGames/wally-index"
 
     manifest.place = {
         shared = "game.ReplicatedStorage.packages",
