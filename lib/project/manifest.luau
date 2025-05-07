@@ -56,8 +56,11 @@ local function await_maybe_extract_npm()
     local peoples = {npm.author, unpack(npm.contribuitors) }
     for index, people in peoples do peoples[index] = concat_people(people :: any) end
 
+    local host, name = string.match(npm.name or '', "(%w[_]+)/(%w[_]+)")
     project.entrypoint = npm.main
     project.authors = peoples :: any
+    project.host = host :: any
+    project.name = name :: any
     return project
 end
 local function await_maybe_extract_wally()
@@ -79,7 +82,7 @@ local function await_maybe_extract_pesde()
     local target = pesde.target
 
     project.name = if name and name:gsub('_', '-') == infer.get_folder_name() then none else name
-    project.host = if host and host:gsub('_', '-') == infer.await_git_user() then none else name
+    project.host = if host and host:gsub('_', '-') == infer.await_git_user() then none else host
     project.repository = pesde.repository and { type = 'git', url = pesde.repository }
     project.environment = if target and target.environment ~= 'roblox_server' then target.environment else none
     project.kind = if target.lib then 'package' elseif target.bin then 'terminal' elseif target.scripts then 'script' else none
