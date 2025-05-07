@@ -8,8 +8,7 @@ local version = '1.20.3'
 
 -- vars
 local sup = false
-local manifest = {}
-merge(manifest, file.read_toml('stylua.toml') or {})
+local manifest = require('@self/manifest')
 
 -- functions
 local function save()
