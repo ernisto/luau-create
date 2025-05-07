@@ -9,6 +9,9 @@ local tools = table.freeze {
     rojo = require('@tools/rojo'),
 
     -- package
+    foreman = require('@tools/foreman'),
+    aftman = require('@tools/aftman'),
+    rokit = require('@tools/rokit'),
     pesde = require('@tools/pesde'),
     wally = require('@tools/wally'),
     npm = require('@tools/npm'),
