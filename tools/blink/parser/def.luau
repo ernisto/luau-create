@@ -13,7 +13,6 @@ type type_expr = type_expr.type_expr
 type field = type_expr.field
 local parse_field_block = type_expr.parse_field_block
 local parse_type_expr = type_expr.parse_type_expr
-local parse_generic_expr = type_expr.parse_generic_expr
 
 local misc = require('@self/misc')
 local parse_list = misc.parse_list
@@ -97,6 +96,17 @@ local function parse_event_def(): event_def?
     }
 end
 
+-- helpers
+export type type_params_def = { string }
+function parse_type_params_def(): type_params_def?
+    if not scan_char('<') then return end
+    local args = parse_list(scan_word)
+
+    expect_char('>')
+    return args
+end
+
+-- defs
 export type alias_def = { kind: 'alias', name: string, value: type_expr }
 local function parse_alias_def(): alias_def?
     if not scan_word('type') then return end
@@ -117,28 +127,29 @@ local function parse_enum_option(): enum_option?
     return { name = name, fields = fields }
 end
 
-export type enum_def = { kind: 'enum', name: string, options: {enum_option} }
+export type enum_def = { kind: 'enum', name: string, params: type_params_def?, options: {enum_option} }
 local function parse_enum_def(): enum_def?
     if not scan_word('enum') then return end
-
     local name = scan_word() or warn(`expected identifier`)
+
+    local params = parse_type_params_def()
     expect_char('=')
 
     expect_char('{')
     local options = parse_list(parse_enum_option)
 
     expect_char('}')
-    return { kind = 'enum', name = name, options = options }
+    return { kind = 'enum', name = name, params = params, options = options }
 end
 
-export type struct_def = { kind: 'struct', name: string, fields: type_expr.field_block, generics: type_expr.generic_expr? }
+export type struct_def = { kind: 'struct', name: string, params: type_params_def?, fields: type_expr.field_block }
 local function parse_struct_def(): struct_def?
     if not scan_word('struct') then return end
     local name = scan_word() or warn(`expected identifier`)
-    local generics = parse_generic_expr()
+    local params = parse_type_params_def()
 
     local fields = parse_field_block() or warn(`expected '\{'`)
-    return { kind = 'struct', name = name, fields = fields, generics = generics }
+    return { kind = 'struct', name = name, fields = fields, params = params }
 end
 
 export type set_def = { kind: 'set', name: string, flags: {string} }
@@ -153,12 +164,13 @@ local function parse_set_def(): set_def?
     return { kind = 'set', name = name, flags = flags }
 end
 
-export type map_def = { kind: 'map', key: type_expr, value: type_expr }
+export type map_def = { kind: 'map', params: type_params_def?, key: type_expr, value: type_expr }
 local function parse_map_def(): map_def?
     if not scan_word('map') then return end
     local name = scan_word()
 
     expect_char('=')
+    local params = parse_type_params_def()
     expect_char('{')
 
     expect_char('[')
@@ -169,7 +181,7 @@ local function parse_map_def(): map_def?
     local value = parse_type_expr() or warn(`expected type`)
 
     expect_char('}')
-    return { kind = 'map', key = key, value = value }
+    return { kind = 'map', params = params, key = key, value = value }
 end
 
 export type def = struct_def | alias_def | event_def | func_def | enum_def | set_def | map_def
