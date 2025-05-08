@@ -29,16 +29,14 @@ end
 local function scan_word(exact_word: string?): string?
     if not have_cached_word then
         content, word = scan_pattern('^((%w+)%s*)')
-        if not content then return end
         have_cached_word = true
     end
     if not content then return end
     if exact_word and word ~= exact_word then return end
 
     advance(string.len(content))
-    have_cached_word = false
-
     skip_comments()
+
     return word
 end
 local function scan_char(exact_char: string): string?
