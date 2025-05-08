@@ -12,6 +12,10 @@ local function skip_comments()
         if content then cursor += string.len(content) end
     until content == nil
 end
+local function skip_spaces()
+    local content = scan_pattern('^(%s*)')
+    if content then cursor += string.len(content) end
+end
 
 -- cached word scanner
 local have_cached_word = false
@@ -19,6 +23,7 @@ local content, word: string?
 local function scan_word(exact_word: string?): string?
     if not have_cached_word then
         content, word = scan_pattern('^((%w+)%s*)')
+        if not content then return end
         have_cached_word = true
     end
     if not content then return end
@@ -66,22 +71,22 @@ local function scan_num(): string?
     return num
 end
 local function scan_raw(str: string): string?
-    local content, raw = scan_pattern(str)
-    if not content then return end
+    
+    local raw = string.sub(input, cursor, cursor + string.len(str)-1)
 
-    cursor += string.len(content)
+    if not raw or raw ~= str then return end
+
+    cursor += string.len(raw)
+    skip_spaces()
     skip_comments()
-    return raw
+    return content
 end
 
 local function lex(str)
     input = str
     cursor = 1
 
-    -- skip spaces
-    local content = scan_pattern('^(%s+)')
-    if content then cursor += string.len(content) end
-
+    skip_spaces()
     skip_comments()
 end
 
