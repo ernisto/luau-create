@@ -37,13 +37,15 @@ local function parse_list<T>(parse: () -> T?): {T}
     return nodes
 end
 
-export type range = { min: number, max: number? }
+export type range = { min: number?, max: number? }
 local function parse_range(): range?
     local min = scan_num()
-    if not min and not scan_raw('..') then return end
-    local max = scan_num()
+    local mid = scan_raw('..')
 
-    return { min = tonumber(min) or error('impossible'), max = tonumber(max) }
+    if not min and not mid then return end
+    local max = mid and scan_num()
+
+    return { min = if min then tonumber(min) or error('impossible') else nil, max = tonumber(max) }
 end
 
 -- module
