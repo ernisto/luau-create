@@ -1,0 +1,19 @@
+struct a {
+    foo: u8
+}
+
+struct b {
+    bar: u8,
+}
+
+struct c<A, B, C> {
+    a: A,
+    b: b,
+    c: C
+} 
+
+struct merge {
+    ..a,
+    ..b,
+    ..c<u8, u8, u8>,
+}
