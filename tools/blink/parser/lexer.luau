@@ -64,7 +64,7 @@ local function scan_str(): string?
     return str
 end
 local function scan_num(): string?
-    local content, num = scan_pattern("^((%d+)%s*)")
+    local content, num = scan_pattern("^((%-?%d*%.?%d+)%s*)")
     if not content then return end
 
     advance(string.len(content))
