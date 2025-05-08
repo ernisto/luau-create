@@ -2,8 +2,17 @@
 local input: string
 local cursor: number
 
+-- token cache
+local have_cached_word = false
+local content, word: string?
+
+-- helpers
 local function scan_pattern(pattern: string)
     return select(3, string.find(input, pattern, cursor))
+end
+local function advance(len: number)
+    cursor += len
+    have_cached_word = false
 end
 
 local function skip_comments()
@@ -17,9 +26,6 @@ local function skip_spaces()
     if content then cursor += string.len(content) end
 end
 
--- cached word scanner
-local have_cached_word = false
-local content, word: string?
 local function scan_word(exact_word: string?): string?
     if not have_cached_word then
         content, word = scan_pattern('^((%w+)%s*)')
@@ -29,19 +35,19 @@ local function scan_word(exact_word: string?): string?
     if not content then return end
     if exact_word and word ~= exact_word then return end
 
-    cursor += string.len(content)
+    advance(string.len(content))
     have_cached_word = false
 
     skip_comments()
     return word
 end
 local function scan_char(exact_char: string): string?
-
     local content, char = scan_pattern(`^((.)%s*)`)
     if not content then return end
-    if char ~= exact_char then return end
     
-    cursor += string.len(content)
+    if char ~= exact_char then return end
+    advance(string.len(content))
+
     skip_comments()
     return char
 end
@@ -51,33 +57,30 @@ end
 
 local function scan_str(): string?
     local content, str = scan_pattern("^(\'(.-)\'%s*)")
-    if not content then
-        content, str = scan_pattern("^(\"(.-)\"%s*)")
-    end
+    if not content then content, str = scan_pattern("^(\"(.-)\"%s*)") end
     if not content then return end
 
-    cursor += string.len(content)    
+    advance(string.len(content))    
     skip_comments()
 
     return str
 end
 local function scan_num(): string?
     local content, num = scan_pattern("^((%d+)%s*)")
-    
     if not content then return end
-    cursor += string.len(content)
 
+    advance(string.len(content))
     skip_comments()
+
     return num
 end
 local function scan_raw(str: string): string?
-    
     local raw = string.sub(input, cursor, cursor + string.len(str)-1)
-
     if not raw or raw ~= str then return end
 
-    cursor += string.len(raw)
+    advance(string.len(raw))
     skip_spaces()
+
     skip_comments()
     return raw
 end
