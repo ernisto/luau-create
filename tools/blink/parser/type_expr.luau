@@ -128,9 +128,19 @@ function parse_field_block(): field_block?
     return fields
 end
 
+export type generic_expr = { string }
+function parse_generic_expr(): generic_expr?
+    if not scan_char('<') then return end
+    local args = parse_list(scan_word)
+
+    expect_char('>')
+    return args
+end
+
 -- module
 return table.freeze {
     parse_field_block = parse_field_block,
     parse_type_expr = parse_type_expr,
     parse_field = parse_field,
+    parse_generic_expr = parse_generic_expr
 }

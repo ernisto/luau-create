@@ -20,12 +20,12 @@ local function parse_option()
 
     local name = scan_word() or warn(`expected identifier`)
     expect_char('=')
-
+    
     local expr = parse_expr() or warn(`expected expr`)
     return { kind = 'option', name = name, value = expr }
 end
 
-export type import = { kind: 'import', path: string, name: string }
+export type import = { kind: 'import', path: string, name: string? }
 local function parse_import()
     if not scan_word('import') then return end
     local path = scan_str() or warn(`expected string`)

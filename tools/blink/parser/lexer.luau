@@ -79,7 +79,7 @@ local function scan_raw(str: string): string?
     cursor += string.len(raw)
     skip_spaces()
     skip_comments()
-    return content
+    return raw
 end
 
 local function lex(str)

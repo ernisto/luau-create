@@ -13,6 +13,7 @@ type type_expr = type_expr.type_expr
 type field = type_expr.field
 local parse_field_block = type_expr.parse_field_block
 local parse_type_expr = type_expr.parse_type_expr
+local parse_generic_expr = type_expr.parse_generic_expr
 
 local misc = require('@self/misc')
 local parse_list = misc.parse_list
@@ -130,13 +131,14 @@ local function parse_enum_def(): enum_def?
     return { kind = 'enum', name = name, options = options }
 end
 
-export type struct_def = { kind: 'struct', name: string, fields: type_expr.field_block }
+export type struct_def = { kind: 'struct', name: string, fields: type_expr.field_block, generics: type_expr.generic_expr? }
 local function parse_struct_def(): struct_def?
     if not scan_word('struct') then return end
     local name = scan_word() or warn(`expected identifier`)
+    local generics = parse_generic_expr()
 
     local fields = parse_field_block() or warn(`expected '\{'`)
-    return { kind = 'struct', name = name, fields = fields }
+    return { kind = 'struct', name = name, fields = fields, generics = generics }
 end
 
 export type set_def = { kind: 'set', name: string, flags: {string} }
