@@ -72,17 +72,24 @@ local function parse_struct_expr(): struct_expr?
     return scan_word('struct') and { kind = 'struct', fields = parse_field_block() or {} }
 end
 
-export type read_type = { kind: 'read_type', name: string, args: {type_expr}? }
+export type read_type = { kind: 'read_type', names: {string}, args: {type_expr}? }
 local function parse_read_type(): read_type?
     local name = scan_word()
-    local args
+    if not name then return end
 
+    local names = {name}
+    while scan_char('.') do
+        name = scan_word() or warn(`identifier expected`)
+        table.insert(names, name)
+    end
+
+    local args
     if scan_char('<') then
         args = parse_list(parse_type_expr)
         expect_char('>')
     end
 
-    return name and { kind = 'read_type', name = name, args = args }
+    return name and { kind = 'read_type', names = names, args = args }
 end
 
 export type type_expr = struct_expr | tuple_expr | read_type | map_expr | suffix
