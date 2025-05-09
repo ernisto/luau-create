@@ -9,6 +9,11 @@ local stack_colors = {
 -- defs
 type stack = { [any]: any }
 
+-- vars
+local string_color = color.light_yellow
+local num_color = color.blue
+local boolean_color = color.yellow
+
 -- functions
 local function is_array<V>(tab: V): boolean
     return typeof(tab) == 'table' and typeof(next(tab) :: any) == 'number'
@@ -19,10 +24,10 @@ end
 
 local function display(value: any, _stack: stack?): string
     
-    local stack = (_stack or {}) :: stack
+    local stack = (_stack and table.clone(_stack) or {}) :: stack
     table.insert(stack, value)
 
-    if stack[value] then
+    if typeof(value) == 'table' and stack[value] then
         return color.bold(`depth({stack[value]}) {value}`)
     end
 
@@ -107,11 +112,11 @@ local function display(value: any, _stack: stack?): string
         end
 
     elseif typeof(value) == 'string' then
-        out = color.green(`'{value}'`)
+        out = string_color(`'{value}'`)
     elseif typeof(value) == 'number' then
-        out = color.blue(tostring(value))
+        out = num_color(tostring(value))
     elseif typeof(value) == 'boolean' then
-        out = color.yellow(tostring(value))
+        out = boolean_color(tostring(value))
     end
 
     table.remove(stack)
