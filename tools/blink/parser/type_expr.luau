@@ -7,6 +7,8 @@ local scan_raw = lexer.scan_raw
 local misc = require('./misc')
 local parse_range = misc.parse_range
 local parse_list = misc.parse_list
+local parse_expr = misc.parse_expr
+type expr = misc.expr
 type range = misc.range
 
 local parse_type_expr
@@ -21,13 +23,13 @@ local function parse_array(atom: type_expr): array?
     return { kind = 'array', expr = atom, range = range }
 end
 
-export type ranged = { kind: 'ranged', expr: type_expr, range: range }
-local function parse_ranged(atom: type_expr): ranged?
+export type attribute = { kind: 'attribute', expr: type_expr, value: range | expr }
+local function parse_attribute(atom: type_expr): attribute?
     if not scan_char('(') then return end
-    local range = parse_range() or warn(`expression expected`)
+    local value = parse_range() or parse_expr() or warn(`expression expected`)
 
     expect_char(')')
-    return { kind = 'ranged', expr = atom, range = range }
+    return { kind = 'attribute', expr = atom, value = value }
 end
 
 export type optional = { kind: 'optional', expr: type_expr }
@@ -35,10 +37,10 @@ local function parse_optional(atom: type_expr): optional?
     return scan_char('?') and { kind = 'optional', expr = atom }
 end
 
-export type suffix = optional | ranged | array
+export type suffix = optional | attribute | array
 local function parse_suffix(atom: type_expr): suffix?
     return parse_array(atom)
-        or parse_ranged(atom)
+        or parse_attribute(atom)
         or parse_optional(atom)
 end
 
