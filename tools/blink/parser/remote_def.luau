@@ -20,24 +20,29 @@ local function parse_options(): { [string]: expr | type_expr }
         local name = scan_word()
         if not name then break end
 
+        name = string.lower(name)
+
         expect_char(':')
-        local value = parse_expr() or parse_type_expr() or warn(`type expected`)
+        local value = if name == 'data' or name == 'return' then parse_type_expr() or warn(`type expected for '{name}'`)
+            else parse_expr() or warn(`option expected for '{name}'`)
 
         scan_char(',')
-        options[string.lower(name)] = value
+        options[name] = value
     until name == nil
 
+    lexer.highlight()
     expect_char('}')
     return options
 end
-local function expect_str_enum(expr: expr | type_expr,...: string): string
-    return expr.kind == 'str' and table.find({...}, expr.value)
-        and expr.value or warn(`expected string \'{table.concat({...}, '\' | \'')}\'`)
+local function expect_enum(expr: expr | type_expr?,...: string): string?
+    if not expr then return end
+    local value = expr.kind == 'builtin' and string.lower(expr.value) or nil
+
+    return value and table.find({...}, value) and value
+        or warn(`expected string \'{table.concat({...}, '\' | \'')}\', got {value}`)
 end
-local function expect_bool(expr: expr | type_expr): boolean
-    if expr.kind ~= 'builtin' then return warn(`expected boolean`) end
-    return expr.value == 'true' or expr.value == 'false' or warn(`expected boolean`) or false
-end
+local function expect_type_expr(expr: expr | type_expr?): type_expr?
+    if not expr then return end
     return expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'attribute' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple' and expr or warn(`expected type`)
 end
 
@@ -45,7 +50,7 @@ end
 export type func_def = {
     kind: 'func',
     name: string,
-    yield: 'Coroutine'|'Promise'|'Future',
+    yield: 'coroutine'|'promise'|'future',
     data: type_expr?,
     output: type_expr?
 }
@@ -57,19 +62,19 @@ local function parse_func_def(): func_def?
     return {
         kind = 'func',
         name = name,
-        yield = expect_str_enum(options.yield, 'Coroutine', 'Promise', 'Future') :: any,
+        yield = expect_enum(options.yield, 'coroutine', 'promise', 'future') :: any,
         data = expect_type_expr(options.data),
-        output = expect_type_expr(options.output)
+        output = expect_type_expr(options['return'])
     }
 end
 
 export type event_def = {
     kind: 'event',
     name: string,
-    from: 'Client'|'Server',
-    type: 'Reliable'|'Unreliable',
+    from: 'client'|'server',
+    type: 'reliable'|'rnreliable',
     poll: boolean?,
-    call: 'SingleSync'|'SingleAsync'|'ManySync'|'ManyAsync',
+    call: 'singlesync'|'singleasync'|'manysync'|'manyasync',
     data: type_expr?
 }
 local function parse_event_def(): event_def?
@@ -80,10 +85,10 @@ local function parse_event_def(): event_def?
     return {
         kind = 'event',
         name = name,
-        from = expect_str_enum(options.from, 'Server', 'Client') :: any,
-        type = expect_str_enum(options.yield, 'Reliable', 'Unreliable') :: any,
-        call = expect_str_enum(options.yield, 'SingleSync', 'SingleAsync', 'ManySync', 'ManyAsync') :: any,
-        poll = options.poll and expect_bool(options.poll),
+        from = expect_enum(options.from, 'server', 'client') :: any,
+        type = expect_enum(options.type, 'reliable', 'unreliable') :: any,
+        call = expect_enum(options.call, 'singlesync', 'singleasync', 'manysync', 'manyasync') :: any,
+        poll = options.poll and expect_enum(options.poll, 'true', 'false') == 'true',
         data = expect_type_expr(options.data),
     }
 end
