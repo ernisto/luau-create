@@ -51,32 +51,37 @@ local function parse_enum_option(): enum_option?
     return { name = name, fields = fields }
 end
 
-export type enum_def = { kind: 'enum', name: string, params: type_params_def?, options: {enum_option} }
+export type enum_def = { kind: 'enum', name: string, params: type_params_def?, expr: type_expr.enum_expr | type_expr.suffix }
 local function parse_enum_def(): enum_def?
     if not scan_word('enum') then return end
-    local name = scan_word() or warn(`expected identifier`)
 
+    local name = scan_word() or warn(`expected identifier`)
     local params = parse_type_params_def()
+
     expect_char('=')
 
     expect_char('{')
     local options = parse_list(parse_enum_option)
 
     expect_char('}')
-    return { kind = 'enum', name = name, params = params, options = options }
+    local expr = parse_type_expr { kind = 'enum', options = options }
+
+    return { kind = 'enum', name = name, params = params, expr = expr :: any }
 end
 
-export type struct_def = { kind: 'struct', name: string, params: type_params_def?, fields: type_expr.field_block }
+export type struct_def = { kind: 'struct', name: string, params: type_params_def?, expr: type_expr.struct_expr | type_expr.suffix }
 local function parse_struct_def(): struct_def?
     if not scan_word('struct') then return end
     local name = scan_word() or warn(`expected identifier`)
     local params = parse_type_params_def()
 
     local fields = parse_field_block() or warn(`expected '\{'`)
-    return { kind = 'struct', name = name, fields = fields, params = params }
+    local expr = parse_type_expr { kind = 'struct', fields = fields }
+
+    return { kind = 'struct', name = name, params = params, expr = expr :: any }
 end
 
-export type set_def = { kind: 'set', name: string, flags: {string} }
+export type set_def = { kind: 'set', name: string, expr: type_expr.set_expr | type_expr.suffix }
 local function parse_set_def(): set_def?
     if not scan_word('set') then return end
     local name = scan_word() or warn(`expected identifier`)
@@ -86,16 +91,18 @@ local function parse_set_def(): set_def?
     local flags: {string} = parse_list(scan_word)
 
     expect_char('}')
-    return { kind = 'set', name = name, flags = flags }
+    local expr = parse_type_expr { kind = 'set', flags = flags }
+
+    return { kind = 'set', name = name, expr = expr :: any }
 end
 
-export type map_def = { kind: 'map', name: string, params: type_params_def?, key: type_expr, value: type_expr }
+export type map_def = { kind: 'map', name: string, params: type_params_def?, expr: type_expr.map_expr | type_expr.suffix }
 local function parse_map_def(): map_def?
     if not scan_word('map') then return end
     local name = scan_word() or warn(`expected identifier`)
+    local params = parse_type_params_def()
 
     expect_char('=')
-    local params = parse_type_params_def()
     expect_char('{')
 
     expect_char('[')
@@ -106,7 +113,9 @@ local function parse_map_def(): map_def?
     local value = parse_type_expr() or warn(`expected type`)
 
     expect_char('}')
-    return { kind = 'map', name = name, params = params, key = key, value = value }
+    local expr = parse_type_expr { kind = 'map', key = key, value = value }
+
+    return { kind = 'map', name = name, params = params, expr = expr :: any }
 end
 
 export type export_def = { kind: 'export', alias: alias_def}

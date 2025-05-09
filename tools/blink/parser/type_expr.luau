@@ -44,6 +44,10 @@ local function parse_suffix(atom: type_expr): suffix?
         or parse_optional(atom)
 end
 
+-- doesnt really exist, but is used by enum_def, since it can have suffixes too
+export type enum_option = { name: string, fields: field_block }
+export type enum_expr = { kind: 'enum', options: {enum_option} }
+
 -- atom
 export type tuple_expr = { kind: 'tuple', exprs: {type_expr} }
 local function parse_tuple_expr(): tuple_expr?
@@ -106,9 +110,9 @@ local function parse_read_type(): read_type?
     return name and { kind = 'read_type', names = names, args = args }
 end
 
-export type type_expr = struct_expr | tuple_expr | read_type | map_expr | set_expr | suffix
-function parse_type_expr(): type_expr?
-    local atom: type_expr? = parse_struct_expr()
+export type type_expr = struct_expr | tuple_expr | enum_expr | read_type | map_expr | set_expr | suffix
+function parse_type_expr(base: type_expr?): type_expr?
+    local atom: type_expr? = base or parse_struct_expr()
         or parse_tuple_expr()
         or parse_map_expr()
         or parse_set_expr()
