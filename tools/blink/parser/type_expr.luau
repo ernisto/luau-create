@@ -70,6 +70,17 @@ local function parse_map_expr(): map_expr?
     return { kind = 'map', key = key, value = value }
 end
 
+export type set_expr = { kind: 'set', flags: {string} }
+local function parse_set_expr(): set_expr?
+    if not scan_word('set') then return end
+    expect_char('{')
+
+    local flags = parse_list(scan_word)
+    expect_char('}')
+
+    return { kind = 'set', flags = flags }
+end
+
 export type struct_expr = { kind: 'struct', fields: {field} }
 local function parse_struct_expr(): struct_expr?
     return scan_word('struct') and { kind = 'struct', fields = parse_field_block() or {} }
@@ -95,12 +106,13 @@ local function parse_read_type(): read_type?
     return name and { kind = 'read_type', names = names, args = args }
 end
 
-export type type_expr = struct_expr | tuple_expr | read_type | map_expr | suffix
+export type type_expr = struct_expr | tuple_expr | read_type | map_expr | set_expr | suffix
 function parse_type_expr(): type_expr?
     local atom: type_expr? = parse_struct_expr()
         or parse_tuple_expr()
-        or parse_read_type()
         or parse_map_expr()
+        or parse_set_expr()
+        or parse_read_type()
 
     while atom do
         local suffix = parse_suffix(atom)
