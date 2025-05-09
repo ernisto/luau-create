@@ -120,15 +120,21 @@ local function parse_map_def(): map_def?
     return { kind = 'map', name = name, params = params, expr = expr :: any }
 end
 
-export type export_def = { kind: 'export', alias: alias_def}
+export type export_def = { kind: 'export', def: def }
 local function parse_export_def(): export_def?
     if not scan_word('export') then return end
-    local alias = parse_alias_def() or warn(`expected 'type'`)
-    return { kind = 'export', alias = alias}
+    local def = parse_struct_def()
+        or parse_alias_def()
+        or parse_enum_def()
+        or parse_set_def()
+        or parse_map_def()
+        or warn(`expected definition`)
+
+    return { kind = 'export', def = def }
 end
 
 export type def = struct_def | alias_def | export_def | event_def | func_def | enum_def | set_def | map_def
-local function parse_def(): def?
+function parse_def(): def?
     return parse_struct_def()
         or parse_alias_def()
         or parse_export_def()
