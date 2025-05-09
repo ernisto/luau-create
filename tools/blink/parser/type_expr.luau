@@ -96,12 +96,17 @@ end
 
 export type type_expr = struct_expr | tuple_expr | read_type | map_expr | suffix
 function parse_type_expr(): type_expr?
-    local atom = parse_struct_expr()
+    local atom: type_expr? = parse_struct_expr()
         or parse_tuple_expr()
         or parse_read_type()
         or parse_map_expr()
 
-    return atom and parse_suffix(atom) or atom
+    while atom do
+        local suffix = parse_suffix(atom)
+        if not suffix then return atom end
+        atom = suffix
+    end
+    return
 end
 
 -- helpers
