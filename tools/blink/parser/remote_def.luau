@@ -1,7 +1,8 @@
 local lexer = require('@self/lexer')
-local scan_word = lexer.scan_word
-local scan_char = lexer.scan_char
 local expect_char = lexer.expect_char
+local scan_char = lexer.scan_char
+local scan_word = lexer.scan_word
+local report = lexer.report
 
 local type_expr = require('@self/type_expr')
 type type_expr = type_expr.type_expr
@@ -23,14 +24,13 @@ local function parse_options(): { [string]: expr | type_expr }
         name = string.lower(name)
 
         expect_char(':')
-        local value = if name == 'data' or name == 'return' then parse_type_expr() or warn(`type expected for '{name}'`)
-            else parse_expr() or warn(`option expected for '{name}'`)
+        local value = if name == 'data' or name == 'return' then parse_type_expr() or report(`type expected for '{name}'`)
+            else parse_expr() or report(`option expected for '{name}'`)
 
         scan_char(',')
         options[name] = value
     until name == nil
 
-    lexer.highlight()
     expect_char('}')
     return options
 end
@@ -39,11 +39,11 @@ local function expect_enum(expr: expr | type_expr?,...: string): string?
     local value = expr.kind == 'builtin' and string.lower(expr.value) or nil
 
     return value and table.find({...}, value) and value
-        or warn(`expected string \'{table.concat({...}, '\' | \'')}\', got {value}`)
+        or report(`expected string \'{table.concat({...}, '\' | \'')}\', got {value}`)
 end
 local function expect_type_expr(expr: expr | type_expr?): type_expr?
     if not expr then return end
-    return expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'attribute' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple' and expr or warn(`expected type`)
+    return expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'attribute' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple' and expr or report(`expected type`)
 end
 
 -- defs
@@ -56,7 +56,7 @@ export type func_def = {
 }
 local function parse_func_def(): func_def?
     if not scan_word('function') then return end
-    local name = scan_word() or warn(`expected identifier`)
+    local name = scan_word() or report(`expected identifier`)
 
     local options = parse_options()
     return {
@@ -79,7 +79,7 @@ export type event_def = {
 }
 local function parse_event_def(): event_def?
     if not scan_word('event') then return end
-    local name = scan_word() or warn(`expected identifier`)
+    local name = scan_word() or report(`expected identifier`)
 
     local options = parse_options()
     return {

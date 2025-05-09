@@ -15,6 +15,24 @@ local function advance(len: number)
     have_cached_word = false
 end
 
+-- logger
+local function get_cursor_position()
+    local line_cursor = 0
+    local lines = string.split(input, '\n')
+    for line, line_content in lines do
+        line_cursor += string.len(line_content) + 1
+        if cursor-1 <= line_cursor then return line, line_cursor - line, string.len(line_content) end
+    end
+    local line_content = string.sub(input, line_cursor)
+    line_cursor += string.len(line_content)
+    return #lines, line_cursor, string.len(line_content)
+end
+local function report(str: string)
+    local line, char = get_cursor_position()
+    return warn(`[Line {line}, Column {char}]: {str}`)
+end
+
+-- lexers
 local function skip_comments()
     repeat
         local content = scan_pattern('^(#.-\n%s*)')
@@ -50,7 +68,7 @@ local function scan_char(exact_char: string): string?
     return char
 end
 local function expect_char(exact_char: string): string?
-    return scan_char(exact_char) or warn(`expected '{exact_char}'`)
+    return scan_char(exact_char) or report(`expected '{exact_char}'`)
 end
 
 local function scan_str(): string?
@@ -99,5 +117,6 @@ return table.freeze {
     scan_num = scan_num,
     scan_char = scan_char,
     scan_raw = scan_raw,
-    expect_char = expect_char
+    expect_char = expect_char,
+    report = report,
 }

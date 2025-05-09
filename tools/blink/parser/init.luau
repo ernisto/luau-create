@@ -2,6 +2,7 @@ local lexer = require('@self/lexer')
 local expect_char = lexer.expect_char
 local scan_word = lexer.scan_word
 local scan_str = lexer.scan_str
+local report = lexer.report
 
 local misc = require('@self/misc')
 local parse_list = misc.parse_list
@@ -18,20 +19,20 @@ export type option = { kind: 'option', name: string, value: misc.expr }
 local function parse_option()
     if not scan_word('option') then return end
 
-    local name = scan_word() or warn(`expected identifier`)
+    local name = scan_word() or report(`expected identifier`)
     expect_char('=')
     
-    local expr = parse_expr() or warn(`expected expr`)
+    local expr = parse_expr() or report(`expected expr`)
     return { kind = 'option', name = name, value = expr }
 end
 
 export type import = { kind: 'import', path: string, name: string? }
 local function parse_import()
     if not scan_word('import') then return end
-    local path = scan_str() or warn(`expected string`)
+    local path = scan_str() or report(`expected string`)
     local name
     if scan_word('as') then
-        name = scan_word() or warn(`expected identifier`)
+        name = scan_word() or report(`expected identifier`)
     end
     return { kind = 'import', path = path, name = name }
 end
@@ -39,7 +40,7 @@ end
 export type scope = { kind: 'scope', name: string, statements: {statement} }
 local function parse_scope()
     if not scan_word('scope') then return end
-    local name = scan_word() or warn(`expected identifier`)
+    local name = scan_word() or report(`expected identifier`)
 
     expect_char('{')
     local statements = parse_list(parse_statement)

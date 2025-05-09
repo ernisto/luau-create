@@ -3,6 +3,7 @@ local expect_char = lexer.expect_char
 local scan_char = lexer.scan_char
 local scan_word = lexer.scan_word
 local scan_raw = lexer.scan_raw
+local report = lexer.report
 
 local misc = require('./misc')
 local parse_range = misc.parse_range
@@ -26,7 +27,7 @@ end
 export type attribute = { kind: 'attribute', expr: type_expr, value: range | expr }
 local function parse_attribute(atom: type_expr): attribute?
     if not scan_char('(') then return end
-    local value = parse_range() or parse_expr() or warn(`expression expected`)
+    local value = parse_range() or parse_expr() or report(`expression expected`)
 
     expect_char(')')
     return { kind = 'attribute', expr = atom, value = value }
@@ -64,11 +65,11 @@ local function parse_map_expr(): map_expr?
     expect_char('{')
 
     expect_char('[')
-    local key = parse_type_expr() or warn(`expected expr`)
+    local key = parse_type_expr() or report(`expected expr`)
     expect_char(']')
 
     expect_char(':')
-    local value = parse_type_expr() or warn(`expected expr`)
+    local value = parse_type_expr() or report(`expected expr`)
 
     expect_char('}')
     return { kind = 'map', key = key, value = value }
@@ -97,7 +98,7 @@ local function parse_read_type(): read_type?
 
     local names = {name}
     while scan_char('.') do
-        name = scan_word() or warn(`identifier expected`)
+        name = scan_word() or report(`identifier expected`)
         table.insert(names, name)
     end
 
@@ -133,7 +134,7 @@ local function parse_named_field(): named_field?
     if not name then return end
 
     expect_char(':')
-    local type_expr = parse_type_expr() or warn(`expected type expr`)
+    local type_expr = parse_type_expr() or report(`expected type expr`)
 
     return { kind = 'field', name = name, type = type_expr } :: any
 end
@@ -141,7 +142,7 @@ end
 export type merge_field = { kind: 'merge', type: type_expr }
 local function parse_merge_field(): merge_field?
     if not scan_raw('..') then return end
-    local expr = parse_type_expr() or warn(`expected type`)
+    local expr = parse_type_expr() or report(`expected type`)
     return { kind = 'merge', type = expr }
 end
 

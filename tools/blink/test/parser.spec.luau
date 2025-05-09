@@ -6,4 +6,4 @@ local code = fs.readFile('tools/blink/test/battery.blink')
 local ast = parser.parse(code)
 
 -- abstract syntax tree
-print(display(ast, {}))
+print(display(ast))
