@@ -43,7 +43,7 @@ local function expect_enum(expr: expr | type_expr?,...: string): string?
 end
 local function expect_type_expr(expr: expr | type_expr?): type_expr?
     if not expr then return end
-    return expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'attribute' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple' and expr or report(`expected type`)
+    return (expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'attribute' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple') and expr or report(`expected type`)
 end
 
 -- defs
@@ -72,7 +72,7 @@ export type event_def = {
     kind: 'event',
     name: string,
     from: 'client'|'server',
-    type: 'reliable'|'rnreliable',
+    type: 'reliable'|'unreliable',
     poll: boolean?,
     call: 'singlesync'|'singleasync'|'manysync'|'manyasync',
     data: type_expr?
