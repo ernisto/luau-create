@@ -1,5 +1,4 @@
 local editor = require("@lib/editor")
-local merge = require('@utils/merge')
 local file = require('@lib/file')
 local toolchain = require("@lib/toolchain")
 
@@ -7,8 +6,7 @@ local version = '1.0.0-rc.8'
 
 -- vars
 local sup = false
-local manifest = {}
-merge(manifest, file.read_toml('asphalt.toml') or {})
+local manifest = require('@self/manifest')
 
 -- functions
 local function save()
