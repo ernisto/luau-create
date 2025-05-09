@@ -81,6 +81,7 @@ local function parse_set_def(): set_def?
     if not scan_word('set') then return end
     local name = scan_word() or warn(`expected identifier`)
 
+    expect_char('=')
     expect_char('{')
     local flags: {string} = parse_list(scan_word)
 
