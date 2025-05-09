@@ -7,14 +7,15 @@ local tool = create.tools[tool_name]
 assert(not tool_name or tool, `invalid tool '{tool_name}'`)
 
 if not tool_name then
-    inquire_project()
+	inquire_project()
 
-    for _,s_tool: any in create.tools do s_tool.setup() end
-    create.language.setup()
-    create.editor.setup()
-    create.project.setup()
+	for _, s_tool: any in create.tools do
+		s_tool.setup()
+	end
+	create.language.setup()
+	create.editor.setup()
+	create.project.setup()
 else
-
-    tool.setup()
+	tool.setup()
 end
 create.save()

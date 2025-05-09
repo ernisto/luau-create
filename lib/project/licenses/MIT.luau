@@ -1,8 +1,8 @@
 return table.freeze {
-    permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'private_use' },
-    limitations = table.freeze { 'liability', 'warrantly' },
-    conditions = table.freeze { 'license_and_copyright_notice' },
-    content = [[MIT License
+	permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'private_use' },
+	limitations = table.freeze { 'liability', 'warrantly' },
+	conditions = table.freeze { 'license_and_copyright_notice' },
+	content = [[MIT License
 
 Copyright (c) ${year} ${host}
 

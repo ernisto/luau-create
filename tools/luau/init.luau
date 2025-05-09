@@ -5,47 +5,47 @@ local merge = require('@utils/merge')
 
 -- defs
 type luaurc = {
-    languageMode: 'strict' | 'nonstrict' | 'nocheck'?,
-    lintErrors: boolean?,
-    typeErrors: boolean?,
-    aliases: { [string]: string },
-    globals: { string },
-    lint: { [string]: boolean },
+	languageMode: 'strict' | 'nonstrict' | 'nocheck'?,
+	lintErrors: boolean?,
+	typeErrors: boolean?,
+	aliases: { [string]: string },
+	globals: { string },
+	lint: { [string]: boolean },
 }
 
 -- vars
 local sup = false
 local rc: luaurc = {
-    languageMode = 'strict',
-    aliases = {},
-    globals = {},
-    lint = {},
+	languageMode = 'strict',
+	aliases = {},
+	globals = {},
+	lint = {},
 }
 merge(rc, file.read_json('.luaurc'))
 
 -- functions
 local function save()
-    if not sup then return end
-    file.write_json('.luaurc', rc)
+	if not sup then return end
+	file.write_json('.luaurc', rc)
 end
 
 local function add_alias(alias: string, path: string)
-    if rc.aliases[alias] and rc.aliases[alias] ~= path then warn(`alias '{alias}' already defined`) end
-    rc.aliases[alias] = path
+	if rc.aliases[alias] and rc.aliases[alias] ~= path then warn(`alias '{alias}' already defined`) end
+	rc.aliases[alias] = path
 end
 
 local function setup()
-    if sup then return end
-    sup = true
+	if sup then return end
+	sup = true
 
-    editor.hide_globs('.luaurc')
-    tracker.set_attribute('*.luau', 'text', 'eol=lf')
+	editor.hide_globs('.luaurc')
+	tracker.set_attribute('*.luau', 'text', 'eol=lf')
 end
 
 -- module
 return table.freeze {
-    rc = rc,
-    save = save,
-    setup = setup,
-    add_alias = add_alias,
+	rc = rc,
+	save = save,
+	setup = setup,
+	add_alias = add_alias,
 }

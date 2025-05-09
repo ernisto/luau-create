@@ -1,8 +1,8 @@
 return table.freeze {
-   permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'parent_use', 'private_use' },
-   limitations = table.freeze { 'trademark_use', 'liability', 'warrantly' },
-   conditions = table.freeze { 'license_and_copyright_notice', 'state_changes' },
-   content = [[
+	permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'parent_use', 'private_use' },
+	limitations = table.freeze { 'trademark_use', 'liability', 'warrantly' },
+	conditions = table.freeze { 'license_and_copyright_notice', 'state_changes' },
+	content = [[
                              Apache License
                        Version 2.0, January 2004
                     http://www.apache.org/licenses/

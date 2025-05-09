@@ -13,11 +13,11 @@ includes = ["pesde.toml", "README.md", "LICENSE", "docs/**/*.md", "cli/**"]
 semver = {name = "0x5eal/semver", target = "luau", version = "^0.1.1"}
 
 [dev_dependencies]
-stylua = {index = "default", name = "pesde/stylua", target = "lune", version = "1.20.3"}
+stylua = {index = "default", name = "pesde/stylua", target = "lune", version = "^2.1.0" }
 
 [engines]
-lune = "0.9.2"
-pesde = "^0.6.0"
+lune = "0.8.9"
+pesde = "^0.7.0-rc.3"
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
@@ -25,5 +25,3 @@ default = "https://github.com/pesde-pkg/index"
 [target]
 bin = "cli"
 environment = "lune"
-build_files = []
-scripts = []

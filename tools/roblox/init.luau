@@ -11,37 +11,41 @@ local sup = false
 
 -- functions
 local function save()
-    if not sup then return end
+	if not sup then return end
 end
 
-local function add_system_path(system_path: string, roblox_path: {string})
-    rojo.add_system_path(system_path, roblox_path)
+local function add_system_path(system_path: string, roblox_path: { string })
+	rojo.add_system_path(system_path, roblox_path)
 end
 
 local function setup()
-    if sup then return end
-    sup = true
+	if sup then return end
+	sup = true
 
-    tracker.set_attribute('*.rbxm', 'binary')
-    tracker.set_attribute('*.rbxl', 'binary')
-    tracker.ignore_globs('*.rbxl')
-    editor.hide_globs('.rbxl')
+	tracker.set_attribute('*.rbxm', 'binary')
+	tracker.set_attribute('*.rbxl', 'binary')
+	tracker.ignore_globs('*.rbxl')
+	editor.hide_globs('.rbxl')
 
-    merge(vsc.settings, {
-        ['luau-lsp.platform.type'] = 'roblox',
-        ['luau-lsp.bytecode.vectorCtor'] = 'new',
-        ['luau-lsp.bytecode.vectorLib'] = 'Vector3',
-        ['luau-lsp.bytecode.vectorType'] = 'Vector3',
+	merge(vsc.settings, {
+		['luau-lsp.platform.type'] = 'roblox',
+		['luau-lsp.bytecode.vectorCtor'] = 'new',
+		['luau-lsp.bytecode.vectorLib'] = 'Vector3',
+		['luau-lsp.bytecode.vectorType'] = 'Vector3',
 
-        ['luau-lsp.completion.imports.stringRequires.enabled'] = project.project.kind ~= 'game',
-        ['luau-lsp.completion.imports.requireStyle'] = if project.project.kind == 'game' then 'alwaysAbsolute' else 'alwaysRelative',
-        ['luau-lsp.types.robloxSecurityLevel'] = if project.project.kind == 'plugin' then 'PluginSecurity' else 'LocalUserSecurity',
-    })
+		['luau-lsp.completion.imports.stringRequires.enabled'] = project.project.kind ~= 'game',
+		['luau-lsp.completion.imports.requireStyle'] = if project.project.kind == 'game'
+			then 'alwaysAbsolute'
+			else 'alwaysRelative',
+		['luau-lsp.types.robloxSecurityLevel'] = if project.project.kind == 'plugin'
+			then 'PluginSecurity'
+			else 'LocalUserSecurity',
+	})
 end
 
 -- module
 return table.freeze {
-    save = save,
-    setup = setup,
-    add_system_path = add_system_path,
+	save = save,
+	setup = setup,
+	add_system_path = add_system_path,
 }

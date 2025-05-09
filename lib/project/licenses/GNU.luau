@@ -1,8 +1,8 @@
 return table.freeze {
-        permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'patent_use', 'private_use' },
-        limitations = table.freeze { 'liability', 'warrantly' },
-        conditions = table.freeze { 'license_and_copyright_notice', 'state_changes', 'disclose_source', 'same_license' },
-        content = [[                GNU GENERAL PUBLIC LICENSE
+	permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'patent_use', 'private_use' },
+	limitations = table.freeze { 'liability', 'warrantly' },
+	conditions = table.freeze { 'license_and_copyright_notice', 'state_changes', 'disclose_source', 'same_license' },
+	content = [[                GNU GENERAL PUBLIC LICENSE
                    Version 3, 29 June 2007
 Copyright (C) 2007 Free Software Foundation, Inc. https://fsf.org/ Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
 

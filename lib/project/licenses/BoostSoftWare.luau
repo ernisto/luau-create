@@ -1,8 +1,8 @@
 return table.freeze {
-    permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'private_use' },
-    limitations = table.freeze { 'liability', 'warrantly' },
-    conditions = table.freeze { 'license_and_copyright_notice_for_source' },
-    content = [[Boost Software License - Version 1.0 - August 17th, 2003
+	permissions = table.freeze { 'commercial_use', 'modification', 'distribution', 'private_use' },
+	limitations = table.freeze { 'liability', 'warrantly' },
+	conditions = table.freeze { 'license_and_copyright_notice_for_source' },
+	content = [[Boost Software License - Version 1.0 - August 17th, 2003
 
 Permission is hereby granted, free of charge, to any person or organization obtaining a copy of the software and accompanying documentation covered by this license (the "Software") to use, reproduce, display, distribute, execute, and transmit the Software, and to prepare derivative works of the Software, and to permit third-parties to whom the Software is furnished to do so, all subject to the following:
 
