@@ -37,17 +37,18 @@ local escapes = {
 }
 
 --// Class
-local Color = {}
-function Color.new(escape)
-
-    return setmetatable({ escape = escape }, Color)
+local Color, metatable = {}, {}
+function Color.new(escape: string): Color
+    return setmetatable({ escape = escape }, metatable)
 end
 
-function Color:__call(text) return self.escape .. (text or '') .. escapes.clear end
-function Color:__index(tag)
-
+function metatable.__call(self: Color, text: string?)
+    return self.escape .. (text or '') .. escapes.clear 
+end
+function metatable.__index(self: Color, tag: string): Color
     local escape = escapes[tag] or error(`invalid escape '{tag}'`)
     return Color.new(self.escape .. escape)
 end
 
+export type Color = typeof(Color.new(''))
 return Color.new("")
