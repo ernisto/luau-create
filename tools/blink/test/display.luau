@@ -10,11 +10,6 @@ local stack_colors = {
 type stack = { [any]: any }
 
 -- functions
-local function size_of(tab: {[any]: any})
-    local n = 0
-    for _ in tab do n += 1 end
-    return n
-end
 local function is_array<V>(tab: V): boolean
     return typeof(tab) == 'table' and typeof(next(tab) :: any) == 'number'
 end
@@ -49,8 +44,8 @@ local function display(value: any, _stack: stack?): string
             out ..= `\n{start .. table.concat(outputs, `\n{start}`)}`
                 .. `\n{start:sub(5) .. stack_color(']')}`
         else
-            out ..= ' ' .. table.concat(outputs, ', ')
-                ..' '..stack_color(`]`)
+            out ..= ` {table.concat(outputs, ', ')} `
+                ..stack_color(`]`)
         end
 
     elseif is_node(value) then
@@ -95,17 +90,20 @@ local function display(value: any, _stack: stack?): string
         stack[value] = #stack
         out = stack_color('{')
 
-        local size = size_of(value)
+        local outputs = {}
         for index, value in value do
-            out ..= size > 3 and `\n{start}` or ' '
-                ..color.white(tostring(index))
+            table.insert(outputs, 
+                color.white(tostring(index))
                 ..color.dark_red(' = ')
                 ..display(value, stack)
-                ..color.dark_red(',')
+            )
         end
-        if size > 3 
-            then out ..= `\n{start:sub(5) .. stack_color('}')}`
-            else out ..= ' ' .. stack_color('}')
+
+        if string.len(table.concat(outputs)) > 100 
+            then out ..= `\n{start .. table.concat(outputs, `,\n{start}`)}`
+                    ..`\n{start:sub(5) .. stack_color('}')}`
+            else out ..= ` {table.concat(outputs, ', ')} `
+                    ..stack_color('}')
         end
 
     elseif typeof(value) == 'string' then
