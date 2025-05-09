@@ -56,7 +56,8 @@ end
 
 export type map_expr = { kind: 'map', key: type_expr, value: type_expr }
 local function parse_map_expr(): map_expr?
-    if not scan_char('{') then return end
+    if not scan_word('map') then return end
+    expect_char('{')
 
     expect_char('[')
     local key = parse_type_expr() or warn(`expected expr`)
