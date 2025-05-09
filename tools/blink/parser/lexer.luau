@@ -35,13 +35,14 @@ end
 -- lexers
 local function skip_comments()
     repeat
-        local content = scan_pattern('^(#.-\n%s*)')
-        if content then cursor += string.len(content) end
+        local content = scan_pattern('^(%-%-%[%[.-%]%]%s*)')
+                        or scan_pattern('^(%-%-.-\n%s*)')
+        if content then advance(string.len(content)) end
     until content == nil
 end
 local function skip_spaces()
     local content = scan_pattern('^(%s*)')
-    if content then cursor += string.len(content) end
+    if content then advance(string.len(content)) end
 end
 
 local function scan_word(exact_word: string?): string?
