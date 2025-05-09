@@ -38,8 +38,7 @@ local function expect_bool(expr: expr | type_expr): boolean
     if expr.kind ~= 'builtin' then return warn(`expected boolean`) end
     return expr.value == 'true' or expr.value == 'false' or warn(`expected boolean`) or false
 end
-local function expect_type_expr(expr: expr | type_expr): type_expr
-    return expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'ranged' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple' and expr or warn(`expected type`)
+    return expr.kind == 'array' or expr.kind == 'map' or expr.kind == 'optional' or expr.kind == 'attribute' or expr.kind == 'read_type' or expr.kind == 'struct' or expr.kind == 'tuple' and expr or warn(`expected type`)
 end
 
 -- defs
