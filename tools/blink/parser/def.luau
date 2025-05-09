@@ -2,6 +2,7 @@ local lexer = require('@self/lexer')
 local expect_char = lexer.expect_char
 local scan_char = lexer.scan_char
 local scan_word = lexer.scan_word
+local scan_str = lexer.scan_str
 
 local type_expr = require('@self/type_expr')
 type type_expr = type_expr.type_expr
@@ -51,7 +52,7 @@ local function parse_enum_option(): enum_option?
     return { name = name, fields = fields }
 end
 
-export type enum_def = { kind: 'enum', name: string, params: type_params_def?, expr: type_expr.enum_expr | type_expr.suffix }
+export type enum_def = { kind: 'enum', name: string, kind_field_name: string?, params: type_params_def?, expr: type_expr.enum_expr | type_expr.suffix }
 local function parse_enum_def(): enum_def?
     if not scan_word('enum') then return end
 
@@ -59,6 +60,7 @@ local function parse_enum_def(): enum_def?
     local params = parse_type_params_def()
 
     expect_char('=')
+    local kind_field_name = scan_str()
 
     expect_char('{')
     local options = parse_list(parse_enum_option)
@@ -66,7 +68,7 @@ local function parse_enum_def(): enum_def?
     expect_char('}')
     local expr = parse_type_expr { kind = 'enum', options = options }
 
-    return { kind = 'enum', name = name, params = params, expr = expr :: any }
+    return { kind = 'enum', name = name, kind_field_name = kind_field_name, params = params, expr = expr :: any }
 end
 
 export type struct_def = { kind: 'struct', name: string, params: type_params_def?, expr: type_expr.struct_expr | type_expr.suffix }
