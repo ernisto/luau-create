@@ -31,7 +31,11 @@ local function sparse_unpack(t)
     for i, v in t do
         if type(i) == 'number' and i // 1 == i and i > higher_index then higher_index = i end
     end
-    return unpack(t, 1, higher_index)
+    local output = {}
+    for index = 1, higher_index do
+        table.insert(output, t[index])
+    end
+    return unpack(output)
 end
 
 -- constructors
@@ -137,7 +141,8 @@ local function inquisitor(output: { [string]: any })
         return value
     end
     function self.enum(prop: enum)
-        prop.default_index = prop.default_index or table.find({unpack(prop)}, output[prop.name])
+        local options = {sparse_unpack(prop)}
+        prop.default_index = prop.default_index or table.find(options, output[prop.name])
         local value = prompt_enum(prop)
         output[prop.name] = value
         return value
