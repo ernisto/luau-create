@@ -1,6 +1,7 @@
 local pesde = require('@tools/pesde/manifest')
 local wally = require('@tools/wally/manifest')
 local npm = require('@tools/npm/manifest')
+local stylua = require('@tools/stylua/manifest')
 
 local license = require('@self/licenses')
 local semver = require('@pkg/semver')
@@ -40,6 +41,7 @@ export type project = {
 
     cpu: {npm.cpu}?,
     os: {npm.os}?,
+    stylua: stylua.manifest
 }
 
 -- functions

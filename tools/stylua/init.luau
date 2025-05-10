@@ -1,3 +1,4 @@
+local project = require('@lib/project').project
 local editor = require('@lib/editor')
 local merge = require('@utils/merge')
 local file = require('@lib/file')
@@ -30,6 +31,8 @@ local function setup()
         ['editor.formatOnSave'] = true,
         ['files.eol'] = if manifest.line_endings == 'Unix' then '\\n' else '\\r\\n',
     })
+
+    merge(manifest, project.stylua)
 end
 
 -- module

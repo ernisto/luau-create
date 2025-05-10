@@ -83,6 +83,70 @@ local function inquire()
         table.insert(project.authors, author)
     end
 
+    -- stylua
+    local q_stylua = q.struct { name = 'stylua' } do
+        q_stylua.enum {
+            name = 'syntax',
+            optional = true,
+            { name = 'All' },
+            { name = 'Lua51' },
+            { name = 'Lua52' },
+            { name = 'Lua53' },
+            { name = 'Lua54' },
+            { name = 'LuaJit' },
+            { name = 'Luau' },
+            { name = 'CfxLua' },
+        }
+        q_stylua.int { name = 'column_width', optional = true, default = 4 }
+        q_stylua.enum {
+            name = 'line_endings',
+            optional = true,
+            { name = 'Unix' },
+            { name = 'Windows' }
+        }
+        q_stylua.enum {
+            name = 'ident_type',
+            optional = true,
+            { name = 'Tabs' },
+            { name = 'Space' }
+        }
+        q_stylua.int { name = 'ident_width', default = 4, optional = true }
+        q_stylua.enum {
+            name = 'quote_style',
+            optional = true,
+            { name = 'AutoPreferDouble' },
+            { name = 'AutoPreferSingle' },
+            { name = 'ForceDouble' },
+            { name = 'ForceSingle' },
+        }
+        q_stylua.enum {
+            name = 'call_parentheses',
+            optional = true,
+            { name = 'Always' },
+            { name = 'NoSingleString' },
+            { name = 'NoSingleTable' },
+            { name = 'None' },
+            { name = 'Input' },
+        }
+        q_stylua.enum {
+            name = 'space_after_function_names',
+            optional = true,
+            { name = 'Never' },
+            { name = 'Definitions' },
+            { name = 'Calls' },
+            { name = 'Always' },
+        }
+        q_stylua.enum {
+            name = 'collapse_simple_statement',
+            optional = true,
+            { name = 'Never' },
+            { name = 'FunctionOnly' },
+            { name = 'Conditionaly' },
+            { name = 'Always' },
+        }
+        local value = q_stylua.bool { name = 'sort_requires', optional = true }
+        project.stylua.sort_requires = { enabled = value }
+    end
     return inquire
 end
 
