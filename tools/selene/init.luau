@@ -1,5 +1,4 @@
 local editor = require('@lib/editor')
-local merge = require('@utils/merge')
 local file = require('@lib/file')
 local toolchain = require("@lib/toolchain")
 local vsc = require('@tools/vsc')
@@ -8,8 +7,7 @@ local version = '0.28.0'
 
 -- vars
 local sup = false
-local manifest = {}
-merge(manifest, file.read_toml('selene.toml') or {})
+local manifest = require('@self/manifest')
 
 -- functions
 local function save()
