@@ -1,0 +1,15 @@
+name = "ernisto/luau_create"
+version = "0.1.0"
+license = "MIT"
+
+[engines]
+lune = "0.9.3"
+
+[target]
+environment = "lune"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+semver = { name = "0x5eal/semver", version = "^0.1.1", target = "luau" }
