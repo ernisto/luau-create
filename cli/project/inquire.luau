@@ -88,6 +88,7 @@ local function inquire()
         q_stylua.enum {
             name = 'syntax',
             optional = true,
+            default_index = 1,
             { name = 'All' },
             { name = 'Lua51' },
             { name = 'Lua52' },
@@ -97,9 +98,10 @@ local function inquire()
             { name = 'Luau' },
             { name = 'CfxLua' },
         }
-        q_stylua.int { name = 'column_width', optional = true, default = 4 }
+        q_stylua.int { name = 'column_width', default = 120, optional = true }
         q_stylua.enum {
             name = 'line_endings',
+            default_index = 1,
             optional = true,
             { name = 'Unix' },
             { name = 'Windows' }
@@ -107,6 +109,7 @@ local function inquire()
         q_stylua.enum {
             name = 'ident_type',
             optional = true,
+            default_index = 1,
             { name = 'Tabs' },
             { name = 'Space' }
         }
@@ -114,6 +117,7 @@ local function inquire()
         q_stylua.enum {
             name = 'quote_style',
             optional = true,
+            default_index = 1,
             { name = 'AutoPreferDouble' },
             { name = 'AutoPreferSingle' },
             { name = 'ForceDouble' },
@@ -121,6 +125,7 @@ local function inquire()
         }
         q_stylua.enum {
             name = 'call_parentheses',
+            default_index = 1,
             optional = true,
             { name = 'Always' },
             { name = 'NoSingleString' },
@@ -130,6 +135,7 @@ local function inquire()
         }
         q_stylua.enum {
             name = 'space_after_function_names',
+            default_index = 1,
             optional = true,
             { name = 'Never' },
             { name = 'Definitions' },
@@ -138,6 +144,7 @@ local function inquire()
         }
         q_stylua.enum {
             name = 'collapse_simple_statement',
+            default_index = 1,
             optional = true,
             { name = 'Never' },
             { name = 'FunctionOnly' },
