@@ -1,4 +1,4 @@
-local inquire_project = require('@cli/project/inquire')
+local inquire_project = require('@cli/inquires/project')
 local process = require('@lune/process')
 local create = require('@lib/init')
 local stdio = require("@lune/stdio")
