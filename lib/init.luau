@@ -4,9 +4,18 @@ local project = require('@lib/project')
 local editor = require('@lib/editor')
 local tools = table.freeze {
 
+	-- docs
+	-- moonwave = require('@tools/moonwave')
+	-- mkdocs = require('@tools/mkdocs')
+
 	-- environment
+	lune = require('@tools/lune'),
 	roblox = require('@tools/roblox'),
+	blink = require('@tools/blink'),
+	-- darklua = require('@tools/darklua'),
+	-- argon = require('@tools/argon'),
 	rojo = require('@tools/rojo'),
+	-- zap = require('@tools/zap'),
 
 	-- package
 	foreman = require('@tools/foreman'),
@@ -19,6 +28,8 @@ local tools = table.freeze {
 	-- language
 	luau = require('@tools/luau'),
 	lsp = require('@tools/lsp'),
+	selene = require('@tools/selene'),
+	stylua = require('@tools/stylua'),
 
 	-- editor
 	github = require('@tools/github'),

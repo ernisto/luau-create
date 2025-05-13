@@ -1,12 +1,10 @@
 local editor = require('@lib/editor')
-local merge = require('@utils/merge')
 local file = require('@lib/file')
 local vsc = require('@tools/vsc')
 
 -- vars
 local sup = false
-local tools = {}
-merge({ tools = tools }, file.read_toml('foreman.toml') or {})
+local tools = require('@self/manifest')
 
 -- functions
 local function save()
