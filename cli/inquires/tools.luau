@@ -4,20 +4,12 @@ local project = require('@lib/project')
 
 -- module
 local function inquire()
-	local result = {
-		toolchain_manager = 'pesde',
-		package_managers = { 'pesde' },
-		code_editors = { 'vsc' },
-		version_tracker = 'git',
-		luau_tools = { 'lsp', 'stylua' },
-		roblox_syncer = 'rojo',
-		cloud_sync = 'asphalt',
-		remote_idl = 'blink',
-	}
+	local result = {}
 	local q = inquisitor(result)
 
 	q.enum {
 		name = 'toolchain_manager',
+		default_index = 2,
 		{ name = 'none' },
 		{ name = 'pesde' },
 		{ name = 'rokit' },
@@ -25,20 +17,26 @@ local function inquire()
 		{ name = 'foreman' },
 		{ name = 'npm' },
 	}
-	result.package_managers = if result.toolchain_manager == 'pesde'
-		then { 'pesde' }
-		else q.multiselect {
-			name = 'package_manager',
-			{ name = 'pesde' },
-			{ name = 'npm' },
-			if project.project.environment == 'roblox' then { name = 'wally' } else nil :: any,
-		}
+	q.multiselect {
+		name = 'package_manager',
+		default_indexes = { 1 },
+		{ name = 'pesde' },
+		{ name = 'npm' },
+		if project.project.environment == 'roblox' then { name = 'wally' } else nil :: any,
+	}
 
-	q.multiselect { name = 'code_editors', { name = 'vsc' }, { name = 'zed' }, { name = 'nvim' } }
-	q.enum { name = 'version_tracker', { name = 'none' }, { name = 'git' } }
+	q.enum { name = 'version_tracker', default_index = 2, { name = 'none' }, { name = 'git' } }
+	q.multiselect {
+		name = 'code_editors',
+		default_indexes = { 1 },
+		{ name = 'vsc' },
+		{ name = 'zed' },
+		{ name = 'nvim' },
+	}
 
 	q.multiselect {
 		name = 'luau_tools',
+		default_indexes = { 1, 2 },
 		{ name = 'lsp' },
 		{ name = 'stylua' },
 		{ name = 'selene' },
@@ -48,12 +46,14 @@ local function inquire()
 	if project.project.environment == 'roblox' then
 		q.enum {
 			name = 'roblox_syncer',
+			default_index = 1,
 			optional = true,
 			{ name = 'rojo' },
 			if create.tools.argon then { name = 'argon' } else nil :: any,
 		}
 		q.enum {
 			name = 'cloud_sync',
+			default_index = 2,
 			optional = true,
 			{ name = 'none' },
 			{ name = 'asphalt' },
@@ -62,6 +62,7 @@ local function inquire()
 		if project.project.kind == 'game' then
 			q.enum {
 				name = 'remote_idl',
+				default_index = 2,
 				optional = true,
 				{ name = 'none' },
 				{ name = 'blink' },
