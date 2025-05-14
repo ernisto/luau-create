@@ -9,11 +9,11 @@ local sup = false
 local manifest = require('@self/manifest')
 
 -- functions
-local function save ()
+local function save()
 	if not sup then return end
 	file.write_toml('asphalt.toml', manifest)
 end
-local function setup ()
+local function setup()
 	if sup then return end
 	sup = true
 

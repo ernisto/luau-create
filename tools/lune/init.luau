@@ -7,10 +7,10 @@ local version = '0.9.2'
 local sup = false
 
 -- functions
-local function save ()
+local function save()
 	if not sup then return end
 end
-local function setup ()
+local function setup()
 	if sup then return end
 	sup = true
 

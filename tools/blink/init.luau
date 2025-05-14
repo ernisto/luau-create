@@ -11,10 +11,10 @@ local manifest = {}
 -- merge(manifest, file.read_str('remotes/init.blink'))
 
 -- functions
-local function save ()
+local function save()
 	if not sup then return end
 end
-local function setup ()
+local function setup()
 	if sup then return end
 	sup = true
 

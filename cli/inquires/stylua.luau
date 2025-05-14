@@ -2,7 +2,7 @@ local inquisitor = require('@cli/inquisitor')
 local stylua = require('@tools/stylua')
 
 -- module
-local function inquire ()
+local function inquire()
 	local q_stylua = inquisitor(stylua.manifest)
 
 	q_stylua.enum {

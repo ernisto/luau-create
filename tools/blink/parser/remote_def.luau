@@ -14,7 +14,7 @@ local parse_expr = misc.parse_expr
 type expr = misc.expr
 
 -- utils
-local function parse_options (): { [string]: expr | type_expr }
+local function parse_options(): { [string]: expr | type_expr }
 	expect_char('{')
 	local options = {}
 	repeat
@@ -35,14 +35,14 @@ local function parse_options (): { [string]: expr | type_expr }
 	expect_char('}')
 	return options
 end
-local function expect_enum (expr: expr | type_expr?, ...: string): string?
+local function expect_enum(expr: expr | type_expr?, ...: string): string?
 	if not expr then return end
 	local value = expr.kind == 'builtin' and string.lower(expr.value) or nil
 
 	return value and table.find({ ... }, value) and value
 		or report(`expected string \'{table.concat({ ... }, "' | '")}\', got {value}`)
 end
-local function expect_type_expr (expr: expr | type_expr?): type_expr?
+local function expect_type_expr(expr: expr | type_expr?): type_expr?
 	if not expr then return end
 	return (
 		expr.kind == 'array'
@@ -65,7 +65,7 @@ export type func_def = {
 	data: type_expr?,
 	output: type_expr?,
 }
-local function parse_func_def (): func_def?
+local function parse_func_def(): func_def?
 	if not scan_word('function') then return end
 	local name = scan_word() or report(`expected identifier`)
 
@@ -88,7 +88,7 @@ export type event_def = {
 	call: 'singlesync' | 'singleasync' | 'manysync' | 'manyasync',
 	data: type_expr?,
 }
-local function parse_event_def (): event_def?
+local function parse_event_def(): event_def?
 	if not scan_word('event') then return end
 	local name = scan_word() or report(`expected identifier`)
 

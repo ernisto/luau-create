@@ -16,7 +16,7 @@ type def = def.def
 local parse_statement
 
 export type option = { kind: 'option', name: string, value: misc.expr }
-local function parse_option ()
+local function parse_option()
 	if not scan_word('option') then return end
 
 	local name = scan_word() or report(`expected identifier`)
@@ -27,7 +27,7 @@ local function parse_option ()
 end
 
 export type import = { kind: 'import', path: string, name: string? }
-local function parse_import ()
+local function parse_import()
 	if not scan_word('import') then return end
 	local path = scan_str() or report(`expected string`)
 	local name
@@ -36,7 +36,7 @@ local function parse_import ()
 end
 
 export type scope = { kind: 'scope', name: string, statements: { statement } }
-local function parse_scope ()
+local function parse_scope()
 	if not scan_word('scope') then return end
 	local name = scan_word() or report(`expected identifier`)
 
@@ -48,12 +48,12 @@ local function parse_scope ()
 end
 
 type statement = option | import | scope | def
-function parse_statement ()
+function parse_statement()
 	return parse_option() or parse_import() or parse_scope() or parse_def()
 end
 
 -- main
-local function parse (str: string)
+local function parse(str: string)
 	lexer.lex(str)
 	return parse_list(parse_statement)
 end

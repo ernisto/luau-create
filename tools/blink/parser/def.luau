@@ -24,7 +24,7 @@ type expr = misc.expr
 
 -- helpers
 export type type_params_def = { string }
-function parse_type_params_def (): type_params_def?
+function parse_type_params_def(): type_params_def?
 	if not scan_char('<') then return end
 	local args = parse_list(scan_word)
 
@@ -34,7 +34,7 @@ end
 
 -- defs
 export type alias_def = { kind: 'alias', name: string, value: type_expr }
-local function parse_alias_def (): alias_def?
+local function parse_alias_def(): alias_def?
 	if not scan_word('type') then return end
 
 	local name = scan_word() or report(`expected identifier`)
@@ -45,7 +45,7 @@ local function parse_alias_def (): alias_def?
 end
 
 export type enum_option = { name: string, fields: { field }? }
-local function parse_enum_option (): enum_option?
+local function parse_enum_option(): enum_option?
 	local name = scan_word()
 	if not name then return end
 
@@ -60,7 +60,7 @@ export type enum_def = {
 	params: type_params_def?,
 	expr: type_expr.enum_expr | type_expr.suffix,
 }
-local function parse_enum_def (): enum_def?
+local function parse_enum_def(): enum_def?
 	if not scan_word('enum') then return end
 
 	local name = scan_word() or report(`expected identifier`)
@@ -84,7 +84,7 @@ export type struct_def = {
 	params: type_params_def?,
 	expr: type_expr.struct_expr | type_expr.suffix,
 }
-local function parse_struct_def (): struct_def?
+local function parse_struct_def(): struct_def?
 	if not scan_word('struct') then return end
 	local name = scan_word() or report(`expected identifier`)
 	local params = parse_type_params_def()
@@ -96,7 +96,7 @@ local function parse_struct_def (): struct_def?
 end
 
 export type set_def = { kind: 'set', name: string, expr: type_expr.set_expr | type_expr.suffix }
-local function parse_set_def (): set_def?
+local function parse_set_def(): set_def?
 	if not scan_word('set') then return end
 	local name = scan_word() or report(`expected identifier`)
 
@@ -111,7 +111,7 @@ local function parse_set_def (): set_def?
 end
 
 export type map_def = { kind: 'map', name: string, params: type_params_def?, expr: type_expr.map_expr | type_expr.suffix }
-local function parse_map_def (): map_def?
+local function parse_map_def(): map_def?
 	if not scan_word('map') then return end
 	local name = scan_word() or report(`expected identifier`)
 	local params = parse_type_params_def()
@@ -133,7 +133,7 @@ local function parse_map_def (): map_def?
 end
 
 export type export_def = { kind: 'export', def: def }
-local function parse_export_def (): export_def?
+local function parse_export_def(): export_def?
 	if not scan_word('export') then return end
 	local def = parse_struct_def()
 		or parse_alias_def()
@@ -146,7 +146,7 @@ local function parse_export_def (): export_def?
 end
 
 export type def = struct_def | alias_def | export_def | event_def | func_def | enum_def | set_def | map_def
-function parse_def (): def?
+function parse_def(): def?
 	return parse_struct_def()
 		or parse_alias_def()
 		or parse_export_def()

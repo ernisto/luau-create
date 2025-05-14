@@ -15,14 +15,14 @@ local num_color = color.blue
 local boolean_color = color.yellow
 
 -- functions
-local function is_array <V>(tab: V): boolean
+local function is_array<V>(tab: V): boolean
 	return typeof(tab) == 'table' and typeof(next(tab) :: any) == 'number'
 end
-local function is_node <V>(tab: V): boolean
+local function is_node<V>(tab: V): boolean
 	return typeof(tab) == 'table' and rawget(tab, 'kind') ~= nil
 end
 
-local function display (value: any, _stack: stack?): string
+local function display(value: any, _stack: stack?): string
 	local stack = (_stack and table.clone(_stack) or {}) :: stack
 	table.insert(stack, value)
 

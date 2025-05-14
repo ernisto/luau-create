@@ -10,7 +10,7 @@ type str = { kind: 'str', value: string }
 type num = { kind: 'num', value: number }
 type builtin = { kind: 'builtin', value: string }
 
-local function parse_expr (): expr?
+local function parse_expr(): expr?
 	local num = scan_num()
 	if num then return table.freeze { kind = 'num', value = tonumber(num) } :: any end
 
@@ -23,7 +23,7 @@ local function parse_expr (): expr?
 	return
 end
 
-local function parse_list <T>(parse: () -> T?): { T }
+local function parse_list<T>(parse: () -> T?): { T }
 	local nodes = {}
 	repeat
 		local expr = parse()
@@ -37,7 +37,7 @@ local function parse_list <T>(parse: () -> T?): { T }
 end
 
 export type range = { min: number?, max: number? }
-local function parse_range (): range?
+local function parse_range(): range?
 	local min = scan_num()
 	local mid = scan_raw('..')
 

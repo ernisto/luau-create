@@ -5,17 +5,19 @@ local project = require('@lib/project')
 local tools = table.freeze {
 
 	-- docs
-	-- moonwave = require('@tools/moonwave')
-	-- mkdocs = require('@tools/mkdocs')
+	moonwave = nil, -- require('@tools/moonwave')
+	mkdocs = nil, --require('@tools/mkdocs')
 
 	-- environment
 	lune = require('@tools/lune'),
 	roblox = require('@tools/roblox'),
-	blink = require('@tools/blink'),
-	-- darklua = require('@tools/darklua'),
-	-- argon = require('@tools/argon'),
+	asphalt = require('@tools/asphalt'),
+	mantle = nil, -- require('@tools/mantle'),
+	darklua = nil, -- require('@tools/darklua'),
+	argon = nil, -- require('@tools/argon'),
 	rojo = require('@tools/rojo'),
-	-- zap = require('@tools/zap'),
+	blink = require('@tools/blink'),
+	zap = nil, -- require('@tools/zap'),
 
 	-- package
 	foreman = require('@tools/foreman'),

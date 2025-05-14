@@ -7,16 +7,16 @@ local have_cached_word = false
 local content, word: string?
 
 -- helpers
-local function scan_pattern (pattern: string)
+local function scan_pattern(pattern: string)
 	return select(3, string.find(input, pattern, cursor))
 end
-local function advance (len: number)
+local function advance(len: number)
 	cursor += len
 	have_cached_word = false
 end
 
 -- logger
-local function get_cursor_position ()
+local function get_cursor_position()
 	local line_cursor = 0
 	local lines = string.split(input, '\n')
 	for line, line_content in lines do
@@ -27,24 +27,24 @@ local function get_cursor_position ()
 	line_cursor += string.len(line_content)
 	return #lines, line_cursor, string.len(line_content)
 end
-local function report (str: string)
+local function report(str: string)
 	local line, char = get_cursor_position()
 	return warn(`[Line {line}, Column {char}]: {str}`)
 end
 
 -- lexers
-local function skip_comments ()
+local function skip_comments()
 	repeat
 		local content = scan_pattern('^(%-%-%[%[.-%]%]%s*)') or scan_pattern('^(%-%-.-\n%s*)')
 		if content then advance(string.len(content)) end
 	until content == nil
 end
-local function skip_spaces ()
+local function skip_spaces()
 	local content = scan_pattern('^(%s*)')
 	if content then advance(string.len(content)) end
 end
 
-local function scan_word (exact_word: string?): string?
+local function scan_word(exact_word: string?): string?
 	if not have_cached_word then
 		content, word = scan_pattern('^((%w+)%s*)')
 		have_cached_word = true
@@ -57,7 +57,7 @@ local function scan_word (exact_word: string?): string?
 
 	return word
 end
-local function scan_char (exact_char: string): string?
+local function scan_char(exact_char: string): string?
 	local content, char = scan_pattern(`^((.)%s*)`)
 	if not content then return end
 
@@ -67,11 +67,11 @@ local function scan_char (exact_char: string): string?
 	skip_comments()
 	return char
 end
-local function expect_char (exact_char: string): string?
+local function expect_char(exact_char: string): string?
 	return scan_char(exact_char) or report(`expected '{exact_char}'`)
 end
 
-local function scan_str (): string?
+local function scan_str(): string?
 	local content, str = scan_pattern("^('(.-)'%s*)")
 	if not content then
 		content, str = scan_pattern('^("(.-)"%s*)')
@@ -83,7 +83,7 @@ local function scan_str (): string?
 
 	return str
 end
-local function scan_num (): string?
+local function scan_num(): string?
 	local content, num = scan_pattern('^((%-?%d*%.?%d+)%s*)')
 	if not content then return end
 
@@ -92,7 +92,7 @@ local function scan_num (): string?
 
 	return num
 end
-local function scan_raw (str: string): string?
+local function scan_raw(str: string): string?
 	local raw = string.sub(input, cursor, cursor + string.len(str) - 1)
 	if not raw or raw ~= str then return end
 
@@ -103,7 +103,7 @@ local function scan_raw (str: string): string?
 	return raw
 end
 
-local function lex (str)
+local function lex(str)
 	input = str
 	cursor = 1
 
