@@ -1,7 +1,7 @@
 local process = require('@lune/process')
 
-local args = {}
-export type args = { [any]: string | boolean }
+local args: args = {}
+export type args = { [any]: { string } | string | boolean }
 
 local index = 0
 repeat
@@ -15,7 +15,14 @@ repeat
 		if not key_value or key_value:match('^%-%-') then
 			args[key] = true
 		else
-			args[key] = key_value
+			local current_value = args[key] :: string
+			if type(current_value) == 'table' then
+				table.insert(current_value, key_value)
+			elseif type(current_value) == 'nil' then
+				args[key] = key_value
+			else
+				args[key] = { current_value, key_value }
+			end
 			index += 1
 		end
 	else
@@ -23,6 +30,15 @@ repeat
 	end
 until value == nil
 
+-- methods
+local function get_arg(args: args, key: string | number): string | boolean
+	local value = args[key]
+	return if type(value) == 'table' then value[1] else value
+end
+local function get_args(args: args, key: string): { string }
+	local values = args[key]
+	return if type(values) == 'table' then values else { values :: any }
+end
 local function split(args: args): { string }
 	local tokens = {}
 	for key, value in args do
@@ -37,6 +53,9 @@ end
 
 -- module
 return table.freeze {
-	current = args :: args,
+	current = args,
+
+	get_args = get_args,
+	get_arg = get_arg,
 	split = split,
 }

@@ -1,6 +1,8 @@
-local args = require('@cli/args').current
 local io = require('@lune/stdio')
 local semver = require('@pkg/semver')
+
+local args = require('@cli/args')
+local current_args = args.current
 
 -- defs
 export type struct<Output = unknown> = { name: string, desc: string?, optional: true? }
@@ -65,7 +67,7 @@ end
 
 -- constructors
 local function prompt_text<value>(question: str<value>): value
-	local value = args[question.name] or (args.yes and question.default)
+	local value = current_args[question.name] or (current_args.yes and question.default)
 	repeat
 		local out = value
 			or io.prompt('text', question.name, if question.default == nil then '' else tostring(question.default))
@@ -102,13 +104,13 @@ local function prompt_enum<value>(question: enum<value>): value?
 	undo_id = #names
 
 	-- default
-	local default_value = if args[question.name]
-		then table.find(names, tostring(args[question.name]))
-		elseif args.yes then question.default_index or 1
+	local default_value = if current_args[question.name]
+		then table.find(names, tostring(args.get_arg(current_args, question.name)))
+		elseif current_args.yes then question.default_index or 1
 		else nil
 
-	if args[question.name] and default_value == nil then
-		warn(`invalid option {question.name} value '{args[question.name]}'`)
+	if current_args[question.name] and default_value == nil then
+		warn(`invalid option {question.name} value '{current_args[question.name]}'`)
 		default_value = nil
 	end
 
@@ -140,9 +142,9 @@ local function inquisitor(output: { [string]: any })
 	local self = {}
 
 	function self.bool(prop: bool)
-		local value = if args[prop.name] ~= nil
-			then args[prop.name]
-			elseif args.yes then prop.default
+		local value = if current_args[prop.name] ~= nil
+			then args.get_arg(current_args, prop.name)
+			elseif current_args.yes then prop.default
 			else io.prompt('confirm', prop.name, prop.default or output[prop.name])
 
 		output[prop.name] = value
@@ -151,43 +153,55 @@ local function inquisitor(output: { [string]: any })
 	function self.int(prop: num)
 		prop.parse = parse_integer :: any
 		prop.default = prop.default or output[prop.name]
+
 		local value = prompt_text(prop :: any)
 		output[prop.name] = value
+
 		return value
 	end
 	function self.num(prop: num)
 		prop.parse = parse_number :: any
 		prop.default = prop.default or output[prop.name]
+
 		local value = prompt_text(prop :: any)
 		output[prop.name] = value
+
 		return value
 	end
 	function self.str(prop: str)
 		prop.parse = prop.parse
 		prop.default = prop.default or output[prop.name]
+
 		local value = prompt_text(prop)
 		output[prop.name] = value
+
 		return value
 	end
 	function self.identifier(prop: str)
 		prop.parse = parse_identifier
 		prop.default = prop.default or output[prop.name]
+
 		local value = prompt_text(prop)
 		output[prop.name] = value
+
 		return value
 	end
 	function self.version(prop: str<semver.ParseError>)
 		prop.parse = parse_version :: any
 		prop.default = prop.default or output[prop.name]
+
 		local value = prompt_text(prop)
 		output[prop.name] = value
+
 		return value
 	end
 	function self.enum(prop: enum)
 		local options = { sparse_unpack(prop) }
 		prop.default_index = prop.default_index or table.find(options, output[prop.name])
+
 		local value = prompt_enum(prop)
 		output[prop.name] = value
+
 		return value
 	end
 	function self.struct(prop: struct)
