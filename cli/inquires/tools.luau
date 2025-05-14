@@ -4,7 +4,16 @@ local project = require('@lib/project')
 
 -- module
 local function inquire()
-	local result = {}
+	local result = {
+		toolchain_manager = 'pesde',
+		package_managers = { 'pesde' },
+		code_editors = { 'vsc' },
+		version_tracker = 'git',
+		luau_tools = { 'lsp', 'stylua' },
+		roblox_syncer = 'rojo',
+		cloud_sync = 'asphalt',
+		remote_idl = 'blink',
+	}
 	local q = inquisitor(result)
 
 	q.enum {

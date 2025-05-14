@@ -16,7 +16,7 @@ export type enum<Output = string> = {
 }
 export type selections<Output = string> = {
 	name: string,
-	default_indexes: number?,
+	default_indexes: { number }?,
 	desc: string?,
 	[number]: option<Output>,
 }
@@ -70,17 +70,31 @@ local function sparse_unpack(t)
 	end
 	return unpack(output)
 end
-local function get_indexes(arr, values): { number }
+
+local function get_indexes(options: { option }, values: { any }): { number }
 	local indexes = {}
+	local option_values = {}
+
+	for i, option in options do
+		option_values[i] = option.value or option.name
+	end
+
 	for _, value in values do
-		local index = table.find(arr, value)
+		local index = table.find(option_values, value)
 		if not index then
-			warn(`invalid option '{value}', availables: {table.concat(arr, ' | ')}`)
+			warn(`invalid option '{value}', availables: {table.concat(option_values, ' | ')}`)
 			continue
 		end
 		table.insert(indexes, index)
 	end
 	return indexes
+end
+local function get_index(options: { option }, value: any): number
+	local option_values = {}
+	for i, option in options do
+		option_values[i] = option.value or option.name
+	end
+	return table.find(option_values, value) :: any
 end
 
 -- constructors
@@ -123,7 +137,7 @@ local function prompt_enum<value>(question: enum<value>): value?
 
 	-- default
 	local default_value = if current_args[question.name]
-		then table.find(names, tostring(args.get_arg(current_args, question.name)))
+		then get_index(options :: any, args.get_arg(current_args, question.name))
 		elseif current_args.yes then question.default_index or 1
 		else nil
 
@@ -173,7 +187,7 @@ local function prompt_selections<value>(question: selections<value>): value?
 
 	-- default
 	local default_value = if current_args[question.name]
-		then get_indexes(names, args.get_args(current_args, question.name))
+		then get_indexes(options :: any, args.get_args(current_args, question.name))
 		elseif current_args.yes then question.default_indexes or {}
 		else nil
 
@@ -269,7 +283,7 @@ local function inquisitor(output: { [string]: any })
 	end
 	function self.enum(prop: enum)
 		local options = { sparse_unpack(prop) }
-		prop.default_index = prop.default_index or table.find(options, output[prop.name])
+		prop.default_index = prop.default_index or get_index(options, output[prop.name])
 
 		local value = prompt_enum(prop)
 		output[prop.name] = value
@@ -278,7 +292,7 @@ local function inquisitor(output: { [string]: any })
 	end
 	function self.multiselect(prop: selections)
 		local options = { sparse_unpack(prop) }
-		prop.default_indexes = prop.default_indexes or table.find(options, output[prop.name])
+		prop.default_indexes = prop.default_indexes or get_indexes(options, output[prop.name])
 
 		local value = prompt_selections(prop)
 		output[prop.name] = value
