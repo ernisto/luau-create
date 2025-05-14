@@ -292,7 +292,7 @@ local function inquisitor(output: { [string]: any })
 	end
 	function self.multiselect(prop: selections)
 		local options = { sparse_unpack(prop) }
-		prop.default_indexes = prop.default_indexes or get_indexes(options, output[prop.name])
+		prop.default_indexes = prop.default_indexes or output[prop.name] and get_indexes(options, output[prop.name])
 
 		local value = prompt_selections(prop)
 		output[prop.name] = value
