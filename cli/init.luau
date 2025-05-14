@@ -12,7 +12,24 @@ end
 
 if not args[1] then
 	inquire_project()
-	inquire_tools()
+	local tools = inquire_tools()
+	for _, tool in tools do
+		if type(tool) == 'table' then
+			for _, tool in tool do
+				if create.tools[tool] then
+					create.tools[tool].setup()
+				else
+					warn(`unknown tool '{tool}'`)
+				end
+			end
+		else
+			if create.tools[tool] then
+				create.tools[tool].setup()
+			else
+				warn(`unknown tool '{tool}'`)
+			end
+		end
+	end
 
 	create.language.setup()
 	create.editor.setup()
