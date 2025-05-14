@@ -1,51 +1,66 @@
 local create = require('@lib/init')
+local inquisitor = require('@cli/inquisitor')
 local project = require('@lib/project')
-local stdio = require('@lune/stdio')
 
+-- module
 local function inquire()
-	local toolchain_manager =
-		stdio.prompt('select', 'toolchain manager', { 'none', 'pesde', 'rokit', 'aftman', 'foreman', 'npm' })
-	local package_managers = if toolchain_manager == 2
-		then { 2 }
-		else stdio.prompt(
-			'multiselect',
-			'package manager',
-			{ 'pesde', 'npm', project.project.environment == 'roblox' and 'wally' or nil :: any }
-		)
+	local result = {}
+	local q = inquisitor(result)
 
-	local editors = stdio.prompt('multiselect', 'code editors', { 'vsc', 'zed', 'nvim' })
-	local trackers = stdio.prompt('select', 'version tracker', { 'none', 'git' })
-
-	local language_tools = stdio.prompt(
-		'multiselect',
-		'luau tools',
-		{ 'lsp', 'stylua', 'selene', create.tools.darklua and 'darklua' :: any }
-	)
-
-	local roblox_sync, remote_lib, cloud_sync
-	if project.project.environment == 'roblox' then
-		roblox_sync = stdio.prompt('select', 'roblox syncer', { 'rojo', create.tools.argon and 'argon' :: any })
-
-		remote_lib = project.project.kind == 'game'
-			and stdio.prompt('select', 'remote IDL', { 'none', 'blink', create.tools.zap and 'zap' :: any })
-
-		cloud_sync = stdio.prompt(
-			'select',
-			'cloud sync',
-			{ 'none', 'asphalt', project.project.kind == 'game' and create.tools.mantle and 'mantle' :: any }
-		)
-	end
-
-	return {
-		toolchain_manager = toolchain_manager,
-		package_managers = package_managers,
-		editors = editors,
-		trackers = trackers,
-		language_tools = language_tools,
-		roblox_sync = roblox_sync,
-		remote_lib = remote_lib,
-		cloud_sync = cloud_sync,
+	q.enum {
+		name = 'toolchain_manager',
+		{ name = 'none' },
+		{ name = 'pesde' },
+		{ name = 'rokit' },
+		{ name = 'aftman' },
+		{ name = 'foreman' },
+		{ name = 'npm' },
 	}
+	result.package_managers = if result.toolchain_manager == 'pesde'
+		then { 'pesde' }
+		else q.multiselect {
+			name = 'package_manager',
+			{ name = 'pesde' },
+			{ name = 'npm' },
+			if project.project.environment == 'roblox' then { name = 'wally' } else nil :: any,
+		}
+
+	q.multiselect { name = 'code_editors', { name = 'vsc' }, { name = 'zed' }, { name = 'nvim' } }
+	q.enum { name = 'version_tracker', { name = 'none' }, { name = 'git' } }
+
+	q.multiselect {
+		name = 'luau_tools',
+		{ name = 'lsp' },
+		{ name = 'stylua' },
+		{ name = 'selene' },
+		if create.tools.darklua then { name = 'darklua' } else nil :: any,
+	}
+
+	if project.project.environment == 'roblox' then
+		q.enum {
+			name = 'roblox_syncer',
+			optional = true,
+			{ name = 'rojo' },
+			if create.tools.argon then { name = 'argon' } else nil :: any,
+		}
+		q.enum {
+			name = 'cloud_sync',
+			optional = true,
+			{ name = 'none' },
+			{ name = 'asphalt' },
+			if project.project.kind == 'game' and create.tools.mantle then { name = 'mantle' } else nil :: any,
+		}
+		if project.project.kind == 'game' then
+			q.enum {
+				name = 'remote_idl',
+				optional = true,
+				{ name = 'none' },
+				{ name = 'blink' },
+				if create.tools.zap then { 'zap' } else nil :: any,
+			}
+		end
+	end
+	return result
 end
 
 return inquire

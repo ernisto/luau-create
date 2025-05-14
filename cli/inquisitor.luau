@@ -14,6 +14,12 @@ export type enum<Output = string> = {
 	optional: true?,
 	[number]: option<Output>,
 }
+export type selections<Output = string> = {
+	name: string,
+	default_indexes: number?,
+	desc: string?,
+	[number]: option<Output>,
+}
 export type option<Output = string> = { name: string, value: Output?, desc: string? }
 
 export type num<Output = number> = {
@@ -63,6 +69,18 @@ local function sparse_unpack(t)
 		table.insert(output, t[index])
 	end
 	return unpack(output)
+end
+local function get_indexes(arr, values): { number }
+	local indexes = {}
+	for _, value in values do
+		local index = table.find(arr, value)
+		if not index then
+			warn(`invalid option '{value}', availables: {table.concat(arr, ' | ')}`)
+			continue
+		end
+		table.insert(indexes, index)
+	end
+	return indexes
 end
 
 -- constructors
@@ -137,6 +155,60 @@ local function prompt_enum<value>(question: enum<value>): value?
 		return options[index].value or options[index].name :: any
 	until false
 end
+local function prompt_selections<value>(question: selections<value>): value?
+	local options = { sparse_unpack(question) }
+	local names = {}
+	for i, option in options do
+		names[i] = option.name
+	end
+
+	-- core options
+	local undo_id, help_id: number?
+	if question.desc then
+		table.insert(names, 'help') -- TO IMPROVE
+		help_id = #names
+	end
+	table.insert(names, 'undo')
+	undo_id = #names
+
+	-- default
+	local default_value = if current_args[question.name]
+		then get_indexes(names, args.get_args(current_args, question.name))
+		elseif current_args.yes then question.default_indexes or {}
+		else nil
+
+	if current_args[question.name] and default_value == nil then
+		warn(`invalid option {question.name} value '{current_args[question.name]}'`)
+		default_value = nil
+	end
+
+	-- loop
+	repeat
+		local indexes = default_value or io.prompt('multiselect', question.name, names)
+
+		if table.find(indexes, undo_id) then
+			print('NEED IMPLEMENTATION')
+			continue
+		elseif help_id and table.find(indexes, help_id) then
+			table.remove(names, help_id)
+			undo_id -= 1
+			help_id = nil
+
+			print(question.desc)
+			for i, option in options do
+				names[i] = `{option.name} {io.color('white')}{option.desc or ''}`
+			end
+			continue
+		end
+
+		local values = {}
+		for _, index in indexes do
+			table.insert(values, options[index].value or options[index].name)
+		end
+
+		return values :: any
+	until false
+end
 
 local function inquisitor(output: { [string]: any })
 	local self = {}
@@ -200,6 +272,15 @@ local function inquisitor(output: { [string]: any })
 		prop.default_index = prop.default_index or table.find(options, output[prop.name])
 
 		local value = prompt_enum(prop)
+		output[prop.name] = value
+
+		return value
+	end
+	function self.multiselect(prop: selections)
+		local options = { sparse_unpack(prop) }
+		prop.default_indexes = prop.default_indexes or table.find(options, output[prop.name])
+
+		local value = prompt_selections(prop)
 		output[prop.name] = value
 
 		return value
