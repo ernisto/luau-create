@@ -69,7 +69,8 @@ local function prompt_text<value>(question: str<value>): value
 	repeat
 		local out = value
 			or io.prompt('text', question.name, if question.default == nil then '' else tostring(question.default))
-		value = nil
+
+		value = nil :: any
 		if question.parse then
 			local success, result = pcall(question.parse, out)
 			if success then return result end
@@ -102,7 +103,10 @@ local function prompt_enum<value>(question: enum<value>): value?
 
 	-- loop
 	repeat
-		local index = io.prompt('select', question.name, names)
+		local index = if args[question.name]
+			then table.find(names, tostring(args[question.name]))
+			else io.prompt('select', question.name, names)
+
 		if index == none_id then
 			return nil
 		elseif index == undo_id then
@@ -127,8 +131,9 @@ local function inquisitor(output: { [string]: any })
 	local self = {}
 
 	function self.bool(prop: bool)
-		local value = args[prop.name] and args[prop.name] == 'true'
-		if value == nil then value = io.prompt('confirm', prop.name, prop.default or output[prop.name]) end
+		local value = if args[prop.name] == nil
+			then io.prompt('confirm', prop.name, prop.default or output[prop.name])
+			else args[prop.name]
 
 		output[prop.name] = value
 		return value
