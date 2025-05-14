@@ -140,9 +140,10 @@ local function inquisitor(output: { [string]: any })
 	local self = {}
 
 	function self.bool(prop: bool)
-		local value = if args[prop.name] == nil
-			then io.prompt('confirm', prop.name, prop.default or output[prop.name])
-			else args[prop.name]
+		local value = if args[prop.name] ~= nil
+			then args[prop.name]
+			elseif args.yes then prop.default
+			else io.prompt('confirm', prop.name, prop.default or output[prop.name])
 
 		output[prop.name] = value
 		return value

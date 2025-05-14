@@ -11,7 +11,7 @@ repeat
 	local key = value:match('^%-%-(.*)')
 	if key then
 		local key_value = process.args[index + 1]
-		if key_value:match('^%-%-') then
+		if not key_value or key_value:match('^%-%-') then
 			args[key] = true
 		else
 			args[key] = key_value
