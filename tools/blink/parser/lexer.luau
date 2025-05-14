@@ -46,7 +46,7 @@ end
 
 local function scan_word(exact_word: string?): string?
 	if not have_cached_word then
-		content, word = scan_pattern('^((%w+)%s*)')
+		content, word = scan_pattern('^(([%a_][%w_]*)%s*)')
 		have_cached_word = true
 	end
 	if not content then return end
