@@ -1,4 +1,4 @@
-local args = require('@utils/args')
+local args = require('@cli/args').current
 local io = require('@lune/stdio')
 local semver = require('@pkg/semver')
 

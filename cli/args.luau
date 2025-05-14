@@ -1,6 +1,7 @@
 local process = require('@lune/process')
 
 local args = {}
+export type args = { [any]: string | boolean }
 
 local index = 0
 repeat
@@ -22,4 +23,20 @@ repeat
 	end
 until value == nil
 
-return table.freeze(args :: { [any]: string | boolean })
+local function split(args: args): { string }
+	local tokens = {}
+	for key, value in args do
+		if type(key) == 'string' then
+			table.insert(tokens, `--{key}`)
+			if value == true then continue end
+		end
+		table.insert(tokens, tostring(value))
+	end
+	return tokens
+end
+
+-- module
+return table.freeze {
+	current = args :: args,
+	split = split,
+}
