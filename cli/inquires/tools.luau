@@ -1,4 +1,4 @@
-local create = require('@lib')
+local create = require('@lib/init')
 local project = require('@lib/project')
 local stdio = require('@lune/stdio')
 
