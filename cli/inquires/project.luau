@@ -3,7 +3,7 @@ local inquisitor = require('@cli/inquisitor')
 local project = require('@lib/project')
 
 -- main
-local function inquire ()
+local function inquire()
 	local project = project.project
 
 	-- root
@@ -35,8 +35,9 @@ local function inquire ()
 	if env == 'roblox' and kind == 'package' then
 		q.enum {
 			name = 'side',
-			{ name = 'client' },
+			default_index = 1,
 			{ name = 'shared' },
+			{ name = 'client' },
 			{ name = 'server' },
 		}
 	end

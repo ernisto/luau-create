@@ -104,7 +104,7 @@ local function prompt_enum<value>(question: enum<value>): value?
 	-- default
 	local default_value = if args[question.name]
 		then table.find(names, tostring(args[question.name]))
-		elseif args.yes then question.default_index
+		elseif args.yes then question.default_index or 1
 		else nil
 
 	if args[question.name] and default_value == nil then
