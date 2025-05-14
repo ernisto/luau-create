@@ -1,8 +1,8 @@
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 
-local simple_dict = require('@self/simple_dict')
 local merge = require('@utils/merge')
+local simple_dict = require('@self/simple_dict')
 
 -- vars
 local sup = false
@@ -12,14 +12,14 @@ merge(ignored_globs, (file.read_str('.gitignore') or ''):split('\n'))
 merge(attributes, simple_dict.read('.gitattributes') or {})
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 	file.write_str('.gitignore', table.concat(ignored_globs, '\n'))
 	simple_dict.write('.gitattributes', attributes)
 end
 
 type glob = string
-local function ignore_globs(...: glob)
+local function ignore_globs (...: glob)
 	table.insert(ignored_globs, `# {debug.info(2, 'n')}`)
 	for _, glob in { ... } do
 		if table.find(ignored_globs, glob) then continue end
@@ -28,11 +28,11 @@ local function ignore_globs(...: glob)
 end
 
 type attribute = string
-local function set_attribute(glob: glob, ...: attribute)
+local function set_attribute (glob: glob, ...: attribute)
 	attributes[glob] = merge(attributes[glob] or {}, { ... })
 end
 
-local function setup()
+local function setup ()
 	if not sup then return end
 	sup = true
 

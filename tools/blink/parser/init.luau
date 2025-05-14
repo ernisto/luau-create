@@ -16,54 +16,49 @@ type def = def.def
 local parse_statement
 
 export type option = { kind: 'option', name: string, value: misc.expr }
-local function parse_option()
-    if not scan_word('option') then return end
+local function parse_option ()
+	if not scan_word('option') then return end
 
-    local name = scan_word() or report(`expected identifier`)
-    expect_char('=')
-    
-    local expr = parse_expr() or report(`expected expr`)
-    return { kind = 'option', name = name, value = expr }
+	local name = scan_word() or report(`expected identifier`)
+	expect_char('=')
+
+	local expr = parse_expr() or report(`expected expr`)
+	return { kind = 'option', name = name, value = expr }
 end
 
 export type import = { kind: 'import', path: string, name: string? }
-local function parse_import()
-    if not scan_word('import') then return end
-    local path = scan_str() or report(`expected string`)
-    local name
-    if scan_word('as') then
-        name = scan_word() or report(`expected identifier`)
-    end
-    return { kind = 'import', path = path, name = name }
+local function parse_import ()
+	if not scan_word('import') then return end
+	local path = scan_str() or report(`expected string`)
+	local name
+	if scan_word('as') then name = scan_word() or report(`expected identifier`) end
+	return { kind = 'import', path = path, name = name }
 end
 
-export type scope = { kind: 'scope', name: string, statements: {statement} }
-local function parse_scope()
-    if not scan_word('scope') then return end
-    local name = scan_word() or report(`expected identifier`)
+export type scope = { kind: 'scope', name: string, statements: { statement } }
+local function parse_scope ()
+	if not scan_word('scope') then return end
+	local name = scan_word() or report(`expected identifier`)
 
-    expect_char('{')
-    local statements = parse_list(parse_statement)
+	expect_char('{')
+	local statements = parse_list(parse_statement)
 
-    expect_char('}')
-    return { kind = 'scope', name = name, statements = statements }
+	expect_char('}')
+	return { kind = 'scope', name = name, statements = statements }
 end
 
 type statement = option | import | scope | def
-function parse_statement()
-    return parse_option()
-        or parse_import()
-        or parse_scope()
-        or parse_def()
+function parse_statement ()
+	return parse_option() or parse_import() or parse_scope() or parse_def()
 end
 
 -- main
-local function parse(str: string)
-    lexer.lex(str)
-    return parse_list(parse_statement)
+local function parse (str: string)
+	lexer.lex(str)
+	return parse_list(parse_statement)
 end
 
 -- module
 return table.freeze {
-    parse = parse
+	parse = parse,
 }

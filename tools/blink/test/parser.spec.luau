@@ -1,6 +1,6 @@
-local fs = require("@lune/fs")
-local display = require("./display")
-local parser = require("../parser")
+local display = require('./display')
+local fs = require('@lune/fs')
+local parser = require('../parser')
 
 local code = fs.readFile('tools/blink/test/battery.blink')
 local ast = parser.parse(code)

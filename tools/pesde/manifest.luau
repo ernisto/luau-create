@@ -1,7 +1,7 @@
 local file = require('@lib/file')
 local fs = require('@lune/fs')
-local merge = require('@utils/merge')
 local license = require('@lib/project/licenses')
+local merge = require('@utils/merge')
 
 -- defs
 export type dependency = pesde_dependency | wally_dependency | github_dependency | workspace_dependency | path_dependency
@@ -63,7 +63,7 @@ export type manifest = {
 }
 
 -- functions
-local function get_scripts(root: string)
+local function get_scripts (root: string)
 	local scripts = {}
 	if not fs.isDir(root) then return end
 	for _, name_ext in fs.readDir('scripts') do

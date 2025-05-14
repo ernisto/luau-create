@@ -1,5 +1,5 @@
-local project = require('@lib/project')
 local merge = require('@utils/merge')
+local project = require('@lib/project')
 local vsc = require('@tools/vsc')
 
 -- vars
@@ -8,25 +8,25 @@ local ignore_imports = {}
 local sup = false
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 end
 
 type glob = string
-local function ignore_import_globs(...: glob)
+local function ignore_import_globs (...: glob)
 	for _, glob in { ... } do
 		if table.find(ignore_diagnostics, glob) then continue end
 		table.insert(ignore_diagnostics, glob)
 	end
 end
-local function ignore_diagnostic_globs(...: glob)
+local function ignore_diagnostic_globs (...: glob)
 	for _, glob in { ... } do
 		if table.find(ignore_imports, glob) then continue end
 		table.insert(ignore_imports, glob)
 	end
 end
 
-local function setup()
+local function setup ()
 	if sup then return end
 	sup = true
 

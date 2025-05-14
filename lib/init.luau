@@ -1,7 +1,7 @@
-local package_manager = require('@lib/packages')
-local language = require('@self/language')
-local project = require('@lib/project')
 local editor = require('@lib/editor')
+local language = require('@self/language')
+local package_manager = require('@lib/packages')
+local project = require('@lib/project')
 local tools = table.freeze {
 
 	-- docs
@@ -38,7 +38,7 @@ local tools = table.freeze {
 }
 
 -- functions
-local function save()
+local function save ()
 	for _, tool: any in tools do
 		tool.save()
 	end

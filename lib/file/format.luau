@@ -1,14 +1,14 @@
 -- functions
-local function is_array(t: { [any]: any }): boolean
+local function is_array (t: { [any]: any }): boolean
 	local k = next(t)
 	return not k or typeof(k) == 'number'
 end
 
-local function is_empty(t: { [any]: any }): boolean
+local function is_empty (t: { [any]: any }): boolean
 	return next(t) == nil
 end
 
-local function get_keys<K>(t: { [K]: any }): { K }
+local function get_keys <K>(t: { [K]: any }): { K }
 	local keys = {}
 
 	for k in t do
@@ -18,13 +18,13 @@ local function get_keys<K>(t: { [K]: any }): { K }
 	return keys
 end
 
-local function custom_type(a: any): string
+local function custom_type (a: any): string
 	return if typeof(a) == 'table' and is_array(a) then 'array' else typeof(a)
 end
 
-local function sort_iter<K, V>(t: { [K]: V }): () -> (K, V)
+local function sort_iter <K, V>(t: { [K]: V }): () -> (K, V)
 	local keys = get_keys(t)
-	table.sort(keys, function(a: any, b: any)
+	table.sort(keys, function (a: any, b: any)
 		local typeA, typeB = custom_type(t[a]), custom_type(t[b])
 
 		if (typeof(t[a]) ~= 'table') and (typeof(t[b]) == 'table') then return true end
@@ -34,18 +34,18 @@ local function sort_iter<K, V>(t: { [K]: V }): () -> (K, V)
 		return false
 	end)
 
-	return coroutine.wrap(function()
+	return coroutine.wrap(function ()
 		for _, v in keys do
 			coroutine.yield(v, t[v])
 		end
 	end)
 end
 
-local function format_type<V>(v: V): V | string
+local function format_type <V>(v: V): V | string
 	return if typeof(v) == 'string' then `"{v}"` else v
 end
 
-local function format_table(t: { [any]: any }): string
+local function format_table (t: { [any]: any }): string
 	local texts = {}
 
 	local array = is_array(t)
@@ -63,7 +63,7 @@ local function format_table(t: { [any]: any }): string
 	return if array then `[{text}]` else `\{{text}}`
 end
 
-local function create_table(name: string, t: { [string]: any }): string
+local function create_table (name: string, t: { [string]: any }): string
 	local texts = {}
 
 	for k, v in sort_iter(t) do
@@ -76,7 +76,7 @@ local function create_table(name: string, t: { [string]: any }): string
 	return text
 end
 
-local function format(data: { [string]: any }): string
+local function format (data: { [string]: any }): string
 	local text = ''
 	for k, v in sort_iter(data) do
 		if typeof(v) == 'table' and is_empty(v) then continue end

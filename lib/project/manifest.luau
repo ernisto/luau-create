@@ -1,12 +1,12 @@
-local pesde = require('@tools/pesde/manifest')
-local wally = require('@tools/wally/manifest')
 local npm = require('@tools/npm/manifest')
+local pesde = require('@tools/pesde/manifest')
 local stylua = require('@tools/stylua/manifest')
+local wally = require('@tools/wally/manifest')
 
-local license = require('@self/licenses')
-local semver = require('@pkg/semver')
 local infer = require('@utils/infer')
+local license = require('@self/licenses')
 local merge = require('@utils/merge')
+local semver = require('@pkg/semver')
 
 -- defs
 export type project = {
@@ -46,11 +46,11 @@ export type project = {
 
 -- functions
 local none: any = nil
-local function concat_people(people: npm.people): string
+local function concat_people (people: npm.people): string
 	if type(people) == 'string' then return people end
 	return people.name .. (people.email and ` <{people.email}>` or '') .. (people.url and ` ({people.url})` or '')
 end
-local function await_maybe_extract_npm()
+local function await_maybe_extract_npm ()
 	local project: project = table.clone(npm) :: any
 
 	local peoples = { npm.author, unpack(npm.contribuitors) }
@@ -65,7 +65,7 @@ local function await_maybe_extract_npm()
 	project.name = name :: any
 	return project
 end
-local function await_maybe_extract_wally()
+local function await_maybe_extract_wally ()
 	local wally = wally.package
 	local project: project = table.clone(wally) :: any
 
@@ -77,7 +77,7 @@ local function await_maybe_extract_wally()
 	project.host = host :: any
 	return project
 end
-local function await_maybe_extract_pesde()
+local function await_maybe_extract_pesde ()
 	local project: project = table.clone(pesde) :: any
 
 	local host, name = string.match(pesde.name or '', '(%w[_]+)/([%w_]+)')

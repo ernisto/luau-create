@@ -1,6 +1,6 @@
+local create = require('@lib/init')
 local inquire_project = require('@cli/inquires/project')
 local process = require('@lune/process')
-local create = require('@lib/init')
 local stdio = require('@lune/stdio')
 
 local tool_name = process.args[1]

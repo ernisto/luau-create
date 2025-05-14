@@ -1,6 +1,6 @@
+local file = require('@lib/file')
 local license = require('@lib/project/licenses')
 local merge = require('@utils/merge')
-local file = require('@lib/file')
 
 -- defs
 type overrides = { [string]: string | overrides }

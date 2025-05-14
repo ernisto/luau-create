@@ -4,11 +4,11 @@ local editor = require('@lib/editor')
 local sup = false
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 end
 
-local function setup()
+local function setup ()
 	if sup then return end
 	sup = true
 	editor.hide_globs('.env', '.github')

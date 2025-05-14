@@ -1,13 +1,13 @@
 local project = require('@lib/project').project
-local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
+local tracker = require('@lib/tracker')
 
+local dom = require('@self/dom')
 local merge = require('@utils/merge')
 local pesde = require('@tools/pesde')
-local wally = require('@tools/wally')
 local vsc = require('@tools/vsc')
-local dom = require('@self/dom')
+local wally = require('@tools/wally')
 
 -- vars
 local sup = false
@@ -17,12 +17,12 @@ local tree = dom.node('DataModel')
 merge({ tree = tree }, file.read_json('dev.project.json'))
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 	file.write_json('dev.project.json', { name = project.name, tree = tree })
 end
 
-local function add_system_path(system_path: string, roblox_path: { string }, place: string?)
+local function add_system_path (system_path: string, roblox_path: { string }, place: string?)
 	local tree = places[place] or tree
 	local node = dom.get_node(tree, roblox_path)
 
@@ -33,11 +33,11 @@ local function add_system_path(system_path: string, roblox_path: { string }, pla
 	node['$path'] = system_path
 	synced_paths[system_path] = joined_path
 end
-local function set_properties(roblox_path: { string }, properties: { [string]: any })
+local function set_properties (roblox_path: { string }, properties: { [string]: any })
 	merge(dom.get_node(tree, roblox_path)['$properties'], properties)
 end
 
-local function setup()
+local function setup ()
 	if sup then return end
 	sup = true
 

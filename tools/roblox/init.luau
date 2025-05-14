@@ -1,6 +1,6 @@
+local editor = require('@lib/editor')
 local project = require('@lib/project')
 local tracker = require('@lib/tracker')
-local editor = require('@lib/editor')
 
 local merge = require('@utils/merge')
 local rojo = require('@tools/rojo')
@@ -10,15 +10,15 @@ local vsc = require('@tools/vsc')
 local sup = false
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 end
 
-local function add_system_path(system_path: string, roblox_path: { string })
+local function add_system_path (system_path: string, roblox_path: { string })
 	rojo.add_system_path(system_path, roblox_path)
 end
 
-local function setup()
+local function setup ()
 	if sup then return end
 	sup = true
 

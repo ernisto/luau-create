@@ -1,4 +1,9 @@
 collapse_simple_statement = 'ConditionalOnly'
+space_after_function_names = 'Definitions'
 call_parentheses = 'Input'
 quote_style = 'AutoPreferSingle'
 line_endings = 'Unix'
+indent_type = 'Tabs'
+
+[sort_requires]
+enabled = true

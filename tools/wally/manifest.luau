@@ -1,6 +1,6 @@
 local file = require('@lib/file')
-local merge = require('@utils/merge')
 local license = require('@lib/project/licenses')
+local merge = require('@utils/merge')
 
 -- defs
 export type manifest = {

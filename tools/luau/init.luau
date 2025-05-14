@@ -1,7 +1,7 @@
-local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 local merge = require('@utils/merge')
+local tracker = require('@lib/tracker')
 
 -- defs
 type luaurc = {
@@ -24,17 +24,17 @@ local rc: luaurc = {
 merge(rc, file.read_json('.luaurc'))
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 	file.write_json('.luaurc', rc)
 end
 
-local function add_alias(alias: string, path: string)
+local function add_alias (alias: string, path: string)
 	if rc.aliases[alias] and rc.aliases[alias] ~= path then warn(`alias '{alias}' already defined`) end
 	rc.aliases[alias] = path
 end
 
-local function setup()
+local function setup ()
 	if sup then return end
 	sup = true
 

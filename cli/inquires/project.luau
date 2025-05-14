@@ -1,9 +1,9 @@
+local infer = require('@utils/infer')
 local inquisitor = require('@cli/inquisitor')
 local project = require('@lib/project')
-local infer = require('@utils/infer')
 
 -- main
-local function inquire()
+local function inquire ()
 	local project = project.project
 
 	-- root

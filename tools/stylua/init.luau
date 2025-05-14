@@ -1,6 +1,6 @@
 local editor = require('@lib/editor')
-local merge = require('@utils/merge')
 local file = require('@lib/file')
+local merge = require('@utils/merge')
 local toolchain = require('@lib/toolchain')
 local vsc = require('@tools/vsc')
 
@@ -11,11 +11,11 @@ local sup = false
 local manifest = require('@self/manifest')
 
 -- functions
-local function save()
+local function save ()
 	if not sup then return end
 	file.write_toml('stylua.toml', manifest)
 end
-local function setup()
+local function setup ()
 	if sup then return end
 	sup = true
 
