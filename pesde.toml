@@ -16,7 +16,7 @@ semver = {name = "0x5eal/semver", target = "luau", version = "^0.1.1"}
 stylua = {index = "default", name = "pesde/stylua", target = "lune", version = "^2.1.0" }
 
 [engines]
-lune = "0.8.9"
+lune = "^0.9.3"
 pesde = "^0.7.0-rc.3"
 
 [indices]
