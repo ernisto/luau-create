@@ -27,13 +27,13 @@ local function inquire()
         { name = 'Windows' }
     }
     q_stylua.enum {
-        name = 'ident_type',
+        name = 'indent_type',
         optional = true,
         default_index = 1,
         { name = 'Tabs' },
         { name = 'Space' }
     }
-    q_stylua.int { name = 'ident_width', default = 4, optional = true }
+    q_stylua.int { name = 'indent_width', default = 4, optional = true }
     q_stylua.enum {
         name = 'quote_style',
         optional = true,
