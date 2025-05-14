@@ -65,7 +65,7 @@ end
 
 -- constructors
 local function prompt_text<value>(question: str<value>): value
-	local value = args[question.name]
+	local value = args[question.name] or (args.yes and question.default)
 	repeat
 		local out = value
 			or io.prompt('text', question.name, if question.default == nil then '' else tostring(question.default))
@@ -101,18 +101,27 @@ local function prompt_enum<value>(question: enum<value>): value?
 	table.insert(names, 'undo')
 	undo_id = #names
 
+	-- default
+	local default_value = if args[question.name]
+		then table.find(names, tostring(args[question.name]))
+		elseif args.yes then question.default_index
+		else nil
+
+	if args[question.name] and default_value == nil then
+		warn(`invalid option {question.name} value '{args[question.name]}'`)
+		default_value = nil
+	end
+
 	-- loop
 	repeat
-		local index = if args[question.name]
-			then table.find(names, tostring(args[question.name]))
-			else io.prompt('select', question.name, names)
+		local index = default_value or io.prompt('select', question.name, names)
 
-		if index == none_id then
+		if none_id and index == none_id then
 			return nil
 		elseif index == undo_id then
 			print('NEED IMPLEMENTATION')
 			continue
-		elseif index == help_id then
+		elseif help_id and index == help_id then
 			table.remove(names, help_id)
 			undo_id -= 1
 			help_id = nil
