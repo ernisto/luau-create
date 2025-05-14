@@ -1,8 +1,8 @@
 local project = require('@lib/project').project
-local language = require('@lib/language')
-local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
+local language = require('@lib/language')
+local tracker = require('@lib/tracker')
 local vsc = require('@tools/vsc')
 
 -- vars

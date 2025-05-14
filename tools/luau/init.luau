@@ -1,7 +1,7 @@
-local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 local merge = require('@utils/merge')
+local tracker = require('@lib/tracker')
 
 -- defs
 type luaurc = {

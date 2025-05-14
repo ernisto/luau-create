@@ -1,8 +1,8 @@
 local project = require('@lib/project').project
 local file = require('@lib/file')
 
-local luau = require('@tools/luau')
 local lsp = require('@tools/lsp')
+local luau = require('@tools/luau')
 
 -- functions
 type glob = string

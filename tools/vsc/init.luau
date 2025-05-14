@@ -1,5 +1,5 @@
-local merge = require('@utils/merge')
 local file = require('@lib/file')
+local merge = require('@utils/merge')
 
 -- vars
 local sup = false

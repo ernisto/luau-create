@@ -1,6 +1,6 @@
 local editor = require('@lib/editor')
-local merge = require('@utils/merge')
 local file = require('@lib/file')
+local merge = require('@utils/merge')
 local vsc = require('@tools/vsc')
 
 -- vars

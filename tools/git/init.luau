@@ -1,8 +1,8 @@
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 
-local simple_dict = require('@self/simple_dict')
 local merge = require('@utils/merge')
+local simple_dict = require('@self/simple_dict')
 
 -- vars
 local sup = false

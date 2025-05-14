@@ -1,6 +1,6 @@
 local format = require('@lib/file/format')
-local serde = require('@lune/serde')
 local fs = require('@lune/fs')
+local serde = require('@lune/serde')
 
 -- functions
 export type path = string

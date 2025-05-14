@@ -1,13 +1,13 @@
 local project = require('@lib/project').project
-local tracker = require('@lib/tracker')
 local editor = require('@lib/editor')
 local file = require('@lib/file')
+local tracker = require('@lib/tracker')
 
+local dom = require('@self/dom')
 local merge = require('@utils/merge')
 local pesde = require('@tools/pesde')
-local wally = require('@tools/wally')
 local vsc = require('@tools/vsc')
-local dom = require('@self/dom')
+local wally = require('@tools/wally')
 
 -- vars
 local sup = false

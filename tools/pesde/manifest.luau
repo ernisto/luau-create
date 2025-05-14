@@ -1,7 +1,7 @@
 local file = require('@lib/file')
 local fs = require('@lune/fs')
-local merge = require('@utils/merge')
 local license = require('@lib/project/licenses')
+local merge = require('@utils/merge')
 
 -- defs
 export type dependency = pesde_dependency | wally_dependency | github_dependency | workspace_dependency | path_dependency

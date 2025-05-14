@@ -1,8 +1,8 @@
-local foreman = require('@tools/foreman')
 local aftman = require('@tools/aftman')
-local rokit = require('@tools/rokit')
-local pesde = require('@tools/pesde')
+local foreman = require('@tools/foreman')
 local npm = require('@tools/npm')
+local pesde = require('@tools/pesde')
+local rokit = require('@tools/rokit')
 
 -- functions
 local function install_github(scope: string, name: string, version: string)

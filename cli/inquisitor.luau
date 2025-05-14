@@ -1,5 +1,5 @@
-local semver = require('@pkg/semver')
 local io = require('@lune/stdio')
+local semver = require('@pkg/semver')
 
 -- defs
 export type struct<Output = unknown> = { name: string, desc: string?, optional: true? }

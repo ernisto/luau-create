@@ -1,22 +1,22 @@
-local merge = require('@utils/merge')
 local file = require('@lib/file')
+local merge = require('@utils/merge')
 
 --defs
 type url = string
 type tool = {
-    github: string?,
-    gitlab: string?,
-    source: string?,
-    version: string,
+	github: string?,
+	gitlab: string?,
+	source: string?,
+	version: string,
 }
 
 -- module
 type manifest = {
-    hosts: { [string]: { souce: url, protocol: string } }?,
-    tools: { [string]: tool }
+	hosts: { [string]: { souce: url, protocol: string } }?,
+	tools: { [string]: tool },
 }
 local manifest: manifest = {
-    tools = {}
+	tools = {},
 }
 merge(manifest, file.read_toml('foreman.toml') or {})
 

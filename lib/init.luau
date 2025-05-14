@@ -1,7 +1,7 @@
-local package_manager = require('@lib/packages')
-local language = require('@self/language')
-local project = require('@lib/project')
 local editor = require('@lib/editor')
+local language = require('@self/language')
+local package_manager = require('@lib/packages')
+local project = require('@lib/project')
 local tools = table.freeze {
 
 	-- docs

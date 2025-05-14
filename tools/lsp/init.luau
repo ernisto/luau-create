@@ -1,5 +1,5 @@
-local project = require('@lib/project')
 local merge = require('@utils/merge')
+local project = require('@lib/project')
 local vsc = require('@tools/vsc')
 
 -- vars

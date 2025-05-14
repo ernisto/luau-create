@@ -1,12 +1,12 @@
-local pesde = require('@tools/pesde/manifest')
-local wally = require('@tools/wally/manifest')
 local npm = require('@tools/npm/manifest')
+local pesde = require('@tools/pesde/manifest')
 local stylua = require('@tools/stylua/manifest')
+local wally = require('@tools/wally/manifest')
 
-local license = require('@self/licenses')
-local semver = require('@pkg/semver')
 local infer = require('@utils/infer')
+local license = require('@self/licenses')
 local merge = require('@utils/merge')
+local semver = require('@pkg/semver')
 
 -- defs
 export type project = {

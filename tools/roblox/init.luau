@@ -1,6 +1,6 @@
+local editor = require('@lib/editor')
 local project = require('@lib/project')
 local tracker = require('@lib/tracker')
-local editor = require('@lib/editor')
 
 local merge = require('@utils/merge')
 local rojo = require('@tools/rojo')
