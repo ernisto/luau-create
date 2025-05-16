@@ -2,6 +2,7 @@ local editor = require('@lib/editor')
 local file = require('@lib/file')
 local merge = require('@utils/merge')
 local toolchain = require('@lib/toolchain')
+local tracker = require('@lib/tracker')
 local vsc = require('@tools/vsc')
 
 local version = '2.1.0'
@@ -22,6 +23,7 @@ local function setup()
 	toolchain.install_github('johnnymorganz', 'stylua', version)
 	toolchain.install_pesde('pesde', 'stylua', version)
 
+	tracker.set_attribute('*.luau', if manifest.line_endings == 'Windows' then 'eol=crlf' else 'eol=lf')
 	vsc.recommend_extensions('johnnymorganz.stylua')
 	editor.hide_globs('stylua.toml')
 
