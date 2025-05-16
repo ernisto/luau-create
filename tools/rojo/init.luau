@@ -27,7 +27,7 @@ local function add_system_path(system_path: string, roblox_path: { string }, pla
 	local node = dom.get_node(tree, roblox_path)
 
 	local joined_path = table.concat(roblox_path, '.')
-	if node['$path'] ~= system_path then
+	if node['$path'] and node['$path'] ~= system_path then
 		warn(`roblox path ({joined_path}) already is being synced by {node['$path']}`)
 	end
 	node['$path'] = system_path
