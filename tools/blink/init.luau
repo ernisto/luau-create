@@ -25,8 +25,8 @@ local function setup()
 	tracker.ignore_globs('dist/**')
 
 	file.write_default_str('remotes/init.blink')
+	rojo.add_system_path('dist/blink/server', { 'ServerScriptService', 'server', 'remotes' })
 	rojo.add_system_path('dist/blink/client', { 'ReplicatedStorage', 'client', 'remotes' })
-	rojo.add_system_path('dist/blink/server', { 'ReplicatedStorage', 'server', 'remotes' })
 	rojo.add_system_path('dist/blink/types', { 'ReplicatedStorage', 'types' })
 end
 
