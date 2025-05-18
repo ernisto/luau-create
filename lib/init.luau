@@ -1,9 +1,15 @@
 local editor = require('@lib/editor')
 local environment = require('@lib/environment')
-local language = require('@self/language')
+local language = require('@lib/language')
 local package_manager = require('@lib/packages')
 local project = require('@lib/project')
+local tasks = require('@lib/tasks')
+
 local tools = table.freeze {
+
+	-- libs
+	uilabs = nil,	-- require('@tools/uilabs'),
+	testez = nil,	-- require('@tools/testez'),
 
 	-- docs
 	moonwave = nil, -- require('@tools/moonwave')
@@ -55,5 +61,6 @@ return table.freeze {
 	package_manager = package_manager,
 	environment = environment,
 	editor = editor,
+	tasks = tasks,
 	tools = tools,
 }
