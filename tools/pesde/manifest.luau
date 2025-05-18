@@ -63,7 +63,7 @@ export type manifest = {
 }
 
 -- functions
-local function get_scripts (root: string)
+local function get_scripts(root: string)
 	local scripts = {}
 	if not fs.isDir(root) then return end
 	for _, name_ext in fs.readDir('scripts') do

@@ -7,16 +7,16 @@ local sup = false
 local tools = require('@self/manifest')
 
 -- functions
-local function save ()
+local function save()
 	if not sup then return end
 	file.write_toml('foreman.toml', { tools = tools })
 end
 
-local function install_github (scope: string, name: string, version: string)
+local function install_github(scope: string, name: string, version: string)
 	tools[name] = { github = `{scope}/{name}`, version = version }
 end
 
-local function setup ()
+local function setup()
 	if sup then return end
 	sup = true
 

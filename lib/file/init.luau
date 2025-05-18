@@ -4,7 +4,7 @@ local serde = require('@lune/serde')
 
 -- functions
 export type path = string
-local function check_exising_chain (path: string, file_name: string?)
+local function check_exising_chain(path: string, file_name: string?)
 	local ancestors = string.split(path, '/')
 	local safe_dir = ''
 
@@ -16,7 +16,7 @@ local function check_exising_chain (path: string, file_name: string?)
 	end
 	return not file_name or fs.isFile(safe_dir .. file_name)
 end
-local function ensure_existing_chain (path: string, file_name: string?)
+local function ensure_existing_chain(path: string, file_name: string?)
 	local ancestors = string.split(path, '/')
 
 	local safe_dir = ''
@@ -38,44 +38,44 @@ local function ensure_existing_chain (path: string, file_name: string?)
 end
 
 export type data = { [string]: any }
-local function read_str (path: path): string?
+local function read_str(path: path): string?
 	local dir, file = string.match(path, '(.*)/([^/]+)$')
 	if not check_exising_chain(dir or '', file or path) then return end
 
 	return fs.readFile(path)
 end
-local function read_toml (path: path): data?
+local function read_toml(path: path): data?
 	local str = read_str(path)
 	return str and str ~= '' and serde.decode('toml', str)
 end
-local function read_json (path: path): data?
+local function read_json(path: path): data?
 	local str = read_str(path)
 	return str and str ~= '' and serde.decode('json', str)
 end
-local function read_yaml (path: path): data?
+local function read_yaml(path: path): data?
 	local str = read_str(path)
 	return str and str ~= '' and serde.decode('yaml', str)
 end
 
-local function write_default_str (path: path, str: string?)
+local function write_default_str(path: path, str: string?)
 	local dir = string.match(path, '(.*)/([^/]+)$')
 	ensure_existing_chain(dir or '')
 
 	return not fs.isFile(path) and fs.writeFile(path, str or '')
 end
-local function write_str (path: path, str: string)
+local function write_str(path: path, str: string)
 	local dir = string.match(path, '(.*)/([^/]+)$')
 	ensure_existing_chain(dir or '')
 
 	return fs.writeFile(path, str)
 end
-local function write_toml (path: path, data: data)
+local function write_toml(path: path, data: data)
 	write_str(path, format(data))
 end
-local function write_json (path: path, data: data)
+local function write_json(path: path, data: data)
 	write_str(path, serde.encode('json', data, true))
 end
-local function write_yaml (path: path, data: data)
+local function write_yaml(path: path, data: data)
 	write_str(path, serde.encode('yaml', data, true))
 end
 

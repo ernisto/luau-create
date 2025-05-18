@@ -9,16 +9,16 @@ local tools = {}
 merge({ tools = tools }, file.read_toml('rokit.toml') or {})
 
 -- functions
-local function save ()
+local function save()
 	if not sup then return end
 	file.write_toml('rokit.toml', { tools = tools })
 end
 
-local function install_github (scope: string, name: string, version: string)
+local function install_github(scope: string, name: string, version: string)
 	tools[name] = `{scope}/{name}@{version}`
 end
 
-local function setup ()
+local function setup()
 	if sup then return end
 	sup = true
 
