@@ -14,15 +14,7 @@ if not args[1] then
 	inquire_project()
 	local tools = inquire_tools()
 	for _, tool in tools do
-		if type(tool) == 'table' then
-			for _, tool in tool do
-				if create.tools[tool] then
-					create.tools[tool].setup()
-				else
-					warn(`unknown tool '{tool}'`)
-				end
-			end
-		else
+		for _, tool in (if type(tool) == 'table' then tool else {tool}) do
 			if create.tools[tool] then
 				create.tools[tool].setup()
 			else
