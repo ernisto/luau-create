@@ -32,6 +32,7 @@ local function inquire()
 			else nil :: any,
 		if env == 'lune' then { name = 'cli' } else nil :: any,
 	}
+	if kind == 'plugin' then project.side = 'plugin' end
 	if env == 'roblox' and kind == 'package' then
 		q.enum {
 			name = 'side',
@@ -39,6 +40,7 @@ local function inquire()
 			{ name = 'shared' },
 			{ name = 'client' },
 			{ name = 'server' },
+			{ name = 'plugin' },
 		}
 	end
 	if kind ~= 'game' then

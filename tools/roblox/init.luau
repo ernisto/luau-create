@@ -10,15 +10,15 @@ local vsc = require('@tools/vsc')
 local sup = false
 
 -- functions
-local function save ()
+local function save()
 	if not sup then return end
 end
 
-local function add_system_path (system_path: string, roblox_path: { string })
+local function add_system_path(system_path: string, roblox_path: { string })
 	rojo.add_system_path(system_path, roblox_path)
 end
 
-local function setup ()
+local function setup()
 	if sup then return end
 	sup = true
 
@@ -37,7 +37,7 @@ local function setup ()
 		['luau-lsp.completion.imports.requireStyle'] = if project.project.kind == 'game'
 			then 'alwaysAbsolute'
 			else 'alwaysRelative',
-		['luau-lsp.types.robloxSecurityLevel'] = if project.project.kind == 'plugin'
+		['luau-lsp.types.robloxSecurityLevel'] = if project.project.side == 'plugin'
 			then 'PluginSecurity'
 			else 'LocalUserSecurity',
 	})
