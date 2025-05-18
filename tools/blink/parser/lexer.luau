@@ -1,113 +1,206 @@
 -- global state
-local input: string
+local input: buffer
 local cursor: number
 
 -- token cache
-local have_cached_word = false
-local content, word: string?
+local cached_word: string | false | nil -- not confirmed
+--				   ^^^^^^   ^^^^^
+--				   ^^^^^^^  confirmed no word
+--				   confirmed word
+-- defs
+type char = string
+type char_byte = number
 
 -- helpers
-local function scan_pattern(pattern: string)
-	return select(3, string.find(input, pattern, cursor))
-end
-local function advance(len: number)
-	cursor += len
-	have_cached_word = false
-end
-
--- logger
-local function get_cursor_position()
-	local line_cursor = 0
-	local lines = string.split(input, '\n')
-	for line, line_content in lines do
-		line_cursor += string.len(line_content) + 1
-		if cursor - 1 <= line_cursor then return line, line_cursor - line, string.len(line_content) end
+local current_byte: char_byte?
+local function advance(len: number?)
+	cursor += len or 1
+	if cursor > buffer.len(input) - 1 then
+		cursor = buffer.len(input) - 1
+		current_byte = nil
+		return
 	end
-	local line_content = string.sub(input, line_cursor)
-	line_cursor += string.len(line_content)
-	return #lines, line_cursor, string.len(line_content)
+	cached_word = nil
+	current_byte = buffer.readu8(input, cursor)
+	-- look_ahead = cursor + 1 < buffer.len(input) and buffer.readu8(input, cursor + 1) or nil
 end
-local function report(str: string)
-	local line, char = get_cursor_position()
-	return warn(`[Line {line}, Column {char}]: {str}`)
+local function is_letter(code: char_byte): boolean
+	return string.byte('a') <= code and code <= string.byte('z')
+		or string.byte('A') <= code and code <= string.byte('Z')
+end
+local function is_digit(code: char_byte): boolean
+	return string.byte('0') <= code and code <= string.byte('9')
+end
+local function is_space(code: char_byte): boolean
+	return code == string.byte ' '
+		or code == string.byte '\t'
+		or code == string.byte '\n'
+		or code == string.byte '\r'
+		or code == string.byte '\b'
+		or code == string.byte '\f'
+		or code == string.byte '\v'
 end
 
--- lexers
-local function skip_comments()
-	repeat
-		local content = scan_pattern('^(%-%-%[%[.-%]%]%s*)') or scan_pattern('^(%-%-.-\n%s*)')
-		if content then advance(string.len(content)) end
-	until content == nil
+local function skip_blank()
+	while current_byte and is_space(current_byte) do
+		advance()
+	end
 end
-local function skip_spaces()
-	local content = scan_pattern('^(%s*)')
-	if content then advance(string.len(content)) end
+local function skip_comments()
+	local byte = string.byte('-')
+
+	while buffer.readu16(input, cursor) == byte + byte * 2 ^ 8 do
+		repeat
+			advance()
+			print(current_byte == string.byte('\n'))
+		until current_byte == string.byte('\n')
+		skip_blank()
+	end
 end
 
 local function scan_word(exact_word: string?): string?
-	if not have_cached_word then
-		content, word = scan_pattern('^(([%a_][%w_]*)%s*)')
-		have_cached_word = true
+	if not current_byte then return end
+
+	if cached_word == nil then
+		if not is_letter(current_byte) then
+			cached_word = false
+			return
+		end
+
+		local init_byte = current_byte
+		local init = cursor
+		repeat
+			advance()
+		until not is_letter(current_byte) and not is_digit(current_byte)
+
+		cached_word = buffer.readstring(input, init, cursor - init)
+		cursor = init
+		current_byte = init_byte
 	end
-	if not content then return end
-	if exact_word and word ~= exact_word then return end
+	if exact_word then
+		if exact_word ~= cached_word then return end
+	elseif cached_word == false then
+		return
+	end
 
-	advance(string.len(content))
+	local word: string = cached_word :: any
+	advance(string.len(word))
+
+	skip_blank()
 	skip_comments()
-
 	return word
 end
-local function scan_char(exact_char: string): string?
-	local content, char = scan_pattern(`^((.)%s*)`)
-	if not content then return end
 
-	if char ~= exact_char then return end
-	advance(string.len(content))
-
+local function scan_char(char: char): char?
+	if current_byte ~= string.byte(char) then return end
+	advance()
+	skip_blank()
 	skip_comments()
 	return char
 end
-local function expect_char(exact_char: string): string?
-	return scan_char(exact_char) or report(`expected '{exact_char}'`)
-end
 
 local function scan_str(): string?
-	local content, str = scan_pattern("^('(.-)'%s*)")
-	if not content then
-		content, str = scan_pattern('^("(.-)"%s*)')
-	end
-	if not content then return end
+	local init = cursor
 
-	advance(string.len(content))
+	local symbol_code = current_byte
+	if symbol_code ~= string.byte('"') and symbol_code ~= string.byte("'") then return end
+
+	repeat
+		advance()
+	until current_byte == symbol_code
+
+	local str = buffer.readstring(input, init + 1, cursor - init - 1)
+	advance()
+
+	skip_blank()
 	skip_comments()
-
 	return str
 end
-local function scan_num(): string?
-	local content, num = scan_pattern('^((%-?%d*%.?%d+)%s*)')
-	if not content then return end
 
-	advance(string.len(content))
-	skip_comments()
-
-	return num
+local function expect_char(char: char): char?
+	return scan_char(char) or warn(`{debug.info(2, 'n')}: Expected '{char}', got {string.char(current_byte :: any)}`)
 end
-local function scan_raw(str: string): string?
-	local raw = string.sub(input, cursor, cursor + string.len(str) - 1)
-	if not raw or raw ~= str then return end
+local function scan_num(): string?
+	if not current_byte then return end
 
-	advance(string.len(raw))
-	skip_spaces()
+	local init = cursor
+	local sign = scan_char('-')
 
+	local has_num = is_digit(current_byte)
+	if has_num then
+		repeat
+			advance()
+		until not is_digit(current_byte)
+	end
+
+	local dot = scan_char('.')
+	if dot then
+		if is_digit(current_byte) then
+			has_num = true
+			repeat
+				advance()
+			until not is_digit(current_byte)
+		else
+			advance(-1)
+		end
+		--elseif not has_num and not sign then
+		-- return
+	end
+
+	if not has_num then return end
+	local str = buffer.readstring(input, init, cursor - init)
+
+	skip_blank()
+	skip_comments()
+	return str
+end
+local function scan_raw(raw: string): string?
+	local len = string.len(raw)
+	local b1, b2, b3, b4 = string.byte(raw, 1, 4)
+
+	local sum = (b1 or 0) + (b2 or 0) * 2 ^ 8 + (b3 or 0) * 2 ^ 16 + (b4 or 0) * 2 ^ 32
+	if bit32.extract(buffer.readu32(input, cursor), 0, len * 8) ~= sum then return end
+	advance(len)
+	skip_blank()
 	skip_comments()
 	return raw
 end
 
-local function lex(str)
-	input = str
-	cursor = 1
+-- loggers
+local function get_cursor_position()
+	local line_cursor = 0
+	local line_count = 1
 
-	skip_spaces()
+	for offset = 0, cursor do
+		line_cursor += 1
+		if buffer.readu8(input, offset) == string.byte('\n') then
+			line_count += 1
+			line_cursor = 0
+		end
+	end
+
+	return line_count, line_cursor
+end
+function report(str: string?)
+	local line, char = get_cursor_position()
+	return warn(`[Line {line}, Column {char}]: {str}`)
+end
+function trace()
+	local line, char = get_cursor_position()
+	local current_char, next_char = string.char(current_byte or 0), string.char(buffer.readu8(input, cursor + 1))
+	return warn(
+		`[Line: {line}, Column: {char}, CurrentChar: {current_char}, NextChar: {next_char}, CachedWord: {cached_word}, func: {debug.info(
+			2,
+			'n'
+		)}]`
+	)
+end
+
+local function lex(str: string)
+	cursor = 0
+	input = buffer.fromstring(str .. '\0\0\0\0')
+	current_byte = buffer.readu8(input, cursor)
+	skip_blank()
 	skip_comments()
 end
 
@@ -121,4 +214,5 @@ return table.freeze {
 	scan_raw = scan_raw,
 	expect_char = expect_char,
 	report = report,
+	trace = trace,
 }
