@@ -1,6 +1,5 @@
 local editor = require('@lib/editor')
 local file = require('@lib/file')
-local merge = require('@utils/merge')
 local tracker = require('@lib/tracker')
 
 -- defs
@@ -15,13 +14,7 @@ type luaurc = {
 
 -- vars
 local sup = false
-local rc: luaurc = {
-	languageMode = 'strict',
-	aliases = {},
-	globals = {},
-	lint = {},
-}
-merge(rc, file.read_json('.luaurc'))
+local rc = require('@self/rc')
 
 -- functions
 local function save()
