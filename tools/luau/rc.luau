@@ -3,39 +3,39 @@ local merge = require('@utils/merge')
 
 -- defs
 type path = string
-type lint =
-	'*' -- all
-	| 'UnknownGlobal'
-	| 'DeprecatedGlobal'
-	| 'GlobalUsedAsLocal'
-	| 'LocalShadow'
-	| 'SameLineStatement'
-	| 'MultiLineStatement'
-	| 'LocalUnused'
-	| 'FunctionUnused'
-	| 'ImportUnused'
-	| 'BuiltinGlobalWrite'
-	| 'PlaceholderRead'
-	| 'UnreachableCode'
-	| 'UnknownType'
-	| 'ForRange'
-	| 'UnbalancedAssignment'
-	| 'ImplicitReturn'
-	| 'DuplicateLocal'
-	| 'FormatString'
-	| 'TableLiteral'
-	| 'UninitializedLocal'
-	| 'DuplicateFunction'
-	| 'DeprecatedApi'
-	| 'TableOperations'
-	| 'DuplicateCondition'
-	| 'MisleadingAndOr'
-	| 'CommentDirective'
-	| 'IntegerParsing'
-	| 'ComparisonPrecedence'
 type luaurc = {
 	languageMode: 'strict' | 'nostrict' | 'nocheck'?,
-	lint: { [lint]: boolean },
+	lint: {
+		['*']: boolean?,
+		UnknownGlobal: boolean?,
+		DeprecatedGlobal: boolean?,
+		GlobalUsedAsLocal: boolean?,
+		LocalShadow: boolean?,
+		SameLineStatement: boolean?,
+		MultiLineStatement: boolean?,
+		LocalUnused: boolean?,
+		FunctionUnused: boolean?,
+		ImportUnused: boolean?,
+		BuiltinGlobalWrite: boolean?,
+		PlaceholderRead: boolean?,
+		UnreachableCode: boolean?,
+		UnknownType: boolean?,
+		ForRange: boolean?,
+		UnbalancedAssignment: boolean?,
+		ImplicitReturn: boolean?,
+		DuplicateLocal: boolean?,
+		FormatString: boolean?,
+		TableLiteral: boolean?,
+		UninitializedLocal: boolean?,
+		DuplicateFunction: boolean?,
+		DeprecatedApi: boolean?,
+		TableOperations: boolean?,
+		DuplicateCondition: boolean?,
+		MisleadingAndOr: boolean?,
+		CommentDirective: boolean?,
+		IntegerParsing: boolean?,
+		ComparisonPrecedence: boolean?,
+	},
 	lintErrors: boolean?,
 	typeErrors: boolean?,
 	globals: { string },
