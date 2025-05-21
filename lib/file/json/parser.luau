@@ -19,7 +19,7 @@ local function parse_literal(): cst.value_node?
 			value = nil,
 			raw = 'null',
 			start = start,
-			finish = lexer.get_cursor_position(),
+			finish = lexer.get_final(),
 		}
 	end
 
@@ -29,7 +29,7 @@ local function parse_literal(): cst.value_node?
 			value = true,
 			raw = 'true',
 			start = start,
-			finish = lexer.get_cursor_position(),
+			finish = lexer.get_final(),
 		}
 	end
 
@@ -39,7 +39,7 @@ local function parse_literal(): cst.value_node?
 			value = false,
 			raw = 'false',
 			start = start,
-			finish = lexer.get_cursor_position(),
+			finish = lexer.get_final(),
 		}
 	end
 
@@ -57,7 +57,7 @@ local function parse_string(): cst.value_node?
 		value = str,
 		raw = '"' .. str .. '"',
 		start = start,
-		finish = lexer.get_cursor_position(),
+		finish = lexer.get_final(),
 	}
 end
 
@@ -71,7 +71,7 @@ local function parse_number(): cst.value_node?
 		value = tonumber(num),
 		raw = num,
 		start = start,
-		finish = lexer.get_cursor_position(),
+		finish = lexer.get_final(),
 	}
 end
 
@@ -94,7 +94,7 @@ local function parse_array(): cst.array_node?
 		kind = 'array',
 		elements = elements,
 		start = start,
-		finish = lexer.get_cursor_position(),
+		finish = lexer.get_final(),
 	}
 end
 
@@ -105,6 +105,7 @@ local function parse_object(): cst.object_node?
 	local properties = {}
 
 	while true do
+		local init = lexer.get_cursor_position()
 		local key = scan_str()
 		if not key then break end
 
@@ -120,8 +121,8 @@ local function parse_object(): cst.object_node?
 			kind = 'property' :: any,
 			key = key,
 			value = value,
-			start = start,
-			finish = lexer.get_cursor_position(),
+			start = init,
+			finish = lexer.get_final(),
 		})
 
 		if not scan_char(',') then break end
@@ -132,7 +133,7 @@ local function parse_object(): cst.object_node?
 		kind = 'object',
 		properties = properties,
 		start = start,
-		finish = lexer.get_cursor_position(),
+		finish = lexer.get_final(),
 	}
 end
 
