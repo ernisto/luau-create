@@ -10,9 +10,9 @@ local depth = 0
 -- helper
 local function push_str(str: string, element: string, index: number, replace_len: number)
 	local offset = string.len(element) - (replace_len or 0)
-	output = string.sub(str, 1, index + delta_cursor - 1)
+	output = string.sub(str, 1, index + delta_cursor)
 		.. element
-		.. string.sub(str, index + (replace_len or 0) + delta_cursor)
+		.. string.sub(str, index + 1 + (replace_len or 0) + delta_cursor)
 
 	insert_pos += offset
 	delta_cursor += offset
@@ -35,6 +35,7 @@ local function apply(replacing_node: cst.node?, data: any)
 				apply(element, value)
 			end
 			depth -= 1
+			insert_pos = replacing_node.finish
 			return
 		elseif not is_arr and replacing_node.kind == 'object' then
 			insert_pos += 1
@@ -50,13 +51,14 @@ local function apply(replacing_node: cst.node?, data: any)
 			for index: string, value in data :: any do
 				if existing_properties[index] then continue end
 
-				if needs_separator then push_str(output, ',\n', insert_pos, 0) end
+				if needs_separator then push_str(output, ',', insert_pos, 0) end
 				push_str(output, `\"{index}\": `, insert_pos, 0)
 
 				needs_separator = true
 				apply(nil, value)
 			end
 			depth -= 1
+			insert_pos = replacing_node.finish
 			return
 		end
 	end
@@ -66,6 +68,7 @@ local function apply(replacing_node: cst.node?, data: any)
 	local start = if replacing_node then replacing_node.start - 1 else insert_pos
 
 	push_str(output, new_content, start, replace_len)
+	if replacing_node then insert_pos = replacing_node.finish end
 end
 
 local function save(content: string, data: any)
