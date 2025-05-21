@@ -1,6 +1,7 @@
 -- global state
 local input: buffer
 local cursor: number
+local last_char_cursor: number?
 
 -- token cache
 local cached_word: string | false | nil
@@ -10,7 +11,7 @@ type char = string
 type char_byte = number
 
 -- loggers
-local function get_cursor_position()
+local function get_cursor_position(): (number, number, number)
 	local line_cursor = 0
 	local line_count = 1
 
@@ -22,12 +23,14 @@ local function get_cursor_position()
 		end
 	end
 
-	print(line_count, line_cursor)
-	return line_count, line_cursor
+	return cursor + 1, line_count, line_cursor
+end
+local function get_final()
+	return last_char_cursor or (cursor + 1)
 end
 
 local function report(str: string?)
-	local line, char = get_cursor_position()
+	local _, line, char = get_cursor_position()
 	return warn(`[Line {line}, Column {char}]: {str}`)
 end
 
@@ -60,6 +63,7 @@ local function is_space(code: char_byte): boolean
 end
 
 local function skip_blank()
+	last_char_cursor = cursor - 1 + 1
 	while current_byte and is_space(current_byte) do
 		advance()
 	end
@@ -107,10 +111,7 @@ local function scan_char(char: char): char?
 end
 
 local function scan_str(): string?
-	if current_byte ~= string.byte('"') then return end
-
-	local init = cursor
-	advance() -- skip opening quote
+	if not scan_char('"') then return end
 
 	local str = {}
 	while current_byte and current_byte ~= string.byte('"') do
@@ -138,7 +139,7 @@ local function scan_num(): string?
 	if not current_byte then return end
 
 	local init = cursor
-	local sign = scan_char('-')
+	scan_char('-')
 
 	local has_num = is_digit(current_byte)
 	if has_num then
@@ -178,6 +179,7 @@ local function scan_num(): string?
 
 	if not has_num then return end
 	local str = buffer.readstring(input, init, cursor - init)
+
 	skip_blank()
 	return str
 end
@@ -203,4 +205,5 @@ return table.freeze({
 	expect_char = expect_char,
 	report = report,
 	get_cursor_position = get_cursor_position,
+	get_final = get_final,
 })
