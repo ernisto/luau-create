@@ -19,33 +19,34 @@ local function push_str(str: string, element: string, index: number, replace_len
 end
 
 -- function
-local function apply(node: cst.node?, data: any)
-	if node then insert_pos = node.start end
+local function apply(replacing_node: cst.node?, data: any)
+	if replacing_node then insert_pos = replacing_node.start - 1 end
 
-	if typeof(data) == 'table' and node then
+	if typeof(data) == 'table' and replacing_node then
 		local k = next(data)
-		local is_arr = if k then typeof(k) == 'number' else node.kind == 'array'
+		local is_arr = if k then typeof(k) == 'number' else replacing_node.kind == 'array'
 
-		if is_arr and node.kind == 'array' then
+		if is_arr and replacing_node.kind == 'array' then
 			insert_pos += 1
 			depth += 1
 			for index, value in data do
-				if index > 1 and not node.elements[index] then push_str(output, ',\n', insert_pos, 0) end
-				apply(node.elements[index], value)
+				local element = replacing_node.elements[index]
+				if index > 1 and not element then push_str(output, ',', insert_pos, 0) end
+				apply(element, value)
 			end
 			depth -= 1
 			return
-		elseif not is_arr and node.kind == 'object' then
+		elseif not is_arr and replacing_node.kind == 'object' then
 			insert_pos += 1
 			depth += 1
 			-- existing fields must to keep at same position
 			local existing_properties = {}
-			for _, property in node.properties do
+			for _, property in replacing_node.properties do
 				existing_properties[property.key] = true
 				apply(property.value, data[property.key :: any])
 			end
 			-- new fields must to append at the end
-			local needs_separator = next(node.properties) ~= nil
+			local needs_separator = next(replacing_node.properties) ~= nil
 			for index: string, value in data :: any do
 				if existing_properties[index] then continue end
 
@@ -61,8 +62,8 @@ local function apply(node: cst.node?, data: any)
 	end
 
 	local new_content = serde.encode('json', data)
-	local replace_len = if node then node.finish - node.start else 0
-	local start = if node then node.start else insert_pos
+	local replace_len = if replacing_node then replacing_node.finish - replacing_node.start + 1 else 0
+	local start = if replacing_node then replacing_node.start - 1 else insert_pos
 
 	push_str(output, new_content, start, replace_len)
 end
