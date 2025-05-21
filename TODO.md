@@ -1,3 +1,5 @@
+- [ ] identify latest release version on tool repo
+- [ ] create unexisting lune def files
 - [ ] save files with same position
 - [ ] packages protocol
 - [ ] tasks protocol
