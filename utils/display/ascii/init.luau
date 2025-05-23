@@ -13,9 +13,8 @@ type field = {
 	get_name_line: (line: number) -> string,
 	get_content_line: (line: number) -> string,
 }
-local function clean_string(str: string)
-	local clean = string.gsub(str, '\027%[[0-9;]*m', '')
-	return clean
+local function clean_string(str: string): string
+	return str:gsub('\027%[[%d;]*m?', '')
 end
 local function new_field(name: string): field
 	local self = {} :: field
@@ -87,7 +86,7 @@ local function new_ascii(title: string?)
 	end
 
 	local function print_ascii()
-		local width, height = 3, 2
+		local width, height = 3 - #fields % 2, 2
 		local name_width, name_height = 2, 0
 		local content_width, content_height = 2, 0
 
@@ -139,7 +138,6 @@ local function new_ascii(title: string?)
 			for _, field in fields do
 				local value = field.get_content_line(y) or string.rep(' ', field.absolute_width)
 				local left, right = get_spaces(field.absolute_width, #clean_string(value))
-
 				if field.align == 'right' then
 					left ..= right:sub(1, -2)
 					right = ' '
@@ -147,12 +145,10 @@ local function new_ascii(title: string?)
 					right ..= left:sub(1, -2)
 					left = ' '
 				end
-
 				table.insert(line, left .. value .. right)
 			end
 			lines[y] = `|{table.concat(line, '|')}|`
 		end
-
 		print(table.concat(lines, '\n'))
 		print(vertical_bar)
 	end
