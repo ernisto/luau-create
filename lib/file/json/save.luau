@@ -8,13 +8,12 @@ local output = ''
 local depth = 0
 
 -- helper
-local function push_str(str: string, element: string, index: number, replace_len: number)
+local function push_str(str: string, element: string, index: number, replace_len: number?)
 	local offset = string.len(element) - (replace_len or 0)
 	output = string.sub(str, 1, index + delta_cursor)
 		.. element
 		.. string.sub(str, index + 1 + (replace_len or 0) + delta_cursor)
 
-	insert_pos += offset
 	delta_cursor += offset
 end
 
@@ -31,7 +30,7 @@ local function apply(replacing_node: cst.node?, data: any)
 			depth += 1
 			for index, value in data do
 				local element = replacing_node.elements[index]
-				if index > 1 and not element then push_str(output, ',', insert_pos, 0) end
+				if index > 1 and not element then push_str(output, ', ', insert_pos) end
 				apply(element, value)
 			end
 			depth -= 1
@@ -51,10 +50,10 @@ local function apply(replacing_node: cst.node?, data: any)
 			for index: string, value in data :: any do
 				if existing_properties[index] then continue end
 
-				if needs_separator then push_str(output, ',', insert_pos, 0) end
-				push_str(output, `\"{index}\": `, insert_pos, 0)
-
+				if needs_separator then push_str(output, ', ', insert_pos) end
 				needs_separator = true
+
+				push_str(output, `\"{index}\": `, insert_pos)
 				apply(nil, value)
 			end
 			depth -= 1
