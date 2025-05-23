@@ -1,3 +1,4 @@
+local ascii = require('@self/ascii')
 local color = require('@self/color')
 
 local stack_colors = {
@@ -22,7 +23,7 @@ local function is_node<V>(tab: V): boolean
 	return typeof(tab) == 'table' and rawget(tab, 'kind') ~= nil
 end
 
-local function display(value: any, _stack: stack?): string
+local function syntax(value: any, _stack: stack?): string
 	local stack = (_stack and table.clone(_stack) or {}) :: stack
 	table.insert(stack, value)
 
@@ -38,7 +39,7 @@ local function display(value: any, _stack: stack?): string
 
 		local outputs = {}
 		for _, value in value do
-			table.insert(outputs, display(value, stack))
+			table.insert(outputs, syntax(value, stack))
 		end
 
 		if string.len(table.concat(outputs)) > 100 then
@@ -69,7 +70,7 @@ local function display(value: any, _stack: stack?): string
 			out ..= '\n'
 		end
 		for index, node in nodes do
-			out ..= start .. color.bold(index) .. color.dark_red(' ') .. display(node, stack) .. '\n'
+			out ..= start .. color.bold(index) .. color.dark_red(' ') .. syntax(node, stack) .. '\n'
 		end
 		if next(nodes) then
 			out ..= start:sub(5)
@@ -83,7 +84,7 @@ local function display(value: any, _stack: stack?): string
 
 		local outputs = {}
 		for index, value in value do
-			table.insert(outputs, color.white(tostring(index)) .. color.dark_red(' = ') .. display(value, stack))
+			table.insert(outputs, color.white(tostring(index)) .. color.dark_red(' = ') .. syntax(value, stack))
 		end
 
 		if string.len(table.concat(outputs)) > 100 then
@@ -150,6 +151,7 @@ local function json(str: string)
 end
 
 return {
-	display = display,
+	syntax = syntax,
 	json = json,
+	ascii = ascii,
 }
