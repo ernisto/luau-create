@@ -64,7 +64,7 @@ local function apply(replacing_node: cst.node?, data: any)
 		end
 	end
 
-	local new_content = serde.encode('json', data)
+	local new_content = serde.encode('json', data, true)
 	local replace_len = if replacing_node then replacing_node.finish - replacing_node.start + 1 else 0
 	local start = if replacing_node then replacing_node.start - 1 else insert_pos
 
