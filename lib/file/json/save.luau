@@ -19,14 +19,16 @@ end
 
 -- function
 local function apply(replacing_node: cst.node?, data: any)
-	if replacing_node then insert_pos = replacing_node.start - 1 end
+	if replacing_node then
+		insert_pos = replacing_node.start - 1 -- push_str replaces first character of this node
+	end
 
 	if typeof(data) == 'table' and replacing_node then
 		local k = next(data)
 		local is_arr = if k then typeof(k) == 'number' else replacing_node.kind == 'array'
 
 		if is_arr and replacing_node.kind == 'array' then
-			insert_pos += 1
+			insert_pos += 1 -- '['	-- push_str replaces after this character
 			depth += 1
 			for index, value in data do
 				local element = replacing_node.elements[index]
@@ -34,10 +36,10 @@ local function apply(replacing_node: cst.node?, data: any)
 				apply(element, value)
 			end
 			depth -= 1
-			insert_pos = replacing_node.finish
+			insert_pos = replacing_node.finish -- push_str replaces after the last character of this node
 			return
 		elseif not is_arr and replacing_node.kind == 'object' then
-			insert_pos += 1
+			insert_pos += 1 -- '{'
 			depth += 1
 			-- existing fields must to keep at same position
 			local existing_properties = {}
