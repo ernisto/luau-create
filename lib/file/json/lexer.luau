@@ -211,6 +211,8 @@ local function lex(str: string)
 	cursor = 0
 	input = buffer.fromstring(str .. '\0\0\0\0')
 	current_byte = buffer.readu8(input, cursor)
+	cached_word = nil
+	last_char_cursor = nil
 	skip_blank()
 	skip_comments()
 end
