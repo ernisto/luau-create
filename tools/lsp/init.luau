@@ -15,14 +15,14 @@ end
 type glob = string
 local function ignore_import_globs(...: glob)
 	for _, glob in { ... } do
-		if table.find(ignore_diagnostics, glob) then continue end
-		table.insert(ignore_diagnostics, glob)
+		if table.find(ignore_imports, glob) then continue end
+		table.insert(ignore_imports, glob)
 	end
 end
 local function ignore_diagnostic_globs(...: glob)
 	for _, glob in { ... } do
-		if table.find(ignore_imports, glob) then continue end
-		table.insert(ignore_imports, glob)
+		if table.find(ignore_diagnostics, glob) then continue end
+		table.insert(ignore_diagnostics, glob)
 	end
 end
 
