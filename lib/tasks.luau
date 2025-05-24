@@ -1,3 +1,1 @@
-return table.freeze {
-    
-}
+return table.freeze {}

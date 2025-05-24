@@ -1,6 +1,6 @@
+local fs = require('@lune/fs')
 local process = require('@lune/process')
 local task = require('@lune/task')
-local fs = require('@lune/fs')
 local cwd = process.cwd
 
 -- functions

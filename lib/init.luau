@@ -8,8 +8,8 @@ local tasks = require('@lib/tasks')
 local tools = table.freeze {
 
 	-- libs
-	uilabs = nil,	-- require('@tools/uilabs'),
-	testez = nil,	-- require('@tools/testez'),
+	uilabs = nil, -- require('@tools/uilabs'),
+	testez = nil, -- require('@tools/testez'),
 
 	-- docs
 	moonwave = nil, -- require('@tools/moonwave')
