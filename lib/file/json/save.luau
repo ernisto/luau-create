@@ -35,6 +35,11 @@ local function apply(replacing_node: cst.node?, data: any)
 				if index > 1 and not element then push_str(output, ', ', insert_pos) end
 				apply(element, value)
 			end
+
+			-- remove
+			local replace_len = replacing_node.finish - insert_pos - 1
+			push_str(output, ' ', insert_pos, replace_len)
+
 			depth -= 1
 			insert_pos = replacing_node.finish -- push_str replaces after the last character of this node
 			return
@@ -45,7 +50,13 @@ local function apply(replacing_node: cst.node?, data: any)
 			local existing_properties = {}
 			for _, property in replacing_node.properties do
 				existing_properties[property.key] = true
-				apply(property.value, data[property.key :: any])
+				local value = data[property.key]
+				if value == nil then
+					local replace_len = property.finish - property.start + 1
+					push_str(output, '', property.start - 1, replace_len)
+					continue
+				end
+				apply(property.value, value)
 			end
 			-- new fields must to append at the end
 			local needs_separator = next(replacing_node.properties) ~= nil
