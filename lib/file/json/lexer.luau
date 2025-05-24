@@ -69,6 +69,20 @@ local function skip_blank()
 	end
 end
 
+local function skip_comments()
+	local byte = string.byte('/')
+
+	while buffer.readu16(input, cursor) == byte + byte * 2 ^ 8 do
+		repeat
+			advance()
+		until current_byte == string.byte('\n')
+
+		while current_byte and is_space(current_byte) do
+			advance()
+		end
+	end
+end
+
 -- scanning functions
 local function scan_word(): string?
 	if not current_byte then return end
@@ -100,6 +114,7 @@ local function scan_word(): string?
 	local word: string = cached_word :: any
 	advance(string.len(word))
 	skip_blank()
+	skip_comments()
 	return word
 end
 
@@ -107,6 +122,7 @@ local function scan_char(char: char): char?
 	if current_byte ~= string.byte(char) then return end
 	advance()
 	skip_blank()
+	skip_comments()
 	return char
 end
 
@@ -132,6 +148,7 @@ local function scan_str(): string?
 
 	advance() -- skip closing quote
 	skip_blank()
+	skip_comments()
 	return table.concat(str)
 end
 
@@ -181,6 +198,7 @@ local function scan_num(): string?
 	local str = buffer.readstring(input, init, cursor - init)
 
 	skip_blank()
+	skip_comments()
 	return str
 end
 
@@ -194,6 +212,7 @@ local function lex(str: string)
 	input = buffer.fromstring(str .. '\0\0\0\0')
 	current_byte = buffer.readu8(input, cursor)
 	skip_blank()
+	skip_comments()
 end
 
 return table.freeze({
