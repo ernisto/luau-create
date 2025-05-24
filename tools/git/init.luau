@@ -16,6 +16,7 @@ local function save()
 	if not sup then return end
 	file.write_str('.gitignore', table.concat(ignored_globs, '\n'))
 	simple_dict.write('.gitattributes', attributes)
+	editor.hide_globs('.gitignore', '.gitattributes')
 end
 
 type glob = string
