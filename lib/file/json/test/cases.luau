@@ -26,8 +26,8 @@ local cases: { { string | { any } } } = {
 	{
 		'insert child',
 		[[{
-            "foo": [ 1, 2, 3 ]
-        }]],
+			"foo": [ 1, 2, 3 ]
+		}]],
 		{ foo = { 1, 2, 3, 4 } },
 	},
 	{
@@ -45,8 +45,8 @@ local cases: { { string | { any } } } = {
 	{
 		'switch property type',
 		[[{
-            "foo": { "bar": true }
-        }]],
+			"foo": { "bar": true }
+		}]],
 		{ foo = 5 },
 	},
 }
