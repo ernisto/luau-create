@@ -4,7 +4,7 @@ local project = require('@lib/project')
 
 -- module
 local function inquire()
-	local result = {}
+	local result = { environment = project.project.environment }
 	local q = inquisitor(result)
 
 	q.enum {
