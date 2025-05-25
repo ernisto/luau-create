@@ -10,7 +10,7 @@ local function inquire()
 	q.enum {
 		name = 'toolchain_manager',
 		default_index = 2,
-		{ name = 'none' },
+		optional = true,
 		{ name = 'pesde' },
 		{ name = 'rokit' },
 		{ name = 'aftman' },
@@ -25,7 +25,7 @@ local function inquire()
 		if project.project.environment == 'roblox' then { name = 'wally' } else nil :: any,
 	}
 
-	q.enum { name = 'version_tracker', default_index = 2, { name = 'none' }, { name = 'git' } }
+	q.enum { name = 'version_tracker', default_index = 2, optional = true, { name = 'git' } }
 	q.multiselect {
 		name = 'code_editors',
 		default_indexes = { 1 },
