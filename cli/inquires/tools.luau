@@ -55,7 +55,6 @@ local function inquire()
 			name = 'cloud_sync',
 			default_index = 2,
 			optional = true,
-			{ name = 'none' },
 			{ name = 'asphalt' },
 			if project.project.kind == 'game' and create.tools.mantle then { name = 'mantle' } else nil :: any,
 		}
@@ -64,7 +63,6 @@ local function inquire()
 				name = 'remote_idl',
 				default_index = 2,
 				optional = true,
-				{ name = 'none' },
 				{ name = 'blink' },
 				if create.tools.zap then { 'zap' } else nil :: any,
 			}
