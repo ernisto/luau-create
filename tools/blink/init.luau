@@ -1,9 +1,12 @@
 local file = require('@lib/file')
 local merge = require('@utils/merge')
+local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
 local rojo = require('@tools/rojo')
 local vsc = require('@tools/vsc')
+
+local version = '0.17.3'
 
 -- vars
 local sup = false
@@ -17,6 +20,9 @@ end
 local function setup()
 	if sup then return end
 	sup = true
+
+	toolchain.install_github('1Axen', 'blink', version)
+	toolchain.install_pesde('pesde', 'blink', version)
 
 	vsc.settings['files.associations']['*.blink'] = 'blink'
 	vsc.recommend_extensions('checkraisefold.blink-vscode')
