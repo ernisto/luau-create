@@ -1,5 +1,4 @@
 local editor = require('@lib/editor')
-local environment = require('@lib/environment')
 local language = require('@lib/language')
 local package_manager = require('@lib/packages')
 local project = require('@lib/project')
@@ -59,7 +58,6 @@ return table.freeze {
 	project = project,
 	language = language,
 	package_manager = package_manager,
-	environment = environment,
 	editor = editor,
 	tasks = tasks,
 	tools = tools,

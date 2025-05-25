@@ -23,7 +23,6 @@ if not args[1] then
 		end
 	end
 
-	create.environment.setup()
 	create.editor.setup()
 end
 create.save()
