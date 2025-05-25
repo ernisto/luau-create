@@ -2,6 +2,7 @@ local editor = require('@lib/editor')
 local project = require('@lib/project')
 local tracker = require('@lib/tracker')
 
+local lsp = require('@tools/lsp')
 local luau = require('@tools/luau')
 local merge = require('@utils/merge')
 local rojo = require('@tools/rojo')
@@ -24,6 +25,7 @@ local function setup()
 	sup = true
 
 	luau.setup()
+	lsp.setup()
 
 	tracker.set_attribute('*.rbxm', 'binary')
 	tracker.set_attribute('*.rbxl', 'binary')
