@@ -1,6 +1,7 @@
 local project = require('@lib/project').project
 local editor = require('@lib/editor')
 local file = require('@lib/file')
+local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
 local dom = require('@self/dom')
@@ -8,6 +9,8 @@ local merge = require('@utils/merge')
 local pesde = require('@tools/pesde')
 local vsc = require('@tools/vsc')
 local wally = require('@tools/wally')
+
+local version = '7.5.1'
 
 -- vars
 local sup = false
@@ -41,7 +44,9 @@ local function setup()
 	if sup then return end
 	sup = true
 
-	pesde.manifest.dev_dependencies.scripts = { name = 'pesde/scripts_rojo', version = '^0.1.0', target = 'lune' }
+	toolchain.install_github('rojo-rbx', 'rojo', version)
+	toolchain.install_pesde('pesde', 'rojo', version)
+
 	pesde.manifest.scripts.roblox_sync_config_generator = '.pesde/scripts/roblox_sync_config_generator.luau'
 	pesde.manifest.scripts.sourcemap_generator = '.pesde/scripts/sourcemap_generator.luau'
 
