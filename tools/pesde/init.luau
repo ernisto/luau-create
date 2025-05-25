@@ -6,6 +6,8 @@ local tracker = require('@lib/tracker')
 
 -- vars
 local sup = false
+local version = '0.6.0'
+
 local manifest = require('@self/manifest')
 
 -- functions
@@ -25,7 +27,7 @@ local function setup()
 	language.ignore_diagnostic_globs('*_packages/**', '.pesde/**')
 
 	-- manifest
-	manifest.engines = { pesde = '^0.6.0' }
+	manifest.engines = { pesde = `^{version}` }
 
 	manifest.name = `{project.host}/{project.name:gsub('-', '_')}`
 	manifest.version = tostring(project.version)

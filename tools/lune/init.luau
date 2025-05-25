@@ -1,10 +1,12 @@
 local language = require('@lib/language')
-local pesde = require('@tools/pesde')
 local toolchain = require('@lib/toolchain')
+
 local version = '0.9.2'
+local pesde = require('@tools/pesde')
 
 -- vars
 local sup = false
+local version = '0.9.2'
 
 -- functions
 local function save()

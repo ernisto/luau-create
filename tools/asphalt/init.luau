@@ -2,10 +2,10 @@ local editor = require('@lib/editor')
 local file = require('@lib/file')
 local toolchain = require('@lib/toolchain')
 
-local version = '1.0.0-pre.8'
-
 -- vars
 local sup = false
+local version = '1.0.0-pre.8'
+
 local manifest = require('@self/manifest')
 
 -- functions

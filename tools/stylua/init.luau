@@ -5,10 +5,10 @@ local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 local vsc = require('@tools/vsc')
 
-local version = '2.1.0'
-
 -- vars
 local sup = false
+local version = '2.1.0'
+
 local manifest = require('@self/manifest')
 
 -- functions

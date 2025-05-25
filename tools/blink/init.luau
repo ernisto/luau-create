@@ -6,10 +6,10 @@ local tracker = require('@lib/tracker')
 local rojo = require('@tools/rojo')
 local vsc = require('@tools/vsc')
 
-local version = '0.17.3'
-
 -- vars
 local sup = false
+local version = '0.17.3'
+
 local manifest = {}
 -- merge(manifest, file.read_str('remotes/init.blink'))
 

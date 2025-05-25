@@ -3,10 +3,10 @@ local file = require('@lib/file')
 local toolchain = require('@lib/toolchain')
 local vsc = require('@tools/vsc')
 
-local version = '0.28.0'
-
 -- vars
 local sup = false
+local version = '0.28.0'
+
 local manifest = require('@self/manifest')
 
 -- functions

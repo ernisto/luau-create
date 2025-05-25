@@ -10,10 +10,10 @@ local pesde = require('@tools/pesde')
 local vsc = require('@tools/vsc')
 local wally = require('@tools/wally')
 
-local version = '7.5.1'
-
 -- vars
 local sup = false
+local version = '7.5.1'
+
 local places = {}
 local synced_paths = {}
 local tree = dom.node('DataModel')
