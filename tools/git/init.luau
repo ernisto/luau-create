@@ -34,7 +34,7 @@ local function set_attribute(glob: glob, ...: attribute)
 end
 
 local function setup()
-	if not sup then return end
+	if sup then return end
 	sup = true
 
 	editor.hide_globs('.gitignore', '.gitattributes')
