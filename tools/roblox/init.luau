@@ -2,6 +2,7 @@ local editor = require('@lib/editor')
 local project = require('@lib/project')
 local tracker = require('@lib/tracker')
 
+local luau = require('@tools/luau')
 local merge = require('@utils/merge')
 local rojo = require('@tools/rojo')
 local vsc = require('@tools/vsc')
@@ -21,6 +22,8 @@ end
 local function setup()
 	if sup then return end
 	sup = true
+
+	luau.setup()
 
 	tracker.set_attribute('*.rbxm', 'binary')
 	tracker.set_attribute('*.rbxl', 'binary')

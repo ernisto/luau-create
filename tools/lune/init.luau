@@ -1,7 +1,7 @@
 local language = require('@lib/language')
 local toolchain = require('@lib/toolchain')
 
-local version = '0.9.2'
+local luau = require('@tools/luau')
 local pesde = require('@tools/pesde')
 
 -- vars
@@ -15,6 +15,8 @@ end
 local function setup()
 	if sup then return end
 	sup = true
+
+	luau.setup()
 
 	toolchain.install_github('feliptibell', 'lune', version)
 	pesde.manifest.engines.lune = version
