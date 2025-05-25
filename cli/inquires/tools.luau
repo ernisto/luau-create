@@ -56,7 +56,7 @@ local function inquire()
 			default_index = 2,
 			optional = true,
 			{ name = 'asphalt' },
-			if project.project.kind == 'game' and create.tools.mantle then { name = 'mantle' } else nil :: any,
+			if project.project.kind == 'game' then { name = 'mantle' } else nil :: any,
 		}
 		if project.project.kind == 'game' then
 			q.enum {
