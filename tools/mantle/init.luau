@@ -22,7 +22,11 @@ local function setup()
 	toolchain.install_github('blake-mealey', 'mantle', version)
 	toolchain.install_pesde('pesde', 'mantle', version)
 
-	vsc.settings['yaml.schemas'][`https://mantledeploy.vercel.app/schemas/v{version}/schema.json`] = { 'mantle.yml' }
+	merge(vsc.settings, {
+		['yaml.schemas'] = {
+			[`https://mantledeploy.vercel.app/schemas/v{version}/schema.json`] = { 'mantle.yml' },
+		},
+	})
 	vsc.hide_globs('.mantle-state.yml', 'mantle.yml')
 	vsc.lock_globs('.mantle-state.yml')
 end
