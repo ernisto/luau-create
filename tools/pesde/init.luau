@@ -18,11 +18,11 @@ local function setup()
 	if sup then return end
 	sup = true
 
-	editor.hide_globs('*_packages/**', '.pesde', 'pesde.toml')
-	editor.lock_globs('*_packages/**', '.pesde')
-	tracker.ignore_globs('*_packages/**', '.pesde')
+	editor.hide_globs('*_packages/**', '.pesde/**', 'pesde.toml')
+	editor.lock_globs('*_packages/**', '.pesde/**')
+	tracker.ignore_globs('*_packages/**', '.pesde/**')
 	language.ignore_import_globs('**/.pesde/**')
-	language.ignore_diagnostic_globs('*_packages/**', '.pesde')
+	language.ignore_diagnostic_globs('*_packages/**', '.pesde/**')
 
 	-- manifest
 	manifest.engines = { pesde = '^0.6.0' }
