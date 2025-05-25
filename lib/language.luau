@@ -1,6 +1,3 @@
-local project = require('@lib/project').project
-local file = require('@lib/file')
-
 local lsp = require('@tools/lsp')
 local luau = require('@tools/luau')
 
@@ -22,20 +19,8 @@ local function add_alias(alias: string, path: string)
 	luau.add_alias(alias, path)
 end
 
-local function setup()
-	if project.entrypoint then
-		file.write_default_str(project.entrypoint .. '/init.luau')
-		add_alias(project.entrypoint, project.entrypoint)
-	end
-	for alias, dir in project.directories do
-		file.write_default_str(dir .. '/init.luau')
-		add_alias(alias, dir)
-	end
-end
-
 -- module
 return table.freeze {
-	setup = setup,
 	ignore_diagnostic_globs = ignore_diagnostic_globs,
 	ignore_import_globs = ignore_import_globs,
 	add_globals = add_globals,

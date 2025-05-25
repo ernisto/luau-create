@@ -1,5 +1,6 @@
 local editor = require('@lib/editor')
 local file = require('@lib/file')
+local project = require('@lib/project').project
 local tracker = require('@lib/tracker')
 
 -- defs
@@ -33,6 +34,15 @@ local function setup()
 
 	editor.hide_globs('.luaurc')
 	tracker.set_attribute('*.luau', 'text')
+
+	if project.entrypoint then
+		file.write_default_str(project.entrypoint .. '/init.luau')
+		add_alias(project.entrypoint, project.entrypoint)
+	end
+	for alias, dir in project.directories do
+		file.write_default_str(dir .. '/init.luau')
+		add_alias(alias, dir)
+	end
 end
 
 -- module

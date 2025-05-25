@@ -14,7 +14,7 @@ if not args[1] then
 	inquire_project()
 	local tools = inquire_tools()
 	for _, tool in tools do
-		for _, tool in (if type(tool) == 'table' then tool else {tool}) do
+		for _, tool in (if type(tool) == 'table' then tool else { tool }) do
 			if create.tools[tool] then
 				create.tools[tool].setup()
 			else
@@ -24,7 +24,6 @@ if not args[1] then
 	end
 
 	create.environment.setup()
-	create.language.setup()
 	create.editor.setup()
 end
 create.save()
