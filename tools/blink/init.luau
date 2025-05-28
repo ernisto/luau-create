@@ -6,10 +6,10 @@ local tracker = require('@lib/tracker')
 local rojo = require('@tools/rojo')
 local vsc = require('@tools/vsc')
 
+local github = require('@utils/github')
+
 -- vars
 local sup = false
-local version = '0.17.3'
-
 local manifest = {}
 -- merge(manifest, file.read_str('remotes/init.blink'))
 
@@ -17,10 +17,11 @@ local manifest = {}
 local function save()
 	if not sup then return end
 end
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
+	local version = input_version or github.get_latest_version('1Axen', 'blink')
 	toolchain.install_github('1Axen', 'blink', version)
 	toolchain.install_pesde('pesde', 'blink', version)
 

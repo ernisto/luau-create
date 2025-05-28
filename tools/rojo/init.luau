@@ -5,14 +5,15 @@ local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
 local dom = require('@self/dom')
+local github = require('@utils/github')
 local merge = require('@utils/merge')
+
 local pesde = require('@tools/pesde')
 local vsc = require('@tools/vsc')
 local wally = require('@tools/wally')
 
 -- vars
 local sup = false
-local version = '7.5.1'
 
 local places = {}
 local synced_paths = {}
@@ -40,10 +41,11 @@ local function set_properties(roblox_path: { string }, properties: { [string]: a
 	merge(dom.get_node(tree, roblox_path)['$properties'], properties)
 end
 
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
+	local version = input_version or github.get_latest_version('rojo-rbx', 'rojo')
 	toolchain.install_github('rojo-rbx', 'rojo', version)
 	toolchain.install_pesde('pesde', 'rojo', version)
 

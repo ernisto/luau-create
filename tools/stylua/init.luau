@@ -1,14 +1,14 @@
 local editor = require('@lib/editor')
 local file = require('@lib/file')
-local merge = require('@utils/merge')
 local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
+
+local github = require('@utils/github')
+local merge = require('@utils/merge')
 local vsc = require('@tools/vsc')
 
 -- vars
 local sup = false
-local version = '2.1.0'
-
 local manifest = require('@self/manifest')
 
 -- functions
@@ -16,10 +16,11 @@ local function save()
 	if not sup then return end
 	file.write_toml('stylua.toml', manifest)
 end
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
+	local version = input_version or github.get_latest_version('johnnymorganz', 'stylua')
 	toolchain.install_github('johnnymorganz', 'stylua', version)
 	toolchain.install_pesde('pesde', 'stylua', version)
 

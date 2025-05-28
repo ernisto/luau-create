@@ -1,23 +1,25 @@
 local file = require('@lib/file')
+local github = require('@utils/github')
 local merge = require('@utils/merge')
 local toolchain = require('@lib/toolchain')
 local vsc = require('@tools/vsc')
 
-local version = '0.11.18'
-
 -- vars
 local sup = false
+
 local manifest = {}
-merge(manifest, file.read_str('mantle.yml'))
+merge(manifest, file.read_yaml('mantle.yml'))
 
 -- functions
 local function save()
 	if not sup then return end
 	file.write_yaml('mantle.yml', manifest)
 end
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
+
+	local version = input_version or github.get_latest_version('blake-mealey', 'mantle')
 
 	toolchain.install_github('blake-mealey', 'mantle', version)
 	toolchain.install_pesde('pesde', 'mantle', version)

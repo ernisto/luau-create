@@ -1,11 +1,12 @@
+local github = require('@utils/github')
 local merge = require('@utils/merge')
 local project = require('@lib/project')
 local vsc = require('@tools/vsc')
 
 -- vars
+local sup = false
 local ignore_diagnostics = {}
 local ignore_imports = {}
-local sup = false
 
 -- functions
 local function save()
@@ -26,9 +27,13 @@ local function ignore_diagnostic_globs(...: glob)
 	end
 end
 
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
+
+	local version = input_version or github.get_latest_version('johnnymorganz', 'luau-lsp')
+	-- toolchain.install_github('JohnnyMorganz', 'luau-lsp', version)
+	-- toolchain.install_pesde('pesde', 'luau-lsp', version)
 
 	vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
 	merge(vsc.settings, {

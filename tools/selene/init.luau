@@ -1,12 +1,12 @@
 local editor = require('@lib/editor')
 local file = require('@lib/file')
 local toolchain = require('@lib/toolchain')
+
+local github = require('@utils/github')
 local vsc = require('@tools/vsc')
 
 -- vars
 local sup = false
-local version = '0.28.0'
-
 local manifest = require('@self/manifest')
 
 -- functions
@@ -14,10 +14,11 @@ local function save()
 	if not sup then return end
 	file.write_toml('selene.toml', manifest)
 end
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
+	local version = input_version or github.get_latest_version('kampfkarren', 'selene')
 	toolchain.install_github('kampfkarren', 'selene', version)
 	toolchain.install_pesde('pesde', 'selene', version)
 
