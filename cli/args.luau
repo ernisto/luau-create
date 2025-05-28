@@ -1,7 +1,9 @@
 local process = require('@lune/process')
 
 local args: args = {}
-export type args = { [any]: { string } | string | boolean }
+export type args = { [any]: { string } | string }
+-- { [string]: {string} }
+-- { [number]: string }
 
 local index = 0
 repeat
@@ -13,7 +15,7 @@ repeat
 	if key then
 		local key_value = process.args[index + 1]
 		if not key_value or key_value:match('^%-%-') then
-			args[key] = true
+			args[key] = {}
 		else
 			local current_value = args[key] :: string
 			if type(current_value) == 'table' then
@@ -31,20 +33,28 @@ repeat
 until value == nil
 
 -- methods
-local function get_arg(args: args, key: string | number): string | boolean
+local function get_str(args: args, key: string | number): string?
 	local value = args[key]
 	return if type(value) == 'table' then value[1] else value
 end
-local function get_args(args: args, key: string): { string }
+local function get_num(args: args, key: string | number): number?
+	return tonumber(get_str(args, key) or '')
+end
+local function get_bool(args: args, key: string): boolean
+	return args[key] ~= nil
+end
+
+local function get_strs(args: args, key: string): { string }
 	local values = args[key]
 	return if type(values) == 'table' then values else { values :: any }
 end
+
 local function split(args: args): { string }
 	local tokens = {}
 	for key, value in args do
 		if type(key) == 'string' then
 			table.insert(tokens, `--{key}`)
-			if value == true then continue end
+			if #value == 0 then continue end
 		end
 		table.insert(tokens, tostring(value))
 	end
@@ -55,7 +65,9 @@ end
 return table.freeze {
 	current = args,
 
-	get_args = get_args,
-	get_arg = get_arg,
+	get_strs = get_strs,
+	get_bool = get_bool,
+	get_num = get_num,
+	get_str = get_str,
 	split = split,
 }

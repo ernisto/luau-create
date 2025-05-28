@@ -137,7 +137,7 @@ local function prompt_enum<value>(question: enum<value>): value?
 
 	-- default
 	local default_value = if current_args[question.name]
-		then get_index(options :: any, args.get_arg(current_args, question.name))
+		then get_index(options :: any, args.get_str(current_args, question.name))
 		elseif current_args.yes then question.default_index or 1
 		else nil
 
@@ -187,7 +187,7 @@ local function prompt_selections<value>(question: selections<value>): value?
 
 	-- default
 	local default_value = if current_args[question.name]
-		then get_indexes(options :: any, args.get_args(current_args, question.name))
+		then get_indexes(options :: any, args.get_strs(current_args, question.name))
 		elseif current_args.yes then question.default_indexes or {}
 		else nil
 
@@ -229,7 +229,7 @@ local function inquisitor(output: { [string]: any })
 
 	function self.bool(prop: bool)
 		local value = if current_args[prop.name] ~= nil
-			then args.get_arg(current_args, prop.name)
+			then args.get_bool(current_args, prop.name)
 			elseif current_args.yes then prop.default
 			else io.prompt('confirm', prop.name, prop.default or output[prop.name])
 
