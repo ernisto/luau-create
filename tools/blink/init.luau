@@ -6,7 +6,7 @@ local tracker = require('@lib/tracker')
 local rojo = require('@tools/rojo')
 local vsc = require('@tools/vsc')
 
-local github = require('@utils/github')
+local github_release = require('@utils/github/release')
 
 -- vars
 local sup = false
@@ -21,7 +21,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github.get_latest_version('1Axen', 'blink')
+	local version = input_version or github_release.get_latest_version('1Axen', 'blink')
 	toolchain.install_github('1Axen', 'blink', version)
 	toolchain.install_pesde('pesde', 'blink', version)
 

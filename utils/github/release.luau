@@ -43,7 +43,7 @@ local function get_latest_release(owner: string, repo: string): GitHubRelease?
 end
 
 type version = string
-local function get_latest_version(owner: string, repo: string): version
+local function get_latest_release_version(owner: string, repo: string): version
 	local release = get_latest_release(owner, repo)
 	assert(release, `couldnt possible get a version for package {owner}/{repo}`)
 
@@ -52,6 +52,6 @@ end
 
 -- module
 return table.freeze {
-	get_latest_release = get_latest_release,
-	get_latest_version = get_latest_version,
+	get_latest_version = get_latest_release_version,
+	get_latest = get_latest_release,
 }

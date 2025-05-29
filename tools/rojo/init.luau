@@ -5,7 +5,7 @@ local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
 local dom = require('@self/dom')
-local github = require('@utils/github')
+local github_release = require('@utils/github/release')
 local merge = require('@utils/merge')
 
 local pesde = require('@tools/pesde')
@@ -45,7 +45,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github.get_latest_version('rojo-rbx', 'rojo')
+	local version = input_version or github_release.get_latest_version('rojo-rbx', 'rojo')
 	toolchain.install_github('rojo-rbx', 'rojo', version)
 	toolchain.install_pesde('pesde', 'rojo', version)
 

@@ -1,4 +1,4 @@
-local github = require('@utils/github')
+local github_release = require('@utils/github/release')
 local language = require('@lib/language')
 local toolchain = require('@lib/toolchain')
 
@@ -16,7 +16,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github.get_latest_version('lune-org', 'lune')
+	local version = input_version or github_release.get_latest_version('lune-org', 'lune')
 	luau.setup()
 
 	toolchain.install_github('feliptibell', 'lune', version)

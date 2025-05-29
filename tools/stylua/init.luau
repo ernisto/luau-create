@@ -3,7 +3,7 @@ local file = require('@lib/file')
 local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
-local github = require('@utils/github')
+local github_release = require('@utils/github/release')
 local merge = require('@utils/merge')
 local vsc = require('@tools/vsc')
 
@@ -20,7 +20,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github.get_latest_version('johnnymorganz', 'stylua')
+	local version = input_version or github_release.get_latest_version('johnnymorganz', 'stylua')
 	toolchain.install_github('johnnymorganz', 'stylua', version)
 	toolchain.install_pesde('pesde', 'stylua', version)
 
