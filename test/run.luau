@@ -1,6 +1,7 @@
 local args = require('@cli/args')
 local fs = require('@lune/fs')
 local process = require('@lune/process')
+local stdio = require('@lune/stdio')
 
 local test_dirs = {
 	['luau-pkg'] = { environment = 'luau', kind = 'package' },
@@ -27,7 +28,7 @@ for dir, test_args in test_dirs do
 	}, { cwd = `./test/{dir}` })
 
 	local result = output.stdout:readToEnd()
-	print(result)
+	stdio.write(result)
 
 	local err = output.stderr:readToEnd()
 	assert(err == '', err)
