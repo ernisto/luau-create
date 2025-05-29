@@ -1,9 +1,17 @@
 local format = require('@lib/file/format')
 local fs = require('@lune/fs')
+local process = require('@lune/process')
 local serde = require('@lune/serde')
 
 -- functions
 export type path = string
+local function get_home_dir(): path
+	if process.os == 'windows' then
+		return process.env.USERPROFILE or (process.env.HOMEDRIVE .. process.env.HOMEPATH)
+	else
+		return process.env.HOME or ''
+	end
+end
 local function check_exising_chain(path: string, file_name: string?)
 	local ancestors = string.split(path, '/')
 	local safe_dir = ''
@@ -81,6 +89,7 @@ end
 
 -- module
 return table.freeze {
+	get_home_dir = get_home_dir,
 	write_default_str = write_default_str,
 	read_str = read_str,
 	read_toml = read_toml,

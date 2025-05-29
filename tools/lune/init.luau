@@ -7,6 +7,7 @@ local pesde = require('@tools/pesde')
 
 -- vars
 local sup = false
+local type_defs = require('@self/type_defs')
 
 -- functions
 local function save()
@@ -24,7 +25,8 @@ local function setup(input_version: string?)
 	toolchain.install_github('feliptibell', 'lune', version)
 	pesde.manifest.engines.lune = `^{version}`
 
-	language.add_alias('lune', `~/.lune/.typedefs/{version}/`)
+	local type_defs_path = type_defs.write_type_defs_async(version)
+	language.add_alias('lune', type_defs_path)
 end
 
 -- module
