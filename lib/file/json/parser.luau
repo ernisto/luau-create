@@ -78,7 +78,7 @@ local function parse_number(): cst.value_node?
 end
 
 local function parse_array(): cst.array_node?
-	local start = lexer.get_cursor_position()
+	local start, line = lexer.get_cursor_position()
 	if not scan_char('[') then return end
 
 	local elements = {}
@@ -99,11 +99,15 @@ local function parse_array(): cst.array_node?
 	until comma == nil
 
 	expect_char(']')
+
+	local _, end_line = lexer.get_cursor_position(lexer.get_final() - 1)
+	local multi_line = end_line ~= line
 	return {
 		kind = 'array',
 		elements = elements,
 		start = start,
 		finish = lexer.get_final(),
+		multi_line = multi_line,
 	}
 end
 
