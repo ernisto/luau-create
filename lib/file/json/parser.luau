@@ -145,9 +145,7 @@ end
 
 local function parse(str: string): cst.value_node?
 	lexer.lex(str)
-	local value = parse_value()
-	if not value then return report('Valor JSON esperado') end
-	return value
+	return parse_value()
 end
 
 return table.freeze({
