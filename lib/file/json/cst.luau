@@ -12,6 +12,7 @@ export type primitive_node = {
 export type array_node = {
 	kind: 'array',
 	elements: { element_node },
+	multi_line: boolean,
 	start: number,
 	finish: number,
 }
