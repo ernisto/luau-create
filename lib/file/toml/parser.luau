@@ -7,6 +7,9 @@ local scan_char = lexer.scan_char
 local expect_char = lexer.expect_char
 local report = lexer.report
 
+-- functions
+local parse_value
+
 local function parse_list<V>(parser: () -> V?, separator: string?): { V }
 	local fields = {} :: { V }
 	repeat
