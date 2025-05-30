@@ -39,6 +39,11 @@ local cases: { { string | { any } } } = {
 		[[foo = { bar = true }]],
 		{ foo = 5 },
 	},
+	{
+		'create table',
+		[[foo = true]],
+		{ foo = true, bar = { baz = 1 } },
+	},
 }
 
 return cases
