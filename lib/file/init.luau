@@ -1,3 +1,4 @@
+local format_json = require('@self/json')
 local fs = require('@lune/fs')
 local process = require('@lune/process')
 local serde = require('@lune/serde')
@@ -80,7 +81,8 @@ local function write_toml(path: path, data: data)
 	write_str(path, serde.encode('toml', data, true))
 end
 local function write_json(path: path, data: data)
-	write_str(path, serde.encode('json', data, true))
+	local content = read_str(path) or ''
+	write_str(path, format_json(content, data))
 end
 local function write_yaml(path: path, data: data)
 	write_str(path, serde.encode('yaml', data, true))
