@@ -8,6 +8,8 @@ local expect_char = lexer.expect_char
 local report = lexer.report
 
 -- functions
+local parse_value
+
 local function parse_literal(): cst.value_node?
 	local start = lexer.get_cursor_position()
 	local word = scan_word()
