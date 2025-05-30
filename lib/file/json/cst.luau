@@ -9,7 +9,13 @@ export type primitive_node = {
 
 export type array_node = {
 	kind: 'array',
-	elements: { value_node },
+	elements: { element_node },
+	start: number,
+	finish: number,
+}
+export type element_node = {
+	kind: 'element',
+	value: value_node,
 	start: number,
 	finish: number,
 }
