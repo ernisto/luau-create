@@ -82,14 +82,18 @@ local function parse_array(): cst.array_node?
 	if not scan_char('[') then return end
 
 	local elements = {}
+	repeat
+		local value = parse_value()
+		if not value then break end
 
-	while true do
-		local element = parse_value()
-		if not element then break end
-
-		table.insert(elements, element)
-		if not scan_char(',') then break end
-	end
+		local comma = scan_char(',')
+		table.insert(elements, {
+			kind = 'element',
+			start = value.start,
+			finish = if comma then comma_position else value.finish,
+			value = value,
+		})
+	until comma == nil
 
 	expect_char(']')
 	return {
