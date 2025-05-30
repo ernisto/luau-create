@@ -2,7 +2,7 @@ local args = require('@cli/args')
 local ascii = require('@utils/display/ascii')
 local cases = require('@self/cases')
 local display = require('@utils/display')
-local save = require('@lib/file/json/save')
+local save = require('@lib/file/format/json')
 local serde = require('@lune/serde')
 local stdio = require('@lune/stdio')
 
