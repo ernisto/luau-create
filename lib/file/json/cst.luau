@@ -1,5 +1,5 @@
-export type node = value_node | array_node | object_node
-export type value_node = {
+export type value_node = primitive_node | array_node | object_node
+export type primitive_node = {
 	kind: 'value',
 	value: string | number | boolean | nil,
 	raw: string,
@@ -9,7 +9,7 @@ export type value_node = {
 
 export type array_node = {
 	kind: 'array',
-	elements: { node },
+	elements: { value_node },
 	start: number,
 	finish: number,
 }
@@ -24,7 +24,7 @@ export type object_node = {
 export type property_node = {
 	kind: 'property',
 	key: string,
-	value: node,
+	value: value_node,
 	start: number,
 	finish: number,
 }

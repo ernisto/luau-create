@@ -137,11 +137,11 @@ local function parse_object(): cst.object_node?
 	}
 end
 
-function parse_value(): cst.node?
+function parse_value(): cst.value_node?
 	return parse_literal() or parse_string() or parse_number() or parse_array() or parse_object()
 end
 
-local function parse(str: string): cst.node
+local function parse(str: string): cst.value_node?
 	lexer.lex(str)
 	local value = parse_value()
 	if not value then return report('Valor JSON esperado') end
