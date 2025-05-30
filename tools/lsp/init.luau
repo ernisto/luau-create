@@ -32,10 +32,10 @@ local function setup(input_version: string?)
 	sup = true
 
 	local version = input_version or github_release.get_latest_version('johnnymorganz', 'luau-lsp')
-	-- toolchain.install_github('JohnnyMorganz', 'luau-lsp', version)
+	-- toolchain.install_github('johnnymorganz', 'luau-lsp', version)
 	-- toolchain.install_pesde('pesde', 'luau-lsp', version)
 
-	vsc.recommend_extensions('JohnnyMorganz.luau-lsp')
+	vsc.recommend_extensions('johnnymorganz.luau-lsp')
 	merge(vsc.settings, {
 		['luau-lsp.completion.imports.ignoreGlobs'] = ignore_imports,
 		['luau-lsp.ignoreGlobs'] = ignore_diagnostics,
