@@ -1,4 +1,6 @@
 export type value_node = primitive_node | array_node | object_node
+export type token = { kind: 'token', start: number, finish: number }
+
 export type primitive_node = {
 	kind: 'value',
 	value: string | number | boolean | nil,
@@ -18,6 +20,7 @@ export type element_node = {
 	value: value_node,
 	start: number,
 	finish: number,
+	comma: token?,
 }
 
 export type object_node = {
@@ -33,6 +36,7 @@ export type property_node = {
 	value: value_node,
 	start: number,
 	finish: number,
+	comma: token?,
 }
 
 return nil

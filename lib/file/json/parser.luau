@@ -87,11 +87,14 @@ local function parse_array(): cst.array_node?
 		if not value then break end
 
 		local comma = scan_char(',')
+		local comma_position = lexer.get_final()
+
 		table.insert(elements, {
 			kind = 'element',
 			start = value.start,
 			finish = if comma then comma_position else value.finish,
 			value = value,
+			comma = comma and { kind = 'token' :: any, start = comma_position, finish = comma_position },
 		})
 	until comma == nil
 
@@ -123,15 +126,19 @@ local function parse_object(): cst.object_node?
 			return nil
 		end
 
+		local f = lexer.get_final()
+		local comma_position = lexer.get_cursor_position()
+		local comma = scan_char(',')
+
 		table.insert(properties, {
 			kind = 'property' :: any,
 			key = key,
 			value = value,
 			start = init,
-			finish = lexer.get_final(),
+			finish = f,
+			comma = comma and { kind = 'token', start = comma_position, finish = comma_position },
 		})
-
-		if not scan_char(',') then break end
+		if not comma then break end
 	end
 
 	expect_char('}')
