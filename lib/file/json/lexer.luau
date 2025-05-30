@@ -11,11 +11,11 @@ type char = string
 type char_byte = number
 
 -- loggers
-local function get_cursor_position(): (number, number, number)
+local function get_cursor_position(index: number?): (number, number, number)
 	local line_cursor = 0
 	local line_count = 1
 
-	for offset = 0, cursor do
+	for offset = 0, index or cursor do
 		line_cursor += 1
 		if buffer.readu8(input, offset) == string.byte('\n') then
 			line_count += 1
