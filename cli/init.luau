@@ -3,14 +3,14 @@ local create = require('@lib/init')
 local inquire_project = require('@cli/inquires/project')
 local inquire_tools = require('@cli/inquires/tools')
 
-for _, tool_name in ipairs(args :: { string }) do
+for _, tool_name in ipairs(args.current) do
 	local tool = create.tools[tool_name]
 	assert(not tool_name or tool, `invalid tool '{tool_name}'`)
 
 	tool.setup()
 end
 
-if not args[1] then
+if not args.current[1] then
 	inquire_project()
 	local tools = inquire_tools()
 	for _, tool in tools do
