@@ -30,7 +30,10 @@ end
 
 type attribute = string
 local function set_attribute(glob: glob, ...: attribute)
-	attributes[glob] = merge(attributes[glob] or {}, { ... })
+	attributes[glob] = attributes[glob] or {}
+	for _, attribute in { ... } do
+		table.insert(attributes[glob], attribute)
+	end
 end
 
 local function setup()
