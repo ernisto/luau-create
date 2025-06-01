@@ -26,8 +26,7 @@
   "luau-lsp.bytecode.vectorLib": "vector",
   "luau-lsp.bytecode.vectorType": "vector",
   "luau-lsp.completion.imports.ignoreGlobs": [
-    "*_packages/**",
-    ".pesde"
+    "**/.pesde/**"
   ],
   "luau-lsp.completion.imports.requireStyle": "alwaysAbsolute",
   "luau-lsp.completion.imports.stringRequires.enabled": true,
