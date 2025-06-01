@@ -45,9 +45,10 @@ local function format_type<V>(v: V): V | string
 	return if typeof(v) == 'string' then `"{v}"` else v
 end
 
-local function format_table(t: { [any]: any }): string
-	local texts = {}
+local function format_table(t: { [any]: any }): string?
+	if not next(t) then return end
 
+	local texts = {}
 	local array = is_array(t)
 
 	for k, v in sort_iter(t) do
@@ -63,14 +64,16 @@ local function format_table(t: { [any]: any }): string
 	return if array then `[{text}]` else `\{{text}}`
 end
 
-local function create_table(name: string, t: { [string]: any }): string
+local function create_table(name: string, t: { [string]: any }): string?
 	local texts = {}
 
 	for k, v in sort_iter(t) do
 		local value = if typeof(v) == 'table' then format_table(v) else format_type(v)
+		if not value then continue end
 
 		table.insert(texts, `{k} = {value}`)
 	end
+	if not next(texts) then return end
 
 	local text = `[{name}]\n{table.concat(texts, '\n')}`
 	return text
@@ -82,10 +85,13 @@ local function format(data: { [string]: any }): string
 		if typeof(v) == 'table' and is_empty(v) then continue end
 
 		if custom_type(v) == 'table' then
-			text ..= `\n{create_table(k, v)}\n`
+			local content = create_table(k, v)
+			if not content then continue end
+
+			text ..= `\n{content}\n`
 		else
 			local value = if custom_type(v) == 'array' then format_table(v) else format_type(v)
-
+			if not value then continue end
 			text ..= `{k} = {value}\n`
 		end
 	end
