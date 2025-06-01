@@ -31,7 +31,9 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github_release.get_latest_version('johnnymorganz', 'luau-lsp')
+	local version = input_version
+		or github_release.get_latest_version('johnnymorganz', 'luau-lsp')
+		or error("couldn't find latest version for luau-lsp")
 	-- toolchain.install_github('johnnymorganz', 'luau-lsp', version)
 	-- toolchain.install_pesde('pesde', 'luau-lsp', version)
 

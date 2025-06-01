@@ -21,7 +21,9 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github_release.get_latest_version('1Axen', 'blink')
+	local version = input_version
+		or github_release.get_latest_version('1Axen', 'blink')
+		or error("couldn't find latest version for blink")
 	toolchain.install_github('1Axen', 'blink', version)
 	toolchain.install_pesde('pesde', 'blink', version)
 

@@ -16,7 +16,9 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github_release.get_latest_version('lune-org', 'lune')
+	local version = input_version
+		or github_release.get_latest_version('lune-org', 'lune')
+		or error("couldn't find latest version for lune")
 	luau.setup()
 
 	toolchain.install_github('feliptibell', 'lune', version)

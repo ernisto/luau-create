@@ -45,7 +45,9 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version or github_release.get_latest_version('rojo-rbx', 'rojo')
+	local version = input_version
+		or github_release.get_latest_version('rojo-rbx', 'rojo')
+		or error("couldn't find latest version for rojo")
 	toolchain.install_github('rojo-rbx', 'rojo', version)
 	toolchain.install_pesde('pesde', 'rojo', version)
 
