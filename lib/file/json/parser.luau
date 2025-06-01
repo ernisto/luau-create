@@ -81,7 +81,7 @@ local function parse_array(): cst.array_node?
 	local start, line = lexer.get_cursor_position()
 	if not scan_char('[') then return end
 
-	local elements = {}
+	local elements = {} :: { cst.element_node }
 	repeat
 		local value = parse_value()
 		if not value then break end
@@ -94,7 +94,7 @@ local function parse_array(): cst.array_node?
 			start = value.start,
 			finish = if comma then comma_position else value.finish,
 			value = value,
-			comma = comma and { kind = 'token' :: any, start = comma_position, finish = comma_position },
+			comma = comma and { kind = 'token', start = comma_position, finish = comma_position },
 		})
 	until comma == nil
 
@@ -115,7 +115,7 @@ local function parse_object(): cst.object_node?
 	local start = lexer.get_cursor_position()
 	if not scan_char('{') then return nil end
 
-	local properties = {}
+	local properties = {} :: { cst.property_node }
 
 	while true do
 		local init = lexer.get_cursor_position()
@@ -135,7 +135,7 @@ local function parse_object(): cst.object_node?
 		local comma = scan_char(',')
 
 		table.insert(properties, {
-			kind = 'property' :: any,
+			kind = 'property',
 			key = key,
 			value = value,
 			start = init,
