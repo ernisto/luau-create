@@ -47,7 +47,7 @@ export type question<Output = unknown> = (struct<Output> | enum<Output> | bool<O
 
 -- functions
 local function parse_identifier(input: string)
-	return string.match(input, '^%s*([-_%w]+)%s*$') or error(`invalid identifier (\\[-_A-z0-9]+\\)`)
+	return string.match(input, '^%s*([_%l%d]+)%s*$') or error(`invalid identifier (\\[_a-z0-9]+\\)`)
 end
 local function parse_version(input: string)
 	return semver.parse(input):unpack() or error(`you must to enter a version (n.n.n)`)
