@@ -1,7 +1,7 @@
 {
   "editor.formatOnSave": true,
   "files.associations": {},
-  "files.eol": "\r\n",
+  "files.eol": "\n",
   "files.exclude": {
     "*-lock.*": true,
     "*.lock": true,
