@@ -27,11 +27,11 @@ local function setup(input_version: string?)
 		or github_release.get_latest_version('pesde-pkg', 'pesde')
 		or error("couldn't find latest version for pesde")
 
-	editor.hide_globs('*_packages/**', '.pesde/**', 'pesde.toml')
-	editor.lock_globs('*_packages/**', '.pesde/**')
-	tracker.ignore_globs('*_packages/**', '.pesde/**')
+	editor.hide_globs('**/.pesde/**', '**/*_packages/**', '**/pesde.toml')
+	editor.lock_globs('**/.pesde/**', '**/*_packages/**')
+	tracker.ignore_globs('**/.pesde/**', '**/*_packages/**')
 	language.ignore_import_globs('**/.pesde/**')
-	language.ignore_diagnostic_globs('*_packages/**', '.pesde/**')
+	language.ignore_diagnostic_globs('**/.pesde/**', '**/*_packages/**')
 
 	-- manifest
 	manifest.engines = { pesde = `^{version}` }

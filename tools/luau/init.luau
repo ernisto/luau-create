@@ -32,7 +32,7 @@ local function setup()
 	if sup then return end
 	sup = true
 
-	editor.hide_globs('.luaurc')
+	editor.hide_globs('**/.luaurc')
 	tracker.set_attribute('*.luau', 'text')
 
 	if project.entrypoint then

@@ -29,9 +29,9 @@ local function setup(input_version: string?)
 
 	vsc.settings['files.associations']['*.blink'] = 'blink'
 	vsc.recommend_extensions('checkraisefold.blink-vscode')
-	vsc.hide_globs('dist/**')
-	vsc.lock_globs('dist/**')
-	tracker.ignore_globs('dist/**')
+	vsc.hide_globs('**/dist/**')
+	vsc.lock_globs('**/dist/**')
+	tracker.ignore_globs('**/dist/**')
 
 	file.write_default_str('remotes/init.blink')
 	rojo.add_system_path('dist/blink/server', { 'ServerScriptService', 'server', 'remotes' })

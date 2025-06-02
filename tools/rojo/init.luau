@@ -66,9 +66,9 @@ local function setup(input_version: string?)
 	add_system_path('roblox_packages', { 'ReplicatedStorage', 'packages' })
 	add_system_path('roblox_server_packages', { 'ServerScriptService', 'packages' })
 
-	tracker.ignore_globs('sourcemap.json', 'dist/**')
-	editor.hide_globs('sourcemap.json', 'dist/**')
-	editor.lock_globs('sourcemap.json', 'dist/**')
+	tracker.ignore_globs('sourcemap.json', '**/dist/**')
+	editor.hide_globs('sourcemap.json', '**/dist/**')
+	editor.lock_globs('sourcemap.json', '**/dist/**')
 	vsc.recommend_extensions('evaera.vscode-rojo')
 
 	merge(vsc.settings, {
