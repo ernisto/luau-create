@@ -39,10 +39,6 @@ local function setup()
 		file.write_default_str(project.entrypoint .. '/init.luau')
 		add_alias(project.entrypoint, project.entrypoint)
 	end
-	for alias, dir in project.directories do
-		file.write_default_str(dir .. '/init.luau')
-		add_alias(alias, dir)
-	end
 end
 
 -- module
