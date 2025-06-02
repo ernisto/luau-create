@@ -46,15 +46,15 @@ local function read_str(path: path): string?
 end
 local function read_toml(path: path): data?
 	local str = read_str(path)
-	return str and str ~= '' and serde.decode('toml', str)
+	return str and str ~= '' and serde.decode('toml', str:gsub('#[^\n]*', '') :: string)
 end
 local function read_json(path: path): data?
 	local str = read_str(path)
-	return str and str ~= '' and serde.decode('json', str)
+	return str and str ~= '' and serde.decode('json', str:gsub('//[^\n]*', '') :: string)
 end
 local function read_yaml(path: path): data?
 	local str = read_str(path)
-	return str and str ~= '' and serde.decode('yaml', str)
+	return str and str ~= '' and serde.decode('yaml', str:gsub('#[^\n]*', '') :: string)
 end
 
 local function write_default_str(path: path, str: string?)
