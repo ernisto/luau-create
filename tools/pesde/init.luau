@@ -6,8 +6,7 @@ local tracker = require('@lib/tracker')
 
 -- vars
 local sup = false
-local version = '0.6.0'
-
+local github_release = require('@utils/github/release')
 local manifest = require('@self/manifest')
 
 -- functions
@@ -20,9 +19,13 @@ local function identifier(str)
 	return str:gsub('-', '_'):gsub('%u+', string.lower)
 end
 
-local function setup()
+local function setup(input_version: string?)
 	if sup then return end
 	sup = true
+
+	local version = input_version
+		or github_release.get_latest_version('pesde-pkg', 'pesde')
+		or error("couldn't find latest version for pesde")
 
 	editor.hide_globs('*_packages/**', '.pesde/**', 'pesde.toml')
 	editor.lock_globs('*_packages/**', '.pesde/**')
