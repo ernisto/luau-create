@@ -16,6 +16,10 @@ local function save()
 	file.write_toml('pesde.toml', manifest)
 end
 
+local function identifier(str)
+	return str:gsub('-', '_'):gsub('%u+', string.lower)
+end
+
 local function setup()
 	if sup then return end
 	sup = true
@@ -29,7 +33,7 @@ local function setup()
 	-- manifest
 	manifest.engines = { pesde = `^{version}` }
 
-	manifest.name = `{project.host}/{project.name:gsub('-', '_')}`
+	manifest.name = `{identifier(project.host)}/{identifier(project.name)}`
 	manifest.version = tostring(project.version)
 	manifest.description = project.description
 	manifest.license = project.license
