@@ -21,7 +21,7 @@ end
 
 type glob = string
 local function ignore_globs(...: glob)
-	local title = debug.info(3, 's'):match('([^/]+)$')
+	local title = debug.info(3, 's'):match('tools\\([^/\\"]+)')
 	table.insert(ignored_globs, `# {title}`)
 	for _, glob in { ... } do
 		if table.find(ignored_globs, glob) then continue end
