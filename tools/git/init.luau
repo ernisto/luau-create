@@ -27,6 +27,7 @@ local function ignore_globs(...: glob)
 		if table.find(ignored_globs, glob) then continue end
 		table.insert(ignored_globs, glob)
 	end
+	table.insert(ignored_globs, '')
 end
 
 type attribute = string
