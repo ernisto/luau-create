@@ -25,7 +25,7 @@ local function inquire()
 		if project.project.environment == 'roblox' then { name = 'wally' } else nil :: any,
 	}
 
-	q.enum { name = 'version_tracker', default_index = 2, optional = true, { name = 'git' } }
+	q.enum { name = 'version_tracker', default_index = 1, optional = true, { name = 'git' } }
 	q.multiselect {
 		name = 'code_editors',
 		default_indexes = { 1 },
@@ -53,7 +53,7 @@ local function inquire()
 		}
 		q.enum {
 			name = 'cloud_sync',
-			default_index = 2,
+			default_index = 1,
 			optional = true,
 			{ name = 'asphalt' },
 			if project.project.kind == 'game' then { name = 'mantle' } else nil :: any,
@@ -61,7 +61,7 @@ local function inquire()
 		if project.project.kind == 'game' then
 			q.enum {
 				name = 'remote_idl',
-				default_index = 2,
+				default_index = 1,
 				optional = true,
 				{ name = 'blink' },
 				if create.tools.zap then { 'zap' } else nil :: any,
