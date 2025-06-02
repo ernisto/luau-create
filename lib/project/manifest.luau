@@ -41,7 +41,6 @@ export type project = {
 
 	cpu: { npm.cpu }?,
 	os: { npm.os }?,
-	stylua: stylua.manifest,
 }
 
 -- functions
