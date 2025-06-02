@@ -11,7 +11,7 @@ local github_release = require('@utils/github/release')
 -- vars
 local sup = false
 local manifest = {}
--- merge(manifest, file.read_str('remotes/init.blink'))
+-- merge(manifest, file.read_str('dev.blink'))
 
 -- functions
 local function save()
@@ -33,7 +33,13 @@ local function setup(input_version: string?)
 	vsc.lock_globs('**/dist/**')
 	tracker.ignore_globs('**/dist/**')
 
-	file.write_default_str('remotes/init.blink')
+	local path = debug.info(1, 's'):match('%[string "(.-)/?init%.luau"%]$')
+	file.write_default_str('dev.blink', file.read_str(`{path}/default.blink`))
+
+	manifest.ServerOutput = 'dist/blink/server/init.luau'
+	manifest.ClientOutput = 'dist/blink/client/init.luau'
+	manifest.TypesOutput = 'dist/blink/types.luau'
+
 	rojo.add_system_path('dist/blink/server', { 'ServerScriptService', 'server', 'remotes' })
 	rojo.add_system_path('dist/blink/client', { 'ReplicatedStorage', 'client', 'remotes' })
 	rojo.add_system_path('dist/blink/types', { 'ReplicatedStorage', 'types' })
