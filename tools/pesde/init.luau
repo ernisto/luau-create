@@ -65,6 +65,8 @@ local function setup(input_version: string?)
 		then { default = 'https://github.com/UpliftGames/wally-index' } :: any
 		else nil
 	manifest.indices = { default = 'https://github.com/pesde-pkg/index' } :: any
+
+	if project.kind == 'package' then manifest.target.build_files = { project.entrypoint } :: any end
 end
 
 -- module
