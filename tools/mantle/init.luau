@@ -24,7 +24,7 @@ local function setup(input_version: string?)
 		or error("couldn't find latest version for mantle")
 
 	toolchain.install_github('blake-mealey', 'mantle', version)
-	toolchain.install_pesde('pesde', 'mantle', version)
+	-- toolchain.install_pesde('pesde', 'mantle', version)
 
 	merge(vsc.settings, {
 		['yaml.schemas'] = {
