@@ -1,5 +1,4 @@
 local github_release = require('@utils/github/release')
-local language = require('@lib/language')
 local toolchain = require('@lib/toolchain')
 
 local luau = require('@tools/luau')
@@ -25,8 +24,7 @@ local function setup(input_version: string?)
 	toolchain.install_github('feliptibell', 'lune', version)
 	pesde.manifest.engines.lune = `^{version}`
 
-	local type_defs_path = type_defs.write_type_defs_async(version)
-	language.add_alias('lune', type_defs_path)
+	type_defs.write_type_defs_async(version)
 end
 
 -- module
