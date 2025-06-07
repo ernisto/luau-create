@@ -1,6 +1,5 @@
 local npm = require('@tools/npm/manifest')
 local pesde = require('@tools/pesde/manifest')
-local stylua = require('@tools/stylua/manifest')
 local wally = require('@tools/wally/manifest')
 
 local infer = require('@utils/infer')
@@ -114,7 +113,8 @@ project.kind = if project.directories.lib
 	elseif project.directories.plugin then 'plugin'
 	elseif project.environment == 'roblox' then 'game'
 	elseif project.directories.cli then 'terminal'
-	else 'script'
+	elseif project.directories.script then 'script'
+	else none
 
 project.entrypoint = if project.kind == 'game'
 	then nil

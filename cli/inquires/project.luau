@@ -43,7 +43,9 @@ local function inquire()
 			{ name = 'plugin' },
 		}
 	end
-	if kind ~= 'game' then
+	if kind == 'game' then
+		project.entrypoint = nil
+	else
 		q.str {
 			name = 'entrypoint',
 			default = if kind == 'package' then 'lib' elseif kind == 'terminal' then 'cli' else kind,
