@@ -1,5 +1,6 @@
+local project = require('@lib/project').project
 local editor = require('@lib/editor')
-local project = require('@lib/project')
+local file = require('@lib/file')
 local tracker = require('@lib/tracker')
 
 local lsp = require('@tools/lsp')
@@ -38,14 +39,38 @@ local function setup()
 		['luau-lsp.bytecode.vectorLib'] = 'Vector3',
 		['luau-lsp.bytecode.vectorType'] = 'Vector3',
 
-		['luau-lsp.completion.imports.stringRequires.enabled'] = project.project.kind ~= 'game',
-		['luau-lsp.completion.imports.requireStyle'] = if project.project.kind == 'game'
+		['luau-lsp.completion.imports.stringRequires.enabled'] = project.kind ~= 'game',
+		['luau-lsp.completion.imports.requireStyle'] = if project.kind == 'game'
 			then 'alwaysAbsolute'
 			else 'alwaysRelative',
-		['luau-lsp.types.robloxSecurityLevel'] = if project.project.side == 'plugin'
+		['luau-lsp.types.robloxSecurityLevel'] = if project.side == 'plugin'
 			then 'PluginSecurity'
 			else 'LocalUserSecurity',
 	})
+
+	add_system_path('roblox_packages', { 'ReplicatedStorage', 'packages' })
+	add_system_path('roblox_server_packages', { 'ServerScriptService', 'packages' })
+
+	if project.kind == 'game' then
+		add_system_path('assets', { 'ReplicatedStorage', 'assets' })
+		file.write_default_str('assets/models/.gitkeep')
+
+		add_system_path('config', { 'ReplicatedStorage', 'config' })
+		file.write_default_str('config/init.toml')
+
+		add_system_path('shared', { 'ReplicatedStorage', 'shared' })
+		file.write_default_str('shared/.gitkeep')
+
+		add_system_path('client', { 'ReplicatedStorage', 'client' })
+		file.write_default_str('client/init.client.luau')
+
+		add_system_path('server', { 'ServerScriptService', 'server' })
+		file.write_default_str('server/init.server.luau')
+	elseif project.kind == 'package' then
+		add_system_path(assert(project.entrypoint), { 'ReplicatedStorage', 'packages', project.name })
+	elseif project.kind == 'plugin' then
+		add_system_path(assert(project.entrypoint), { 'ServerStorage', project.name })
+	end
 end
 
 -- module

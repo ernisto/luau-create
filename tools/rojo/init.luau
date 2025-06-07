@@ -64,9 +64,6 @@ local function setup(input_version: string?)
 		shared = 'game.ReplicatedStorage.packages',
 	}
 
-	add_system_path('roblox_packages', { 'ReplicatedStorage', 'packages' })
-	add_system_path('roblox_server_packages', { 'ServerScriptService', 'packages' })
-
 	tracker.ignore_globs('sourcemap.json', '**/dist/**')
 	editor.hide_globs('sourcemap.json', '**/dist/**')
 	editor.lock_globs('sourcemap.json', '**/dist/**')
@@ -78,22 +75,6 @@ local function setup(input_version: string?)
 		['luau-lsp.sourcemap.includeNonScripts'] = true,
 		['luau-lsp.diagnostics.workspace'] = true,
 	})
-
-	if project.kind == 'game' then
-		file.write_default_str('server/init.server.luau')
-		file.write_default_str('client/init.client.luau')
-		file.write_default_str('config/init.toml')
-		file.write_default_str('shared/.gitkeep')
-
-		add_system_path('server', { 'ServerScriptService', 'server' })
-		add_system_path('client', { 'ReplicatedStorage', 'client' })
-		add_system_path('config', { 'ReplicatedStorage', 'config' })
-		add_system_path('shared', { 'ReplicatedStorage', 'shared' })
-	elseif project.kind == 'package' then
-		add_system_path(assert(project.entrypoint), { 'ReplicatedStorage', 'packages', project.name })
-	elseif project.kind == 'plugin' then
-		add_system_path(assert(project.entrypoint), { 'ServerStorage', project.name })
-	end
 end
 
 -- module
