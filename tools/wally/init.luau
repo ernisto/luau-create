@@ -59,5 +59,8 @@ end
 return table.freeze {
 	save = save,
 	setup = setup,
+	sup = function()
+		return sup
+	end,
 	manifest = manifest,
 }

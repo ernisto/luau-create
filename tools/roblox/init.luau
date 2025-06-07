@@ -6,8 +6,10 @@ local tracker = require('@lib/tracker')
 local lsp = require('@tools/lsp')
 local luau = require('@tools/luau')
 local merge = require('@utils/merge')
+local pesde = require('@tools/pesde')
 local rojo = require('@tools/rojo')
 local vsc = require('@tools/vsc')
+local wally = require('@tools/wally')
 
 -- vars
 local sup = false
@@ -48,8 +50,15 @@ local function setup()
 			else 'LocalUserSecurity',
 	})
 
-	add_system_path('roblox_packages', { 'ReplicatedStorage', 'packages' })
-	add_system_path('roblox_server_packages', { 'ServerScriptService', 'packages' })
+	if pesde.sup() then
+		add_system_path('roblox_packages', { 'ReplicatedStorage', 'packages' })
+		add_system_path('roblox_server_packages', { 'ServerScriptService', 'packages' })
+	end
+	if wally.sup() then
+		add_system_path('Packages', { 'ReplicatedStorage', 'packages' })
+		add_system_path('DevPackages', { 'ServerStorage', 'packages' })
+		add_system_path('ServerPackages', { 'ServerScriptService', 'packages' })
+	end
 
 	if project.kind == 'game' then
 		add_system_path('assets', { 'ReplicatedStorage', 'assets' })
