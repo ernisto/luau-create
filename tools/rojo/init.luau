@@ -51,6 +51,7 @@ local function setup(input_version: string?)
 	toolchain.install_github('rojo-rbx', 'rojo', version)
 	toolchain.install_pesde('pesde', 'rojo', version)
 
+	pesde.manifest.dev_dependencies.scripts = { name = 'pesde/scripts_rojo', version = '^0.1.0', target = 'lune' }
 	pesde.manifest.scripts.roblox_sync_config_generator = '.pesde/scripts/roblox_sync_config_generator.luau'
 	pesde.manifest.scripts.sourcemap_generator = '.pesde/scripts/sourcemap_generator.luau'
 
