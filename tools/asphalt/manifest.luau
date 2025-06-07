@@ -31,11 +31,15 @@ local manifest: manifest = {
 		type = 'user',
 		id = 0,
 	},
-	codegen = {},
+	codegen = {
+		strip_extensions = true,
+		typescript = false,
+		style = 'nested',
+	},
 	inputs = {
 		assets = {
-			path = '',
-			output_path = '',
+			path = 'assets/**',
+			output_path = 'assets',
 			web = {},
 		},
 	},
