@@ -43,6 +43,7 @@ local function setup(input_version: string?)
 	rojo.add_system_path('dist/blink/client', { 'ReplicatedStorage', 'client', 'remotes' })
 	rojo.add_system_path('dist/blink/types.luau', { 'ReplicatedStorage', 'types' })
 
+	file.write_default_str('remotes/init.blink')
 end
 
 -- module

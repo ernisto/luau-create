@@ -7,3 +7,5 @@ option PromiseLibrary = "ReplicatedStorage.packages.promise"
 option WriteValidations = true
 option SyncValidation = true
 option Casing = Snake
+
+import "remotes/init.blink" as game
