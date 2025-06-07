@@ -1,5 +1,4 @@
 local file = require('@lib/file')
-local merge = require('@utils/merge')
 local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
@@ -42,7 +41,8 @@ local function setup(input_version: string?)
 
 	rojo.add_system_path('dist/blink/server', { 'ServerScriptService', 'server', 'remotes' })
 	rojo.add_system_path('dist/blink/client', { 'ReplicatedStorage', 'client', 'remotes' })
-	rojo.add_system_path('dist/blink/types', { 'ReplicatedStorage', 'types' })
+	rojo.add_system_path('dist/blink/types.luau', { 'ReplicatedStorage', 'types' })
+
 end
 
 -- module
