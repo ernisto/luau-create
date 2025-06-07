@@ -6,6 +6,7 @@ local toolchain = require('@lib/toolchain')
 -- vars
 local sup = false
 local manifest = require('@self/manifest')
+local rojo = require('@tools/rojo')
 
 -- functions
 local function save()
@@ -22,7 +23,10 @@ local function setup(input_version: string?)
 	toolchain.install_github('jacktabscode', 'asphalt', version)
 	toolchain.install_pesde('pesde', 'asphalt', version)
 
-	file.ensure_existing_chain('assets')
+	file.write_default_str('assets/models/.gitkeep')
+	file.write_default_str('assets/sounds/.gitkeep')
+
+	rojo.add_system_path(`{manifest.inputs.assets.output_path}/assets.luau`, { 'ReplicatedStorage', 'assets' })
 	editor.hide_globs('asphalt.toml')
 end
 
