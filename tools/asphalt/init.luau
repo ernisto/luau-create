@@ -23,6 +23,7 @@ local function setup(input_version: string?)
 	toolchain.install_github('jacktabscode', 'asphalt', version)
 	toolchain.install_pesde('pesde', 'asphalt', version)
 
+	file.write_default_str('assets/images/.gitkeep')
 	file.write_default_str('assets/models/.gitkeep')
 	file.write_default_str('assets/sounds/.gitkeep')
 

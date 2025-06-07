@@ -31,6 +31,7 @@ local function setup(input_version: string?)
 			[`https://mantledeploy.vercel.app/schemas/v{version}/schema.json`] = { 'mantle.yml' },
 		},
 	})
+	file.write_default_str('assets/images/.gitkeep')
 	file.write_default_str('assets/models/.gitkeep')
 	file.write_default_str('assets/sounds/.gitkeep')
 	vsc.hide_globs('.mantle-state.yml')
