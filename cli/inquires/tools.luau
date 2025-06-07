@@ -51,10 +51,9 @@ local function inquire()
 			{ name = 'rojo' },
 			if create.tools.argon then { name = 'argon' } else nil :: any,
 		}
-		q.enum {
+		q.multiselect {
 			name = 'cloud_sync',
-			default_index = 1,
-			optional = true,
+			default_indexes = { 1, 2 },
 			{ name = 'asphalt' },
 			if project.project.kind == 'game' then { name = 'mantle' } else nil :: any,
 		}
