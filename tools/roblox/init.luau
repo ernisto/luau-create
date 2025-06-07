@@ -32,6 +32,7 @@ local function setup()
 
 	tracker.set_attribute('*.rbxm', 'binary')
 	tracker.set_attribute('*.rbxl', 'binary')
+	tracker.ignore_globs('*.rbxl.lock')
 	tracker.ignore_globs('*.rbxl')
 	editor.hide_globs('.rbxl')
 
