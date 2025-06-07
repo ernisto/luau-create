@@ -1,4 +1,5 @@
 local file = require('@lib/file')
+local language = require('@lib/language')
 local toolchain = require('@lib/toolchain')
 local tracker = require('@lib/tracker')
 
@@ -28,9 +29,10 @@ local function setup(input_version: string?)
 
 	vsc.settings['files.associations']['*.blink'] = 'blink'
 	vsc.recommend_extensions('checkraisefold.blink-vscode')
+	language.ignore_diagnostic_globs('**/dist/**')
+	tracker.ignore_globs('**/dist/**')
 	vsc.hide_globs('**/dist/**')
 	vsc.lock_globs('**/dist/**')
-	tracker.ignore_globs('**/dist/**')
 
 	local path = debug.info(1, 's'):match('%[string "(.-)/?init%.luau"%]$')
 	file.write_default_str('dev.blink', file.read_str(`{path}/default.blink`))
