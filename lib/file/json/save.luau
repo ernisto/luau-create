@@ -18,10 +18,6 @@ local function push_str(element: string, index: number, replace_len: number?)
 
 	delta_cursor += offset
 end
-local function remove_node(node: { start: number, finish: number })
-	local replace_len = node.finish - node.start + 1
-	push_str('', node.start - 1, replace_len)
-end
 
 -- function
 local apply
@@ -67,7 +63,7 @@ local function apply_object(replacing_node: cst.object_node, data: { [string]: a
 
 		local value = data[property.key]
 		if value == nil then
-			remove_node(replacing_node.properties[index - 1] or property)
+			apply(replacing_node.properties[index - 1] or property, REMOVE)
 		else
 			apply(property.value, value)
 		end
