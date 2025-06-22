@@ -37,7 +37,7 @@ if not next(args.current) then
 		end
 	until false
 else
-	if args.get_arg(args.current, 'yes') then
+	if args.get_bool(args.current, 'yes') then
 		for _, case in cases do
 			test_case(case)
 		end
