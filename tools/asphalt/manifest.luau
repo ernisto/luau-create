@@ -39,7 +39,7 @@ local manifest: manifest = {
 	inputs = {
 		assets = {
 			path = 'assets/**/*.(!rbxm|!rbxmx)',
-			output_path = 'assets',
+			output_path = 'dist/asphalt',
 			web = {},
 		},
 	},
