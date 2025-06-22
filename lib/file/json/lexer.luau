@@ -28,7 +28,6 @@ end
 local function get_final()
 	return last_char_cursor or (cursor + 1)
 end
-
 local function report(str: string?)
 	local _, line, char = get_cursor_position()
 	return warn(`[Line {line}, Column {char}]: {str}`)
@@ -48,10 +47,14 @@ local function advance(len: number?)
 	current_byte = buffer.readu8(input, cursor)
 end
 
+local function is_letter(code: char_byte): boolean
+	return string.byte('a') <= code and code <= string.byte('z')
+		or string.byte('A') <= code and code <= string.byte('Z')
+		or string.byte('_') == code
+end
 local function is_digit(code: char_byte): boolean
 	return string.byte('0') <= code and code <= string.byte('9')
 end
-
 local function is_space(code: char_byte): boolean
 	return code == string.byte ' '
 		or code == string.byte '\t'
@@ -84,35 +87,34 @@ local function skip_comments()
 end
 
 -- scanning functions
-local function scan_word(): string?
+local function scan_word(exact_word: string?): string?
 	if not current_byte then return end
 
 	if cached_word == nil then
-		-- JSON reserved words: true, false, null
-		local words = { 'true', 'false', 'null' }
-		for _, word in words do
-			local match = true
-			for i = 1, #word do
-				if buffer.readu8(input, cursor + i - 1) ~= string.byte(word, i) then
-					match = false
-					break
-				end
-			end
-			if match then
-				cached_word = word
-				break
-			end
-		end
-		if not cached_word then
+		if not is_letter(current_byte) then
 			cached_word = false
 			return
 		end
+
+		local init_byte = current_byte
+		local init = cursor
+		repeat
+			advance()
+		until not is_letter(current_byte) and not is_digit(current_byte)
+
+		cached_word = buffer.readstring(input, init, cursor - init)
+		cursor = init
+		current_byte = init_byte
+	end
+	if exact_word then
+		if exact_word ~= cached_word then return end
 	elseif cached_word == false then
 		return
 	end
 
 	local word: string = cached_word :: any
 	advance(string.len(word))
+
 	skip_blank()
 	skip_comments()
 	return word
