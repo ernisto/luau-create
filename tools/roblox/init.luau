@@ -62,7 +62,7 @@ local function setup()
 	end
 
 	if project.kind == 'game' then
-		add_system_path('assets', { 'ReplicatedStorage', 'assets' })
+		add_system_path('assets/models', { 'ReplicatedStorage', 'assets', 'models' })
 		file.write_default_str('assets/models/.gitkeep')
 
 		add_system_path('config', { 'ReplicatedStorage', 'config' })
