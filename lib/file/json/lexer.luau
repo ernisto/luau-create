@@ -86,9 +86,7 @@ local function skip_comments()
 			advance()
 		until current_byte == string.byte('\n')
 
-		while current_byte and is_space(current_byte) do
-			advance()
-		end
+		skip_blank()
 	end
 end
 
