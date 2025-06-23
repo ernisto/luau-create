@@ -4,7 +4,13 @@ local cursor: number
 local last_char_cursor: number?
 
 -- token cache
-local cached_word: string | false | nil
+type uncached = nil
+local uncached: uncached = nil
+
+type cached_none = false
+local cached_none: cached_none = false
+
+local cached_word: string | cached_none | uncached
 
 -- definitions
 type char = string
@@ -90,9 +96,9 @@ end
 local function scan_word(exact_word: string?): string?
 	if not current_byte then return end
 
-	if cached_word == nil then
+	if cached_word == uncached then
 		if not is_letter(current_byte) then
-			cached_word = false
+			cached_word = cached_none
 			return
 		end
 
@@ -108,7 +114,7 @@ local function scan_word(exact_word: string?): string?
 	end
 	if exact_word then
 		if exact_word ~= cached_word then return end
-	elseif cached_word == false then
+	elseif cached_word == cached_none then
 		return
 	end
 
