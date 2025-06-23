@@ -109,11 +109,12 @@ local function scan_word(exact_word: string?): string?
 		cached_word = buffer.readstring(input, init, cursor - init)
 		cursor = init
 		current_byte = init_byte
-	end
-	if exact_word then
-		if exact_word ~= cached_word then return end
 	elseif cached_word == cached_none then
 		return
+	end
+
+	if exact_word then
+		if exact_word ~= cached_word then return end
 	end
 
 	local word: string = cached_word :: any
