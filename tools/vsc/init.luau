@@ -7,8 +7,12 @@ local tasks = {}
 local hidden_globs = {}
 local locked_globs = {}
 local recommended_extensions = {}
-local settings =
-	{ ['files.readonlyInclude'] = locked_globs, ['files.exclude'] = hidden_globs, ['files.associations'] = {} }
+local settings = {
+	['files.readonlyInclude'] = locked_globs,
+	['files.exclude'] = hidden_globs,
+	['files.associations'] = {},
+}
+
 merge({ recommendations = recommended_extensions }, file.read_json('.vscode/extensions.json'))
 merge({ tasks = tasks }, file.read_json('.vscode/tasks.json'))
 merge(settings, file.read_json('.vscode/settings.json'))

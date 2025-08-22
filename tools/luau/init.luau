@@ -3,16 +3,6 @@ local file = require('@lib/file')
 local project = require('@lib/project').project
 local tracker = require('@lib/tracker')
 
--- defs
-type luaurc = {
-	languageMode: 'strict' | 'nonstrict' | 'nocheck'?,
-	lintErrors: boolean?,
-	typeErrors: boolean?,
-	aliases: { [string]: string },
-	globals: { string },
-	lint: { [string]: boolean },
-}
-
 -- vars
 local sup = false
 local rc = require('@self/rc')
