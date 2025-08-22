@@ -32,8 +32,7 @@ local function setup(input_version: string?)
 	vsc.hide_globs('**/dist/**')
 	vsc.lock_globs('**/dist/**')
 
-	local path = debug.info(1, 's'):match('%[string "(.-)/?init%.luau"%]$')
-	file.write_default_str('dev.blink', file.read_str(`{path}/default.blink`))
+	file.write_default_str('dev.blink', file.read_str_asset('assets/default.blink'))
 
 	manifest.ServerOutput = 'dist/blink/server/init.luau'
 	manifest.ClientOutput = 'dist/blink/client/init.luau'

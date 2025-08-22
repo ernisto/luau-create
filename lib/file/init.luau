@@ -52,6 +52,10 @@ local function read_str(path: path): string?
 
 	return fs.readFile(path)
 end
+local function read_str_asset(path: path): string
+	local abs_path = `{debug.info(2, 's'):match('%[string "(.-)/?init%.luau"%]$')}{path}`
+	return read_str(abs_path) or error(`asset not found at '{abs_path}'`)
+end
 local function read_toml(path: path): data?
 	local str = read_str(path)
 	return str and str ~= '' and serde.decode('toml', str:gsub('#[^\n]*', '') :: string)
@@ -91,6 +95,7 @@ end
 return table.freeze {
 	get_home_dir = get_home_dir,
 	write_default_str = write_default_str,
+	read_str_asset = read_str_asset,
 	read_str = read_str,
 	read_toml = read_toml,
 	read_json = read_json,
