@@ -20,9 +20,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version
-		or github_release.get_latest_version('johnnymorganz', 'stylua')
-		or error("couldn't find latest version for stylua")
+	local version = input_version or github_release.assert_latest_release_version('johnnymorganz', 'stylua')
 	toolchain.install_github('johnnymorganz', 'stylua', version)
 	toolchain.install_pesde('pesde', 'stylua', version)
 

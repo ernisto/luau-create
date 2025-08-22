@@ -23,9 +23,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version
-		or github_release.get_latest_version('pesde-pkg', 'pesde')
-		or error("couldn't find latest version for pesde")
+	local version = input_version or github_release.assert_latest_release_version('pesde-pkg', 'pesde')
 
 	editor.hide_globs('**/.pesde/**', '**/*_packages/**', '**/pesde.toml')
 	editor.lock_globs('**/.pesde/**', '**/*_packages/**')

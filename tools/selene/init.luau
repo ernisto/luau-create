@@ -18,9 +18,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version
-		or github_release.get_latest_version('kampfkarren', 'selene')
-		or error("couldn't find latest version for selene")
+	local version = input_version or github_release.assert_latest_release_version('kampfkarren', 'selene')
 	toolchain.install_github('kampfkarren', 'selene', version)
 	toolchain.install_pesde('pesde', 'selene', version)
 

@@ -51,9 +51,13 @@ local function get_latest_release_version(owner: string, repo: string): version?
 	local ver = semver.parse(release.tagName)
 	return ver:isOk() and tostring(ver:unwrap())
 end
+local function assert_latest_release_version(owner: string, repo: string): version
+	return get_latest_release_version(owner, repo) or error(`couldn't find latest version for {repo}`)
+end
 
 -- module
 return table.freeze {
-	get_latest_version = get_latest_release_version,
+	assert_latest_release_version = assert_latest_release_version,
+	get_latest_release_version = get_latest_release_version,
 	get_latest = get_latest_release,
 }

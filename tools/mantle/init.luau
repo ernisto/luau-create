@@ -19,9 +19,7 @@ local function setup(input_version: string?)
 	if sup then return end
 	sup = true
 
-	local version = input_version
-		or github_release.get_latest_version('blake-mealey', 'mantle')
-		or error("couldn't find latest version for mantle")
+	local version = input_version or github_release.assert_latest_release_version('blake-mealey', 'mantle')
 
 	toolchain.install_github('blake-mealey', 'mantle', version)
 	-- toolchain.install_pesde('pesde', 'mantle', version)
