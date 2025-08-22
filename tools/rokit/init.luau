@@ -22,7 +22,7 @@ local function setup()
 	if sup then return end
 	sup = true
 
-	vsc.recommend_extensions('filiptibell.tooling-language-server')
+	vsc.recommend_extensions('filiptibell.deputy')
 	editor.hide_globs('rokit.toml')
 end
 
