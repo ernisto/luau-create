@@ -1,6 +1,7 @@
 local create = require('@lib/init')
 local inquisitor = require('@cli/inquisitor')
 local project = require('@lib/project')
+local rojo = require('@tools/rojo')
 
 -- module
 local function inquire()

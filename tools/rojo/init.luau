@@ -14,6 +14,7 @@ local wally = require('@tools/wally')
 
 -- vars
 local sup = false
+local preferences = { manage_assets = false }
 
 local places = {}
 local synced_paths = {}
@@ -23,7 +24,14 @@ merge({ tree = tree }, file.read_json('dev.project.json'))
 -- functions
 local function save()
 	if not sup then return end
-	file.write_json('dev.project.json', { name = project.name, tree = tree })
+	file.write_json('dev.project.json', { name = project.name, tree = tree, emitLegacyScripts = false })
+
+	if preferences.manage_assets then
+		file.write_str('places/lighting.project.json', file.read_str_asset('assets/lighting.project.json'))
+		file.write_str('places/chat.project.json', file.read_str_asset('assets/chat.project.json'))
+		file.write_str('places/baseplate.rbxm', file.read_str_asset('assets/baseplate.rbxm'))
+		file.write_str('assets/models/.gitkeep', '')
+	end
 end
 
 local function add_system_path(system_path: string, roblox_path: { string }, place: string?)
@@ -49,7 +57,7 @@ local function setup(input_version: string?)
 	toolchain.install_github('rojo-rbx', 'rojo', version)
 	toolchain.install_pesde('pesde', 'rojo', version)
 
-	pesde.manifest.dev_dependencies.scripts = { name = 'pesde/scripts_rojo', version = '^0.1.0', target = 'lune' }
+	pesde.manifest.dependencies.scripts = { name = 'pesde/scripts_rojo', version = '^0.1.0', target = 'lune' }
 	pesde.manifest.scripts.roblox_sync_config_generator = '.pesde/scripts/roblox_sync_config_generator.luau'
 	pesde.manifest.scripts.sourcemap_generator = '.pesde/scripts/sourcemap_generator.luau'
 
@@ -73,10 +81,17 @@ local function setup(input_version: string?)
 		['luau-lsp.sourcemap.includeNonScripts'] = true,
 		['luau-lsp.diagnostics.workspace'] = true,
 	})
+
+	if preferences.manage_assets then
+		add_system_path('places/lighting.project.json', { 'Lighting' })
+		add_system_path('places/chat.project.json', { 'TextChatService' })
+		add_system_path('places/baseplate.rbxm', { 'Workspace', 'Baseplate' })
+	end
 end
 
 -- module
 return table.freeze {
+	preferences = preferences,
 	places = places,
 	tree = tree,
 	dom = dom,

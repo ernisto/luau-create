@@ -22,7 +22,6 @@ local function setup(input_version: string?)
 	toolchain.install_pesde('pesde', 'asphalt', version)
 
 	file.write_default_str('assets/images/.gitkeep')
-	file.write_default_str('assets/models/.gitkeep')
 	file.write_default_str('assets/sounds/.gitkeep')
 
 	rojo.add_system_path(`{manifest.inputs.assets.output_path}/assets.luau`, { 'ReplicatedStorage', 'assets' })
