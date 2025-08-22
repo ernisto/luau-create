@@ -1,5 +1,6 @@
 local create = require('@lib/init')
 local inquisitor = require('@cli/inquisitor')
+local mantle = require('@tools/mantle')
 local project = require('@lib/project')
 local rojo = require('@tools/rojo')
 
@@ -52,7 +53,7 @@ local function inquire()
 			{ name = 'rojo' },
 			if create.tools.argon then { name = 'argon' } else nil :: any,
 		}
-		q.multiselect {
+		local cloud_sync = q.multiselect {
 			name = 'cloud_sync',
 			default_indexes = { 1, 2 },
 			{ name = 'asphalt' },
@@ -66,6 +67,12 @@ local function inquire()
 				{ name = 'blink' },
 				if create.tools.zap then { 'zap' } else nil :: any,
 			}
+			if table.find(cloud_sync, 'mantle') then
+				mantle.preferences.output_generator = q.bool {
+					message = 'read output from roblox ?',
+					default = true,
+				}
+			end
 			rojo.preferences.manage_assets = q.bool {
 				message = 'manage assets with rojo ?',
 				default = true,

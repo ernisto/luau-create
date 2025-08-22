@@ -6,14 +6,15 @@ local vsc = require('@tools/vsc')
 
 -- vars
 local sup = false
-
-local manifest = {}
-merge(manifest, file.read_yaml('mantle.yml'))
+local preferences = { output_generator = false }
 
 -- functions
 local function save()
 	if not sup then return end
 	file.write_yaml('mantle.yml', manifest)
+	if preferences.output_generator then
+		file.write_str('scripts/uploads_generator.luau', file.read_str_asset('assets/uploads_generator.luau'))
+	end
 end
 local function setup(input_version: string?)
 	if sup then return end
@@ -37,6 +38,7 @@ end
 
 -- module
 return table.freeze {
+	preferences = preferences,
 	save = save,
 	setup = setup,
 }
