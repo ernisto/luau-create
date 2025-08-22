@@ -85,12 +85,12 @@ local function await_maybe_extract_pesde()
 	project.host = if host and host:gsub('_', '-') == infer.await_git_user() then none else host
 	project.repository = pesde.repository and { type = 'git', url = pesde.repository }
 	project.environment = if target and target.environment ~= 'roblox_server' then target.environment else none
+	project.entrypoint = target and (target.lib or target.bin)
 	project.kind = if target.lib
 		then 'package'
 		elseif target.bin then 'terminal'
 		elseif target.scripts then 'script'
 		else none
-	project.entrypoint = target and (target.lib or target.bin)
 
 	return project
 end

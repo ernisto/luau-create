@@ -11,12 +11,12 @@ local function inquire()
 		default_index = 2,
 		{ name = 'All' },
 		{ name = 'Luau' },
-		{ name = 'Lua51' },
-		{ name = 'Lua52' },
-		{ name = 'Lua53' },
-		{ name = 'Lua54' },
-		{ name = 'LuaJit' },
-		{ name = 'CfxLua' },
+		{ message = 'Cfx Lua', value = 'CfxLua' },
+		{ message = 'Lua Jit', value = 'LuaJIT' },
+		{ message = 'Lua 5.1', value = 'Lua51' },
+		{ message = 'Lua 5.2', value = 'Lua52' },
+		{ message = 'Lua 5.3', value = 'Lua53' },
+		{ message = 'Lua 5.4', value = 'Lua54' },
 	}
 	q_stylua.int { name = 'column_width', default = 120, optional = true }
 	q_stylua.enum {

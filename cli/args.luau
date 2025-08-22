@@ -1,7 +1,7 @@
 local process = require('@lune/process')
 
 local args: args = {}
-export type args = { [any]: { string } | string }
+export type args = { [string | number]: { string } | string }
 -- { [string]: {string} }
 -- { [number]: string }
 
@@ -28,7 +28,7 @@ repeat
 			index += 1
 		end
 	else
-		table.insert(args, value)
+		table.insert(args :: any, value)
 	end
 until value == nil
 

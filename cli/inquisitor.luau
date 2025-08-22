@@ -5,45 +5,62 @@ local args = require('@cli/args')
 local current_args = args.current
 
 -- defs
-export type struct<Output = unknown> = { name: string, desc: string?, optional: true? }
+export type question<Output = unknown> = { kind: string } & (struct<Output> | enum<Output> | bool<Output> | str<Output>)
+export type option<Output = string> = { message: string?, name: string?, value: Output?, desc: string? }
 
 export type enum<Output = string> = {
-	name: string,
+	-- kind: 'enum',
+	name: string?,
+	message: string?,
 	default_index: number?,
 	desc: string?,
 	optional: true?,
 	[number]: option<Output>,
 }
 export type selections<Output = string> = {
-	name: string,
+	-- kind: 'selections',
+	name: string?,
+	message: string?,
 	default_indexes: { number }?,
 	desc: string?,
 	[number]: option<Output>,
 }
-export type option<Output = string> = { name: string, value: Output?, desc: string? }
+
+export type struct<Output = unknown> = {
+	-- kind: 'struct',
+	name: string?,
+	message: string?,
+	desc: string?,
+	optional: true?,
+}
 
 export type num<Output = number> = {
-	name: string,
+	-- kind: 'num',
+	name: string?,
+	message: string?,
 	default: number?,
 	desc: string?,
 	optional: true?,
 	parse: nil | (number) -> Output?,
 }
 export type bool<Output = boolean> = {
-	name: string,
+	-- kind: 'bool',
+	name: string?,
+	message: string?,
 	default: boolean?,
 	desc: string?,
 	optional: true?,
 	parse: nil | (boolean) -> Output?,
 }
 export type str<Output = string, Input = string> = {
-	name: string,
+	-- kind: 'str',
+	name: string?,
+	message: string?,
 	default: Input?,
 	desc: string?,
 	optional: true?,
 	parse: nil | (Input) -> Output,
 }
-export type question<Output = unknown> = (struct<Output> | enum<Output> | bool<Output> | str<Output>) & { kind: string }
 
 -- functions
 local function parse_identifier(input: string)
@@ -99,10 +116,14 @@ end
 
 -- constructors
 local function prompt_text<value>(question: str<value>): value
-	local value = current_args[question.name] or (current_args.yes and question.default)
+	local value = question.name and current_args[question.name] or (current_args.yes and question.default)
 	repeat
 		local out = value
-			or io.prompt('text', question.name, if question.default == nil then '' else tostring(question.default))
+			or io.prompt(
+				'text',
+				question.message or question.name,
+				if question.default == nil then '' else tostring(question.default)
+			)
 
 		value = nil :: any
 		if question.parse then
@@ -119,7 +140,7 @@ local function prompt_enum<value>(question: enum<value>): value?
 	local options = { sparse_unpack(question) }
 	local names = {}
 	for i, option in options do
-		names[i] = option.name
+		names[i] = option.message or option.name
 	end
 
 	-- core options
@@ -136,19 +157,19 @@ local function prompt_enum<value>(question: enum<value>): value?
 	undo_id = #names
 
 	-- default
-	local default_value = if current_args[question.name]
+	local default_value = if question.name and current_args[question.name]
 		then get_index(options :: any, args.get_str(current_args, question.name))
 		elseif current_args.yes then question.default_index or 1
 		else nil
 
-	if current_args[question.name] and default_value == nil then
+	if question.name and current_args[question.name] and default_value == nil then
 		warn(`invalid option {question.name} value '{current_args[question.name]}'`)
 		default_value = nil
 	end
 
 	-- loop
 	repeat
-		local index = default_value or io.prompt('select', question.name, names)
+		local index = default_value or io.prompt('select', question.message or question.name, names)
 
 		if none_id and index == none_id then
 			return nil
@@ -162,18 +183,18 @@ local function prompt_enum<value>(question: enum<value>): value?
 
 			print(question.desc)
 			for i, option in options do
-				names[i] = `{option.name} {io.color('white')}{option.desc or ''}`
+				names[i] = `{option.message or option.name} {io.color('white')}{option.desc or ''}`
 			end
 			continue
 		end
 		return options[index].value or options[index].name :: any
 	until false
 end
-local function prompt_selections<value>(question: selections<value>): value?
+local function prompt_selections<value>(question: selections<value>): { value }
 	local options = { sparse_unpack(question) }
 	local names = {}
 	for i, option in options do
-		names[i] = option.name
+		names[i] = option.message or option.name
 	end
 
 	-- core options
@@ -186,19 +207,19 @@ local function prompt_selections<value>(question: selections<value>): value?
 	undo_id = #names
 
 	-- default
-	local default_value = if current_args[question.name]
+	local default_value = if question.name and current_args[question.name]
 		then get_indexes(options :: any, args.get_strs(current_args, question.name))
 		elseif current_args.yes then question.default_indexes or {}
 		else nil
 
-	if current_args[question.name] and default_value == nil then
+	if question.name and current_args[question.name] and default_value == nil then
 		warn(`invalid option {question.name} value '{current_args[question.name]}'`)
 		default_value = nil
 	end
 
 	-- loop
 	repeat
-		local indexes = default_value or io.prompt('multiselect', question.name, names)
+		local indexes = default_value or io.prompt('multiselect', question.message or question.name, names)
 
 		if table.find(indexes, undo_id) then
 			print('NEED IMPLEMENTATION')
@@ -210,7 +231,7 @@ local function prompt_selections<value>(question: selections<value>): value?
 
 			print(question.desc)
 			for i, option in options do
-				names[i] = `{option.name} {io.color('white')}{option.desc or ''}`
+				names[i] = `{option.message or option.name} {io.color('white')}{option.desc or ''}`
 			end
 			continue
 		end
@@ -228,80 +249,83 @@ local function inquisitor(output: { [string]: any })
 	local self = {}
 
 	function self.bool(prop: bool)
-		local value = if current_args[prop.name] ~= nil
+		local default = prop.default or (prop.name and output[prop.name])
+		local value = if prop.name and current_args[prop.name] ~= nil
 			then args.get_bool(current_args, prop.name)
-			elseif current_args.yes then prop.default
-			else io.prompt('confirm', prop.name, prop.default or output[prop.name])
+			elseif current_args.yes then default
+			else io.prompt('confirm', prop.message or prop.name, default)
 
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 		return value
 	end
 	function self.int(prop: num)
 		prop.parse = parse_integer :: any
-		prop.default = prop.default or output[prop.name]
+		prop.default = prop.default or (prop.name and output[prop.name])
 
 		local value = prompt_text(prop :: any)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.num(prop: num)
 		prop.parse = parse_number :: any
-		prop.default = prop.default or output[prop.name]
+		prop.default = prop.default or (prop.name and output[prop.name])
 
 		local value = prompt_text(prop :: any)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.str(prop: str)
 		prop.parse = prop.parse
-		prop.default = prop.default or output[prop.name]
+		prop.default = prop.default or (prop.name and output[prop.name])
 
 		local value = prompt_text(prop)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.identifier(prop: str)
 		prop.parse = parse_identifier
-		prop.default = prop.default or output[prop.name]
+		prop.default = prop.default or (prop.name and output[prop.name])
 
 		local value = prompt_text(prop)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.version(prop: str<semver.ParseError>)
 		prop.parse = parse_version :: any
-		prop.default = prop.default or output[prop.name]
+		prop.default = prop.default or (prop.name and output[prop.name])
 
 		local value = prompt_text(prop)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.enum(prop: enum)
 		local options = { sparse_unpack(prop) }
-		prop.default_index = prop.default_index or get_index(options, output[prop.name])
+		prop.default_index = prop.default_index
+			or (prop.name and output[prop.name] and get_index(options, output[prop.name]))
 
 		local value = prompt_enum(prop)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.multiselect(prop: selections)
 		local options = { sparse_unpack(prop) }
-		prop.default_indexes = prop.default_indexes or output[prop.name] and get_indexes(options, output[prop.name])
+		prop.default_indexes = prop.default_indexes
+			or (prop.name and output[prop.name] and get_indexes(options, output[prop.name]))
 
 		local value = prompt_selections(prop)
-		output[prop.name] = value
+		if prop.name then output[prop.name] = value end
 
 		return value
 	end
 	function self.struct(prop: struct)
-		if output[prop.name] == nil then output[prop.name] = {} end
-		return inquisitor(output[prop.name])
+		if prop.name and output[prop.name] == nil then output[prop.name] = {} end
+		return inquisitor(prop.name and output[prop.name] or {})
 	end
 
 	return self

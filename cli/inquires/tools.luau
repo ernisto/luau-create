@@ -65,6 +65,10 @@ local function inquire()
 				{ name = 'blink' },
 				if create.tools.zap then { 'zap' } else nil :: any,
 			}
+			rojo.preferences.manage_assets = q.bool {
+				message = 'manage assets with rojo ?',
+				default = true,
+			}
 		end
 	end
 	return result
