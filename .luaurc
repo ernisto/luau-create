@@ -1,14 +1,14 @@
 {
   "languageMode": "strict",
   "globals": [
-      "warn"
+    "warn"
   ],
   "aliases": {
-      "lune": "~/.lune/.typedefs/0.9.3/",
-      "pkg": "luau_packages",
-      "tools": "tools",
-      "utils": "utils",
-      "cli": "cli",
-      "lib": "lib"
+    "lune": "~/.lune/.typedefs/0.10.1/",
+    "pkg": "./luau_packages",
+    "tools": "./tools",
+    "utils": "./utils",
+    "cli": "./cli",
+    "lib": "./lib"
   }
 }

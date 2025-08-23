@@ -1,10 +1,10 @@
--- for lune 0.9.0	-- crates/**/types.d.luau
+-- 0.9.0	-- crates/**/types.d.luau
 
 local file = require('@lib/file')
 local fs = require('@lune/fs')
 local github_file = require('@utils/github/file')
 local language = require('@lib/language')
-local semver = require('@utils/semver')
+local semver = require('@pkg/semver')
 local task = require('@lune/task')
 
 -- defs
@@ -29,9 +29,9 @@ local function await_write_type_def(version: string, crate_name: string, crate_f
 
 	fs.writeFile(local_type_def_path:format(version, crate_name), result)
 end
-local function write_type_defs_async(version: semver.Version)
+local function write_type_defs_async(version: semver.version)
 	local version_ref = `v{version}`
-	if version < semver '0.9.0' then return end
+	if semver.is_oldest(version, semver.parse '0.9.0') then return end
 
 	local files = github_file.list_files('lune-org', 'lune', 'crates', version_ref)
 	for _, crate_file in files do
