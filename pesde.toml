@@ -1,27 +1,24 @@
-license = "MIT"
-repository = "https://github.com/ernisto/luau-create"
-private = false
 name = "ernisto/luau_create"
 version = "0.1.0"
+license = "MIT"
+private = false
+repository = "https://github.com/ernisto/luau-create"
+includes = ["pesde.toml", "README.md", "LICENSE", "docs/**/*.md", "cli/**"]
 authors = [
     "ernisto <joaovitordesouza707@gmail.com>",
     "david lagos <davidlagos929@gmail.com>"
 ]
-includes = ["pesde.toml", "README.md", "LICENSE", "docs/**/*.md", "cli/**"]
-
-[dependencies]
-semver = {name = "0x5eal/semver", target = "luau", version = "^0.1.1"}
-
-[dev_dependencies]
-stylua = {index = "default", name = "pesde/stylua", target = "lune", version = "^2.1.0" }
-
-[engines]
-lune = "^0.9.3"
-pesde = "^0.7.0-rc.3"
-
-[indices]
-default = "https://github.com/pesde-pkg/index"
 
 [target]
 bin = "cli"
 environment = "lune"
+
+[engines]
+lune = "^0.10.2"
+pesde = "^0.7.0"
+
+[indices]
+default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+semver = {name = "ernisto/semver", target = "luau", version = "^0.1.2"}

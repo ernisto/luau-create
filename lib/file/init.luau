@@ -53,7 +53,10 @@ local function read_str(path: path): string?
 	return fs.readFile(path)
 end
 local function read_str_asset(path: path): string
-	local abs_path = `{debug.info(2, 's'):match('%[string "(.-)/?init%.luau"%]$')}{path}`
+	local caller = debug.info(2, 's')
+	if fs.isFile(caller) then caller:match('(.*)/[^/]+$') end
+
+	local abs_path = `{caller}/{path}`
 	return read_str(abs_path) or error(`asset not found at '{abs_path}'`)
 end
 local function read_toml(path: path): data?

@@ -1,5 +1,5 @@
 local args = require('@cli/args')
-local create = require('@lib/init')
+local create = require('@lib')
 local inquire_project = require('@cli/inquires/project')
 local inquire_tools = require('@cli/inquires/tools')
 

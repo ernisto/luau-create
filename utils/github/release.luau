@@ -48,8 +48,8 @@ local function get_latest_release_version(owner: string, repo: string): version?
 	local release = get_latest_release(owner, repo)
 	assert(release, `couldnt possible get a version for package {owner}/{repo}`)
 
-	local ver = semver.parse(release.tagName)
-	return ver:isOk() and tostring(ver:unwrap())
+	local version = semver.try_parse(release.tagName)
+	return version and semver.tostring(version)
 end
 local function assert_latest_release_version(owner: string, repo: string): version
 	return get_latest_release_version(owner, repo) or error(`couldn't find latest version for {repo}`)

@@ -13,7 +13,8 @@
     ".pesde": true,
     ".vscode": true,
     "pesde.toml": true,
-    "stylua.toml": true
+    "stylua.toml": true,
+    "aftman.toml": true
   },
   "files.readonlyInclude": {
     "*-lock.*": true,

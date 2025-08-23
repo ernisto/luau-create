@@ -5,7 +5,7 @@
 -- 0.7.8    -- types/*  -- lowercase
 -- 0.9.0	-- crates/**/types.d.luau
 
-local semver = require('@utils/semver')
+local semver = require('@pkg/semver')
 local task = require('@lune/task')
 local v1 = require('@tools/lune/type_defs/v1')
 local v2 = require('@tools/lune/type_defs/v2')
@@ -13,7 +13,7 @@ local v3 = require('@tools/lune/type_defs/v3')
 
 -- functions
 local function write_type_defs_async(str: string)
-	local version = semver(str)
+	local version = semver.parse(str)
 	return v3.write_type_defs_async(version)
 		or v2.write_type_defs_async(version)
 		or task.spawn(v1.await_write_type_defs, version)

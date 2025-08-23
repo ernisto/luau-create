@@ -67,7 +67,8 @@ local function parse_identifier(input: string)
 	return string.match(input, '^%s*([-_%w]+)%s*$') or error(`invalid identifier (\\[-_A-z0-9]+\\)`)
 end
 local function parse_version(input: string)
-	return semver.parse(input):unpack() or error(`you must to enter a version (n.n.n)`)
+	local ver = semver.try_parse(input) or error(`you must to enter a version (n.n.n)`)
+	return semver.tostring(ver)
 end
 local function parse_number(value: string): number
 	return tonumber(value) or error(`you must to enter a number`)
@@ -294,7 +295,7 @@ local function inquisitor(output: { [string]: any })
 
 		return value
 	end
-	function self.version(prop: str<semver.ParseError>)
+	function self.version(prop: str<semver.version>)
 		prop.parse = parse_version :: any
 		prop.default = prop.default or (prop.name and output[prop.name])
 

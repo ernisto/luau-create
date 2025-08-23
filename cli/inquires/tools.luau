@@ -1,4 +1,4 @@
-local create = require('@lib/init')
+local create = require('@lib')
 local inquisitor = require('@cli/inquisitor')
 local mantle = require('@tools/mantle')
 local project = require('@lib/project')

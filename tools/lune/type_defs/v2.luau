@@ -1,10 +1,12 @@
--- for lune 0.7.5 to 0.8.9	-- types/*  -- PascalCase
+-- 0.6.2	-- docs/typedefs/*
+-- 0.7.5	-- types/*  -- PascalCase
+-- 0.7.8    -- types/*  -- lowercase
 
 local file = require('@lib/file')
 local fs = require('@lune/fs')
 local github_file = require('@utils/github/file')
 local language = require('@lib/language')
-local semver = require('@utils/semver')
+local semver = require('@pkg/semver')
 local task = require('@lune/task')
 
 -- defs
@@ -29,11 +31,11 @@ local function await_write_type_def(version: string, crate_name: path, type_def_
 
 	fs.writeFile(local_type_def_path:format(version, type_def_file), result)
 end
-local function write_type_defs_async(version: semver.Version)
-	local version_ref = `v{version}`
-	local path = if version >= semver '0.7.5' then 'types' elseif version >= semver '0.6.2' then 'docs/typedefs' else nil
+local function write_type_defs_async(version: semver.version)
+	if semver.is_oldest(version, semver.parse '0.6.2') then return end
+	local path = if semver.is_oldest(version, semver.parse '0.7.5') then 'docs/typedefs' else 'types'
 
-	if not path then return end
+	local version_ref = `v{version}`
 	local files = github_file.list_files('lune-org', 'lune', path, version_ref)
 
 	for _, type_def_file in files do

@@ -3,7 +3,7 @@ local pesde = require('@tools/pesde/manifest')
 local wally = require('@tools/wally/manifest')
 
 local infer = require('@utils/infer')
-local license = require('@self/licenses')
+local license = require('./licenses')
 local merge = require('@utils/merge')
 local semver = require('@pkg/semver')
 
@@ -18,7 +18,7 @@ export type project = {
 
 	name: string,
 	host: string,
-	version: semver.Version,
+	version: semver.version,
 	description: string,
 	private: boolean,
 	license: license.license_name?,
