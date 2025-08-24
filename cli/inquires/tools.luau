@@ -1,4 +1,5 @@
 local create = require('@lib')
+local inquire_stylua = require('@cli/inquires/stylua')
 local inquisitor = require('@cli/inquisitor')
 local mantle = require('@tools/mantle')
 local project = require('@lib/project')
@@ -6,7 +7,7 @@ local rojo = require('@tools/rojo')
 
 -- module
 local function inquire()
-	local result = { environment = project.project.environment }
+	local result = { environment = project.project.environment, language = 'luau' }
 	local q = inquisitor(result)
 
 	q.enum {
@@ -28,6 +29,8 @@ local function inquire()
 	}
 
 	q.enum { name = 'version_tracker', default_index = 1, optional = true, { name = 'git' } }
+	result.github = q.bool { message = 'setup github ?', default = true } and 'github'
+
 	q.multiselect {
 		name = 'code_editors',
 		default_indexes = { 1 },
@@ -36,7 +39,7 @@ local function inquire()
 		{ name = 'nvim' },
 	}
 
-	q.multiselect {
+	local tools = q.multiselect {
 		name = 'luau_tools',
 		default_indexes = { 1, 2 },
 		{ name = 'lsp' },
@@ -44,6 +47,7 @@ local function inquire()
 		{ name = 'selene' },
 		if create.tools.darklua then { name = 'darklua' } else nil :: any,
 	}
+	if table.find(tools, 'stylua') then inquire_stylua() end
 
 	if project.project.environment == 'roblox' then
 		q.enum {
