@@ -1,16 +1,16 @@
-name = "ernisto/luau_create"
-version = "0.1.0"
+name = "ernisto/create"
+version = "0.1.0-beta.2"
 license = "MIT"
 private = false
 repository = "https://github.com/ernisto/luau-create"
-includes = ["pesde.toml", "README.md", "LICENSE", "docs/**/*.md", "cli/**"]
+includes = ["pesde.toml", "README.md", "LICENSE", "docs/**/*.md", "cli/**", "lib/**", "tools/**", "utils/**", ".luaurc"]
 authors = [
     "ernisto <joaovitordesouza707@gmail.com>",
     "david lagos <davidlagos929@gmail.com>"
 ]
 
 [target]
-bin = "cli"
+bin = "cli/init.luau"
 environment = "lune"
 
 [engines]
