@@ -6,6 +6,7 @@ local vsc = require('@tools/vsc')
 
 -- vars
 local sup = false
+local manifest = require('@self/manifest')
 local preferences = { output_generator = false }
 
 -- functions
@@ -23,7 +24,7 @@ local function setup(input_version: string?)
 	local version = input_version or github_release.assert_latest_release_version('blake-mealey', 'mantle')
 
 	toolchain.install_github('blake-mealey', 'mantle', version)
-	-- toolchain.install_pesde('pesde', 'mantle', version)
+	toolchain.install_pesde('pesde', 'mantle', version)
 
 	merge(vsc.settings, {
 		['yaml.schemas'] = {
